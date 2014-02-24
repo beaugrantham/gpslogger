@@ -28,7 +28,6 @@ import android.content.pm.PackageInfo;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.view.*;
@@ -46,14 +45,8 @@ import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.IFileLogger;
 import com.mendhak.gpslogger.senders.FileSenderFactory;
 import com.mendhak.gpslogger.senders.IFileSender;
-import com.mendhak.gpslogger.senders.dropbox.DropBoxAuthorizationActivity;
-import com.mendhak.gpslogger.senders.dropbox.DropBoxHelper;
 import com.mendhak.gpslogger.senders.email.AutoEmailActivity;
 import com.mendhak.gpslogger.senders.ftp.AutoFtpActivity;
-import com.mendhak.gpslogger.senders.gdocs.GDocsHelper;
-import com.mendhak.gpslogger.senders.gdocs.GDocsSettingsActivity;
-import com.mendhak.gpslogger.senders.osm.OSMHelper;
-import com.mendhak.gpslogger.senders.opengts.OpenGTSActivity;
 
 import java.io.File;
 import java.text.NumberFormat;
@@ -342,7 +335,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             TextView txtDistance = (TextView) findViewById(R.id.txtDistance);
             TextView txtAutoEmail = (TextView) findViewById(R.id.txtAutoEmail);
 
-            List<IFileLogger> loggers = FileLoggerFactory.GetFileLoggers();
+            List<IFileLogger> loggers = FileLoggerFactory.GetFileLoggers(this);
 
             if (loggers.size() > 0)
             {
@@ -491,18 +484,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             case R.id.mnuSettings:
                 Intent settingsActivity = new Intent(getApplicationContext(), GpsSettingsActivity.class);
                 startActivity(settingsActivity);
-                break;
-            case R.id.mnuOSM:
-                UploadToOpenStreetMap();
-                break;
-            case R.id.mnuDropBox:
-                UploadToDropBox();
-                break;
-            case R.id.mnuGDocs:
-                UploadToGoogleDocs();
-                break;
-            case R.id.mnuOpenGTS:
-                SendToOpenGTS();
                 break;
             case R.id.mnuFtp:
                 SendToFtp();
@@ -685,77 +666,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         }
     }
-
-    private void SendToOpenGTS()
-    {
-        Utilities.LogDebug("GpsMainActivity.SendToOpenGTS");
-
-        Intent settingsIntent = new Intent(getApplicationContext(), OpenGTSActivity.class);
-
-        if (!Utilities.IsOpenGTSSetup())
-        {
-            startActivity(settingsIntent);
-        }
-        else
-        {
-            IFileSender fs = FileSenderFactory.GetOpenGTSSender(getApplicationContext(), this);
-            ShowFileListDialog(settingsIntent, fs);
-        }
-    }
-
-
-    private void UploadToGoogleDocs()
-    {
-        Utilities.LogDebug("GpsMainActivity.UploadToGoogleDocs");
-
-        if (!GDocsHelper.IsLinked(getApplicationContext()))
-        {
-            startActivity(new Intent(GpsMainActivity.this, GDocsSettingsActivity.class));
-            return;
-        }
-
-        Intent settingsIntent = new Intent(GpsMainActivity.this, GDocsSettingsActivity.class);
-        ShowFileListDialog(settingsIntent, FileSenderFactory.GetGDocsSender(getApplicationContext(), this));
-    }
-
-
-    private void UploadToDropBox()
-    {
-        Utilities.LogDebug("GpsMainActivity.UploadToDropBox");
-
-        final DropBoxHelper dropBoxHelper = new DropBoxHelper(getApplicationContext(), this);
-
-        if (!dropBoxHelper.IsLinked())
-        {
-            startActivity(new Intent("com.mendhak.gpslogger.DROPBOX_SETUP"));
-            return;
-        }
-
-        Intent settingsIntent = new Intent(GpsMainActivity.this, DropBoxAuthorizationActivity.class);
-        ShowFileListDialog(settingsIntent, FileSenderFactory.GetDropBoxSender(getApplication(), this));
-
-    }
-
-
-    /**
-     * Uploads a GPS Trace to OpenStreetMap.org.
-     */
-    private void UploadToOpenStreetMap()
-    {
-        Utilities.LogDebug("GpsMainactivity.UploadToOpenStreetMap");
-
-        if (!OSMHelper.IsOsmAuthorized(getApplicationContext()))
-        {
-            startActivity(OSMHelper.GetOsmSettingsIntent(getApplicationContext()));
-            return;
-        }
-
-        Intent settingsIntent = OSMHelper.GetOsmSettingsIntent(getApplicationContext());
-
-        ShowFileListDialog(settingsIntent, FileSenderFactory.GetOsmSender(getApplicationContext(), this));
-
-    }
-
 
     private void ShowFileListDialog(final Intent settingsIntent, final IFileSender sender)
     {
@@ -1172,7 +1082,8 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         if(!AppSettings.shouldLogToGpx() && !AppSettings.shouldLogToKml() && !AppSettings.shouldLogToCustomUrl())
         {
-            mnuAnnotate.setIcon(R.drawable.ic_menu_edit_disabled);
+            // mnuAnnotate.setIcon(R.drawable.ic_menu_edit_disabled);
+           mnuAnnotate.setIcon(R.drawable.ic_menu_edit_active);
         }
         else
         {

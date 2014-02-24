@@ -30,7 +30,6 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.mendhak.gpslogger.common.FileDialog.FileDialog;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.senders.osm.OSMHelper;
 
 public class GpsSettingsActivity extends SherlockPreferenceActivity
 {
@@ -98,12 +97,6 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
 
         Preference enableDisablePref = findPreference("enableDisableGps");
         enableDisablePref.setOnPreferenceClickListener(new AndroidLocationPreferenceClickListener());
-
-        Preference osmSetupPref = findPreference("osm_setup");
-        osmSetupPref.setOnPreferenceClickListener(new OSMPreferenceClickListener());
-
-        CheckBoxPreference chkLog_opengts = (CheckBoxPreference) findPreference("log_opengts");
-        chkLog_opengts.setOnPreferenceClickListener(new LogOpenGTSPreferenceClickListener(prefs));
 
         /** 
          * Logging Details - New file creation 
@@ -202,20 +195,6 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
         public boolean onPreferenceClick(Preference preference)
         {
             startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
-            return true;
-        }
-    }
-
-    /**
-     * Opens the OpenStreetMap preferences screen
-     */
-    private class OSMPreferenceClickListener implements OnPreferenceClickListener
-    {
-
-        public boolean onPreferenceClick(Preference preference)
-        {
-            startActivity(OSMHelper.GetOsmSettingsIntent(getApplicationContext()));
-
             return true;
         }
     }
@@ -355,32 +334,6 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
 
     }
 
-    /**
-     * Opens the OpenGTS preferences
-     * Listener to ensure that the server is configured when the user wants to enable OpenGTS logging logger
-     */
-    private class LogOpenGTSPreferenceClickListener implements OnPreferenceClickListener
-    {
-        private SharedPreferences prefs;
-
-        public LogOpenGTSPreferenceClickListener(SharedPreferences prefs)
-        {
-            this.prefs = prefs;
-        }
-
-        public boolean onPreferenceClick(Preference preference)
-        {
-            CheckBoxPreference chkLog_opengts = (CheckBoxPreference) findPreference("log_opengts");
-            boolean opengts_enabled = prefs.getBoolean("opengts_enabled", false);
-
-            if (chkLog_opengts.isChecked() && !opengts_enabled)
-            {
-                startActivity(new Intent("com.mendhak.gpslogger.OPENGTS_SETUP"));
-            }
-            return true;
-        }
-    }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
@@ -388,13 +341,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
         if (hasFocus)
         {
 
-            CheckBoxPreference chkLog_opengts = (CheckBoxPreference) findPreference("log_opengts");
-            boolean opengts_enabled = prefs.getBoolean("opengts_enabled", false);
 
-            if (chkLog_opengts.isChecked() && !opengts_enabled)
-            {
-                chkLog_opengts.setChecked(false);
-            }
 
         }
     }

@@ -18,17 +18,12 @@
 package com.mendhak.gpslogger.senders;
 
 import android.content.Context;
-import android.os.Environment;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.senders.dropbox.DropBoxHelper;
 import com.mendhak.gpslogger.senders.email.AutoEmailHelper;
 import com.mendhak.gpslogger.senders.ftp.FtpHelper;
-import com.mendhak.gpslogger.senders.gdocs.GDocsHelper;
-import com.mendhak.gpslogger.senders.opengts.OpenGTSHelper;
-import com.mendhak.gpslogger.senders.osm.OSMHelper;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -39,29 +34,9 @@ import java.util.List;
 public class FileSenderFactory
 {
 
-    public static IFileSender GetOsmSender(Context applicationContext, IActionListener callback)
-    {
-        return new OSMHelper(applicationContext, callback);
-    }
-
-    public static IFileSender GetDropBoxSender(Context applicationContext, IActionListener callback)
-    {
-        return new DropBoxHelper(applicationContext, callback);
-    }
-
-    public static IFileSender GetGDocsSender(Context applicationContext, IActionListener callback)
-    {
-        return new GDocsHelper(applicationContext, callback);
-    }
-
     public static IFileSender GetEmailSender(IActionListener callback)
     {
         return new AutoEmailHelper(callback);
-    }
-
-    public static IFileSender GetOpenGTSSender(Context applicationContext, IActionListener callback)
-    {
-        return new OpenGTSHelper(applicationContext, callback);
     }
 
     public static IFileSender GetFtpSender(Context applicationContext, IActionListener callback)
@@ -129,31 +104,9 @@ public class FileSenderFactory
     {
         List<IFileSender> senders = new ArrayList<IFileSender>();
 
-        if (GDocsHelper.IsLinked(applicationContext))
-        {
-            senders.add(new GDocsHelper(applicationContext, callback));
-        }
-
-        if (OSMHelper.IsOsmAuthorized(applicationContext))
-        {
-            senders.add(new OSMHelper(applicationContext, callback));
-        }
-
         if (AppSettings.isAutoEmailEnabled())
         {
             senders.add(new AutoEmailHelper(callback));
-        }
-
-        DropBoxHelper dh = new DropBoxHelper(applicationContext, callback);
-
-        if (dh.IsLinked())
-        {
-            senders.add(dh);
-        }
-
-        if (AppSettings.isAutoOpenGTSEnabled())
-        {
-            senders.add(new OpenGTSHelper(applicationContext, callback));
         }
 
         if(AppSettings.isAutoFtpEnabled())

@@ -38,15 +38,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.mendhak.gpslogger.senders.dropbox.DropBoxAuthorizationActivity"
-                  android:label="DropBox"
-                  android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="com.mendhak.gpslogger.DROPBOX_SETUP"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
         <activity android:name=".common.FileDialog.FileDialog" ></activity>
 
         <activity android:name="com.mendhak.gpslogger.Faqtivity"
@@ -64,17 +55,6 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:label="@string/osm_preferences_title"
-                  android:name="com.mendhak.gpslogger.senders.osm.OSMAuthorizationActivity">
-            <intent-filter>
-                <action android:name="com.mendhak.gpslogger.OSM_AUTHORIZE"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="gpslogger" android:host="authorize"/>
             </intent-filter>
         </activity>
 
@@ -96,12 +76,6 @@
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT"/>
                 <action android:name="com.mendhak.gpslogger.AUTOEMAIL_SETUP"/>
-            </intent-filter>
-        </activity>
-        <activity android:name="com.mendhak.gpslogger.senders.gdocs.GDocsSettingsActivity" android:label="@string/gdocs_settings_screenname">
-            <intent-filter>
-                <action android:name="com.mendhak.gpslogger.GDOCS_SETUP"/>
-                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
@@ -127,13 +101,6 @@
         <activity android:name=".shortcuts.ShortcutStop" android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-            </intent-filter>
-        </activity>
-        <activity android:name="com.mendhak.gpslogger.senders.opengts.OpenGTSActivity"
-                  android:label="@string/opengts_setup_title">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="com.mendhak.gpslogger.OPENGTS_SETUP"/>
             </intent-filter>
         </activity>
 
