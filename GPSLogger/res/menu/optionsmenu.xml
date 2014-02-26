@@ -25,7 +25,7 @@
             <item android:id="@+id/mnuEmailnow" android:title="@string/menu_email_now" android:icon="@drawable/ic_menu_send" />
             <item android:id="@+id/mnuFAQ" android:title="@string/menu_faq"
                   android:icon="@drawable/ic_menu_help" />
-
+            <item android:id="@+id/mnuLocationHistory" android:title="@string/menu_location_history" android:icon="@drawable/ic_menu_help" />
             <item android:id="@+id/mnuExit" android:title="@string/menu_exit"
                   android:icon="@drawable/ic_menu_close_clear_cancel"/>
         </menu>

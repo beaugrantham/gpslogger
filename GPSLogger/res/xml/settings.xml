@@ -3,13 +3,6 @@
                   android:key="gpslogger_preferences">
 
     <PreferenceScreen android:title="@string/pref_loggingto_title" android:summary="@string/pref_loggingto_summary">
-        <CheckBoxPreference android:key="log_gpx"
-                            android:title="@string/log_gpx_title" android:summary="@string/log_gpx_summary"
-                            android:defaultValue="true"/>
-
-        <CheckBoxPreference android:key="log_kml"
-                            android:summary="@string/log_kml_summary" android:title="@string/log_kml_title"/>
-
         <Preference android:title="@string/log_customurl_title"
                     android:summary="@string/log_customurl_summary" android:key="customurl_setup">
             <intent android:action="com.mendhak.gpslogger.CUSTOMURL_SETUP" />
@@ -122,23 +115,6 @@
             <Preference android:title="@string/autoemail_title"
                         android:summary="@string/autoemail_summary" android:key="autoemail_setup">
                 <intent android:action="com.mendhak.gpslogger.AUTOEMAIL_SETUP"/>
-            </Preference>
-
-            <Preference android:title="@string/osm_setup_title"
-                        android:summary="@string/osm_setup_summary" android:key="osm_setup">
-                <intent android:action="com.mendhak.gpslogger.OSM_AUTHORIZE"/>
-            </Preference>
-            <Preference android:title="@string/dropbox_setup_title" android:summary="@string/dropbox_setup_summary"
-                        android:key="dropbox_setup">
-                <intent android:action="com.mendhak.gpslogger.DROPBOX_SETUP"/>
-            </Preference>
-            <Preference android:title="@string/gdocs_setup_title"
-                        android:summary="@string/gdocs_setup_summary" android:key="gdocs_setup">
-                <intent android:action="com.mendhak.gpslogger.GDOCS_SETUP" />
-            </Preference>
-            <Preference android:title="@string/opengts_setup_title"
-                        android:summary="@string/opengts_setup_summary" android:key="opengts_setup">
-                <intent android:action="com.mendhak.gpslogger.OPENGTS_SETUP" />
             </Preference>
             <Preference android:title="@string/autoftp_setup_title"
                          android:summary="@string/autoftp_setup_summary" android:key="autoftp_setup">

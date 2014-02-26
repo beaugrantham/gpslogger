@@ -52,15 +52,6 @@ public class AppSettings extends Application
     private static int minimumAccuracy;
     private static boolean shouldSendZipFile;
 
-    private static boolean LogToOpenGTS;
-    private static boolean openGTSEnabled;
-    private static boolean autoOpenGTSEnabled;
-    private static String openGTSServer;
-    private static String openGTSServerPort;
-    private static String openGTSServerCommunicationMethod;
-    private static String openGTSServerPath;
-    private static String openGTSDeviceId;
-
     private static boolean autoFtpEnabled;
     private static String ftpServerName;
     private static int ftpPort;
@@ -453,87 +444,6 @@ public class AppSettings extends Application
     {
         AppSettings.autoSendEnabled = autoSendEnabled;
     }
-
-    public static boolean shouldLogToOpenGTS()
-    {
-        return LogToOpenGTS;
-    }
-
-    public static void setLogToOpenGTS(boolean logToOpenGTS)
-    {
-        AppSettings.LogToOpenGTS = logToOpenGTS;
-    }
-
-    public static boolean isOpenGTSEnabled()
-    {
-        return openGTSEnabled;
-    }
-
-    public static void setOpenGTSEnabled(boolean openGTSEnabled)
-    {
-        AppSettings.openGTSEnabled = openGTSEnabled;
-    }
-
-    public static boolean isAutoOpenGTSEnabled()
-    {
-        return autoOpenGTSEnabled;
-    }
-
-    public static void setAutoOpenGTSEnabled(boolean autoOpenGTSEnabled)
-    {
-        AppSettings.autoOpenGTSEnabled = autoOpenGTSEnabled;
-    }
-
-    public static String getOpenGTSServer()
-    {
-        return openGTSServer;
-    }
-
-    public static void setOpenGTSServer(String openGTSServer)
-    {
-        AppSettings.openGTSServer = openGTSServer;
-    }
-
-    public static String getOpenGTSServerPort()
-    {
-        return openGTSServerPort;
-    }
-
-    public static void setOpenGTSServerPort(String openGTSServerPort)
-    {
-        AppSettings.openGTSServerPort = openGTSServerPort;
-    }
-
-    public static String getOpenGTSServerCommunicationMethod()
-    {
-        return openGTSServerCommunicationMethod;
-    }
-
-    public static void setOpenGTSServerCommunicationMethod(String openGTSServerCommunicationMethod)
-    {
-        AppSettings.openGTSServerCommunicationMethod = openGTSServerCommunicationMethod;
-    }
-
-    public static String getOpenGTSServerPath()
-    {
-        return openGTSServerPath;
-    }
-
-    public static void setOpenGTSServerPath(String openGTSServerPath)
-    {
-        AppSettings.openGTSServerPath = openGTSServerPath;
-    }
-
-    public static String getOpenGTSDeviceId()
-    {
-        return openGTSDeviceId;
-    }
-
-    public static void setOpenGTSDeviceId(String openGTSDeviceId)
-    {
-        AppSettings.openGTSDeviceId = openGTSDeviceId;
-    }
-
 
     public static String getFtpServerName()
     {

@@ -52,24 +52,6 @@
 	<item>99</item>
 </string-array>
 
-
-
-<string-array name="osm_visibility_choices">
-	<item>private</item>
-	<item>public</item>
-	<item>trackable</item>
-	<item>identifiable</item>
-</string-array>
-
-<string-array name="opengts_server_communication_methods">
-    <item>HTTP/GET Based</item>
-    <!-- <item>Raw Socket based</item> -->
-</string-array>
-
-<string-array name="opengts_server_communication_methods_values">
-    <item>HTTP/GET</item>
-    <!-- <item>RAW</item> -->
-</string-array>
     <string-array name="autoftp_ssltls_entries">
         <item>@string/autoftp_ssltls_none</item>
         <item>@string/autoftp_ssltls_ssl</item>

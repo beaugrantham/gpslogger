@@ -252,13 +252,6 @@ public class Utilities
         AppSettings.setDebugToFile(prefs.getBoolean("debugtofile", false));
         AppSettings.setShouldSendZipFile(prefs.getBoolean("autosend_sendzip", true));
         AppSettings.setSmtpFrom(prefs.getString("smtp_from", ""));
-        AppSettings.setOpenGTSEnabled(prefs.getBoolean("opengts_enabled", false));
-        AppSettings.setAutoOpenGTSEnabled(prefs.getBoolean("autoopengts_enabled", false));
-        AppSettings.setOpenGTSServer(prefs.getString("opengts_server", ""));
-        AppSettings.setOpenGTSServerPort(prefs.getString("opengts_server_port", ""));
-        AppSettings.setOpenGTSServerCommunicationMethod(prefs.getString("opengts_server_communication_method", ""));
-        AppSettings.setOpenGTSServerPath(prefs.getString("autoopengts_server_path", ""));
-        AppSettings.setOpenGTSDeviceId(prefs.getString("opengts_device_id", ""));
 
         AppSettings.setAutoFtpEnabled(prefs.getBoolean("autoftp_enabled",false));
         AppSettings.setFtpServerName(prefs.getString("autoftp_server",""));
@@ -605,16 +598,6 @@ public class Utilities
                 && AppSettings.getSmtpUsername().length() > 0;
 
     }
-
-    public static boolean IsOpenGTSSetup()
-    {
-        return AppSettings.isOpenGTSEnabled() &&
-                AppSettings.getOpenGTSServer().length() > 0
-                && AppSettings.getOpenGTSServerPort().length() > 0
-                && AppSettings.getOpenGTSServerCommunicationMethod().length() > 0
-                && AppSettings.getOpenGTSDeviceId().length() > 0;
-    }
-
 
     public static boolean IsFtpSetup()
     {

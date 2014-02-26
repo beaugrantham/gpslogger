@@ -40,22 +40,14 @@
 
         <activity android:name=".common.FileDialog.FileDialog" ></activity>
 
+        <activity android:name="com.mendhak.gpslogger.LocationHistoryActivity"
+                  android:label="@string/location_history_screen_title"
+                  android:launchMode="singleTask"/>
+
+
         <activity android:name="com.mendhak.gpslogger.Faqtivity"
                   android:label="@string/faq_screen_title"
                   android:launchMode="singleTask">
-        </activity>
-
-        <activity
-                android:name="com.dropbox.client2.android.AuthActivity"
-                android:launchMode="singleTask"
-                android:configChanges="orientation|keyboard">
-            <intent-filter>
-                <!-- Change this to be db- followed by your app key -->
-                <data android:scheme="db-0unjsn38gpe3rwv"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
 
         <activity android:name="com.mendhak.gpslogger.GpsSettingsActivity"

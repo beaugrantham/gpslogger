@@ -40,18 +40,6 @@ public class FileLoggerFactory
 
         List<IFileLogger> loggers = new ArrayList<IFileLogger>();
 
-        if (AppSettings.shouldLogToGpx())
-        {
-            File gpxFile = new File(gpxFolder.getPath(), Session.getCurrentFileName() + ".gpx");
-            loggers.add(new Gpx10FileLogger(gpxFile,  Session.shouldAddNewTrackSegment(), Session.getSatelliteCount()));
-        }
-
-        if (AppSettings.shouldLogToKml())
-        {
-            File kmlFile = new File(gpxFolder.getPath(), Session.getCurrentFileName() + ".kml");
-            loggers.add(new Kml22FileLogger(kmlFile, Session.shouldAddNewTrackSegment()));
-        }
-
         if (AppSettings.shouldLogToPlainText())
         {
             File file = new File(gpxFolder.getPath(), Session.getCurrentFileName() + ".txt");

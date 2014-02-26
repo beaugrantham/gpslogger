@@ -41,6 +41,7 @@ import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
+import com.mendhak.gpslogger.db.LocationDbHelper;
 import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.IFileLogger;
 import com.mendhak.gpslogger.senders.FileSenderFactory;
@@ -60,10 +61,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      * General all purpose handler used for updating the UI from threads.
      */
     private static Intent serviceIntent;
-    private GpsLoggingService loggingService;
-    private MenuItem mnuAnnotate;
-    private Menu menu;
-
     /**
      * Provides a connection to the GPS Logging Service
      */
@@ -108,7 +105,9 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 OnSetAnnotation();
         }
     };
-
+    private GpsLoggingService loggingService;
+    private MenuItem mnuAnnotate;
+    private Menu menu;
 
     /**
      * Event raised when the form is created for the first time
@@ -138,7 +137,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         int currentVersionNumber = 0;
 
         int savedVersionNumber = prefs.getInt("SAVED_VERSION", 0);
-        String gdocsKey = prefs.getString("GDOCS_ACCOUNT_NAME", "");
 
         try
         {
@@ -149,16 +147,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         if (currentVersionNumber > savedVersionNumber)
         {
-            if(!Utilities.IsNullOrEmpty(gdocsKey))
-            {
-                Utilities.MsgBox("Google Docs users, please note",
-                        "A few weeks ago, Google Docs upload stopped working due to Google breaking an API.\r\n\r\n " +
-                        "I've had to rewrite this feature, but you will need to reauthenticate. \r\n\r\n " +
-                        "To do this, go to the Google Docs settings, clear your authorization and reauthorize yourself. \r\n\r\n " +
-                        "Also note that phones without Google Play can no longer use the Google Docs upload feature.\r\n\r\n" +
-                        "Please report on Github if there are any problems with the Google Docs upload.\r\n", this);
-            }
-
             SharedPreferences.Editor editor   = prefs.edit();
             editor.putInt("SAVED_VERSION", currentVersionNumber);
             editor.commit();
@@ -198,7 +186,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         Session.setBoundToService(true);
     }
 
-
     /**
      * Stops the service if it isn't logging. Also unbinds.
      */
@@ -223,7 +210,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     @Override
     protected void onPause()
     {
-
         Utilities.LogDebug("GpsMainActivity.onPause");
         StopAndUnbindServiceIfRequired();
         super.onPause();
@@ -232,11 +218,9 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     @Override
     protected void onDestroy()
     {
-
         Utilities.LogDebug("GpsMainActivity.onDestroy");
         StopAndUnbindServiceIfRequired();
         super.onDestroy();
-
     }
 
     /**
@@ -280,7 +264,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             Session.setSinglePointMode(false);
         }
     }
-
 
     public void SetSinglePointButtonEnabled(boolean enabled)
     {
@@ -351,9 +334,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             }
             else
             {
-
                 txtLoggingTo.setText(R.string.summary_loggingto_screen);
-
             }
 
             if (AppSettings.getMinimumSeconds() > 0)
@@ -366,7 +347,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             else
             {
                 txtFrequency.setText(R.string.summary_freq_max);
-
             }
 
 
@@ -442,7 +422,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         return super.onKeyDown(keyCode, event);
     }
 
-
     public boolean onKeyUp(int keyCode, KeyEvent event){
 
         if(keyCode == KeyEvent.KEYCODE_MENU){
@@ -468,7 +447,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         return true;
     }
-
 
     /**
      * Called when one of the menu items is selected.
@@ -504,6 +482,10 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 Intent faqtivity = new Intent(getApplicationContext(), Faqtivity.class);
                 startActivity(faqtivity);
                 break;
+           case R.id.mnuLocationHistory:
+                Intent locationHistory = new Intent(getApplicationContext(), LocationHistoryActivity.class);
+                startActivity(locationHistory);
+                break;
             case R.id.mnuExit:
                 loggingService.StopLogging();
                 loggingService.stopSelf();
@@ -512,7 +494,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
         return false;
     }
-
 
     private void EmailNow()
     {
@@ -524,15 +505,12 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
         else
         {
-
             Intent pref = new Intent().setClass(this, GpsSettingsActivity.class);
             pref.putExtra("autosend_preferencescreen", true);
             startActivity(pref);
-
         }
 
     }
-
 
     /**
      * Allows user to send a GPX/KML file along with location, or location only
@@ -546,6 +524,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         {
 
             final String locationOnly = getString(R.string.sharing_location_only);
+
             final File gpxFolder = new File(AppSettings.getGpsLoggerFolder());
             if (gpxFolder.exists())
             {
@@ -734,18 +713,17 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
     }
 
-
     /**
      * Annotates GPX and KML files, TXT files are ignored.
-     * 
+     *
      * The annotation is done like this:
      *     <wpt lat="##.##" lon="##.##">
      *         <name>user input</name>
      *     </wpt>
-     *    
+     *
      * The user is prompted for the content of the <name> tag. If a valid
      * description is given, the logging service starts in single point mode.
-     *  
+     *
      */
     private void Annotate()
     {
@@ -790,7 +768,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             }
 
         });
-        
+
         alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener()
         {
             public void onClick(DialogInterface dialog, int whichButton)
@@ -856,7 +834,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         Utilities.LogDebug("GpsMainActivity.OnClearAnnotation");
         SetAnnotationButtonMarked(false);
     }
-
 
     /**
      * Sets the message in the top status label.
@@ -1091,7 +1068,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
     }
 
-
     public void OnLocationUpdate(Location loc)
     {
         Utilities.LogDebug("GpsMainActivity.OnLocationUpdate");
@@ -1151,7 +1127,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     {
         return this;
     }
-
 
     @Override
     public void OnComplete()

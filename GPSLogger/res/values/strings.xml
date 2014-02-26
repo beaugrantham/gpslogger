@@ -326,21 +326,6 @@
     <string name="autoemail_from_summary">Some email providers require a from address. Use this only if you need it.
     </string>
 
-    <string name="gdocs_upload">Google Docs</string>
-
-    <string name="gdocs_settings_screenname">Google Docs Upload Settings</string>
-    <string name="gdocs_startauthorization">Authorize with Google Docs</string>
-    <string name="gdocs_authorize_summary">Takes you to Google Docs where you need to authorize GPSLogger</string>
-    <string name="gdocs_clearauthorization">Clear Authorization</string>
-    <string name="gdocs_clearauthorization_summary">Forgets local GDocs settings. To permanently revoke access, go to Google Account settings</string>
-    <string name="gdocs_setup_title">Google Docs</string>
-    <string name="gdocs_setup_summary">Authorize with Google Docs to allow uploads</string>
-    <string name="gdocs_test_summary">Upload a test file to Google Docs</string>
-    <string name="gdocs_test_title">Test upload</string>
-    <string name="gdocs_testupload_error">Could not upload a test file</string>
-    <string name="gdocs_testupload_success">Uploaded. Please check your Google Documents for a new file.</string>
-    <string name="gdocs_selectgoogleaccount">Select a Google Account</string>
-
     <string name="email_upload">Email a file</string>
 
     <string name="autoemail_sendto_csv">Comma separated email addresses</string>
@@ -367,26 +352,6 @@
     <string name="shortcut_stop">Stop</string>
     <string name="shortcut_pickaction">Pick an action</string>
 
-    <string name="log_opengts_title">Log to OpenGTS Server</string>
-    <string name="log_opengts_summary">Send GPRMC data to an online OpenGTS server.</string>
-    <string name="opengts_setup_title">OpenGTS Setup</string>
-    <string name="opengts_setup_summary">Send GPS traces to an OpenGTS server of your choice.</string>
-    <string name="opengts_enabled">Enable OpenGTS</string>
-    <string name="opengts_enabled_summary">Enable this OpenGTS server.</string>
-    <string name="autoopengts_autosend">Enable Automatically Send</string>
-    <string name="autoopengts_autosend_summary">Enables automatically sending the GPS traces.</string>
-    <string name="autoopengts_server_category">OpenGTS Settings</string>
-    <string name="autoopengts_invalid_form">Invalid values</string>
-    <string name="autoopengts_invalid_form_message">Please ensure that all of the fields have been filled in properly</string>
-    <string name="opengts_upload">Send to OpenGTS</string>
-    <string name="autoopengts_server">Server</string>
-    <string name="autoopengts_server_summary">Hostname or IP</string>
-    <string name="opengts_server_port">Port</string>
-    <string name="opengts_server_communication_method">Communication Method</string>
-    <string name="opengts_server_communication_method_summary">HTTP-based or Raw Socket Based communication</string>
-    <string name="autoopengts_server_path">Server Path</string>
-    <string name="autoopengts_server_path_summary">Optional and only for HTTP-based communication. For example \'/gprmc/Data\'</string>
-    <string name="autoopengts_device_id">Device ID</string>
     <string name="autoftp_server">FTP Server</string>
     <string name="autoftp_server_summary">IP address or hostname</string>
     <string name="autoftp_username">Username</string>
@@ -415,8 +380,10 @@
     <string name="autoftp_setup_title">FTP Setup</string>
     <string name="autoftp_setup_summary">Upload your files to an FTP(S) server. Note: This does not cover SFTP.</string>
 
+    <string name="location_history_screen_title">Location History</string>
     <string name="faq_screen_title">Frequently asked questions</string>
     <string name="menu_faq">Help and FAQ</string>
+    <string name="menu_location_history">Location History</string>
     <string name="gpsf_missing">Missing Service</string>
     <string name="gpsf_missing_description">You will need Google Play Services Framework to use this feature.</string>
     <string name="pref_loggingto_title">Log to...</string>
