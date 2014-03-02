@@ -120,6 +120,10 @@
                          android:summary="@string/autoftp_setup_summary" android:key="autoftp_setup">
                 <intent android:action="com.mendhak.gpslogger.AUTOFTP_SETUP" />
             </Preference>
+            <Preference android:title="@string/autopost_setup_title"
+                        android:summary="@string/autopost_setup_summary" android:key="autopost_setup">
+                <intent android:action="com.mendhak.gpslogger.AUTOPOST_SETUP" />
+            </Preference>
         </PreferenceCategory>
 
 

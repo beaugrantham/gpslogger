@@ -24,6 +24,7 @@ import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.senders.email.AutoEmailHelper;
 import com.mendhak.gpslogger.senders.ftp.FtpHelper;
+import com.mendhak.gpslogger.senders.post.AutoPostHelper;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -46,62 +47,24 @@ public class FileSenderFactory
 
     public static void SendFiles(Context applicationContext, IActionListener callback)
     {
-
-
-        final String currentFileName = Session.getCurrentFileName();
-
-        File gpxFolder = new File(AppSettings.getGpsLoggerFolder());
-
-        if (!gpxFolder.exists())
-        {
-            callback.OnFailure();
-            return;
-        }
-
-        List<File> files = new ArrayList<File>(Arrays.asList(gpxFolder.listFiles(new FilenameFilter()
-        {
-            @Override
-            public boolean accept(File file, String s)
-            {
-                return s.contains(currentFileName) && !s.contains("zip");
-            }
-        })));
-
-        if (files.size() == 0)
-        {
-            callback.OnFailure();
-            return;
-        }
-
-        if (AppSettings.shouldSendZipFile())
-        {
-            File zipFile = new File(gpxFolder.getPath(), currentFileName + ".zip");
-            ArrayList<String> filePaths = new ArrayList<String>();
-
-            for (File f : files)
-            {
-                filePaths.add(f.getAbsolutePath());
-            }
-
-            Utilities.LogInfo("Zipping file");
-            ZipHelper zh = new ZipHelper(filePaths.toArray(new String[filePaths.size()]), zipFile.getAbsolutePath());
-            zh.Zip();
-
-            //files.clear();
-            files.add(zipFile);
-        }
+//        if (!gpxFolder.exists())
+//        {
+//            callback.OnFailure();
+//            return;
+//        }
 
         List<IFileSender> senders = GetFileSenders(applicationContext, callback);
 
         for (IFileSender sender : senders)
         {
-            sender.UploadFile(files);
+            sender.UploadFile(null);
         }
     }
 
 
     public static List<IFileSender> GetFileSenders(Context applicationContext, IActionListener callback)
     {
+        Utilities.LogInfo("Getting available file senders");
         List<IFileSender> senders = new ArrayList<IFileSender>();
 
         if (AppSettings.isAutoEmailEnabled())
@@ -113,6 +76,14 @@ public class FileSenderFactory
         {
             senders.add(new FtpHelper(callback));
         }
+
+        if (AppSettings.isAutoPostEnabled())
+        {
+           Utilities.LogInfo("Creating AutoPostHelper");
+           senders.add(new AutoPostHelper(callback));
+        }
+
+       Utilities.LogInfo("Returning " + senders.size() + " senders");
 
         return senders;
 

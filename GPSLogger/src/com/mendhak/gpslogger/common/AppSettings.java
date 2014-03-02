@@ -39,6 +39,7 @@ public class AppSettings extends Application
     private static String newFileCreation;
     private static Float autoSendDelay = 0f;
     private static boolean autoSendEnabled = false;
+
     private static boolean autoEmailEnabled = false;
     private static String smtpServer;
     private static String smtpPort;
@@ -51,6 +52,9 @@ public class AppSettings extends Application
     private static int minimumDistance;
     private static int minimumAccuracy;
     private static boolean shouldSendZipFile;
+
+   private static boolean autoPostEnabled = false;
+    private static String postUrl;
 
     private static boolean autoFtpEnabled;
     private static String ftpServerName;
@@ -311,6 +315,15 @@ public class AppSettings extends Application
 
     }
 
+
+   public static boolean isAutoPostEnabled() {
+      return autoPostEnabled;
+   }
+
+   public static void setAutoPostEnabled(boolean autoPostEnabled) {
+      AppSettings.autoPostEnabled = autoPostEnabled;
+   }
+
     /**
      * @return the autoEmailEnabled
      */
@@ -569,4 +582,12 @@ public class AppSettings extends Application
     public static void setGpsLoggerFolder(String gpsLoggerFolder) {
         AppSettings.gpsLoggerFolder = gpsLoggerFolder;
     }
+
+   public static String getPostUrl() {
+      return postUrl;
+   }
+
+   public static void setPostUrl(String postUrl) {
+      AppSettings.postUrl = postUrl;
+   }
 }

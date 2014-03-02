@@ -230,6 +230,9 @@ public class Utilities
 
         AppSettings.setAutoSendEnabled(prefs.getBoolean("autosend_enabled", false));
 
+        AppSettings.setAutoPostEnabled(prefs.getBoolean("autopost_enabled", false));
+        AppSettings.setPostUrl(prefs.getString("post_url", "http://localhost:8080/post.do"));
+
         AppSettings.setAutoEmailEnabled(prefs.getBoolean("autoemail_enabled",
                 false));
 

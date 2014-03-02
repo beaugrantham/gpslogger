@@ -32,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver
     {
         try
         {
-            Utilities.LogInfo("Email alarm received");
+            Utilities.LogInfo("Auto Send alarm received");
             Intent serviceIntent = new Intent(context.getPackageName() + ".GpsLoggingService");
             serviceIntent.putExtra("emailAlarm", true);
             // Start the service in case it isn't already running

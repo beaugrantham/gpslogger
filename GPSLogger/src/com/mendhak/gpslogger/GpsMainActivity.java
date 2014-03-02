@@ -22,17 +22,14 @@ package com.mendhak.gpslogger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.*;
 import android.content.pm.PackageInfo;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.view.*;
 import android.widget.*;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
@@ -41,15 +38,9 @@ import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.db.LocationDbHelper;
 import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.IFileLogger;
-import com.mendhak.gpslogger.senders.FileSenderFactory;
-import com.mendhak.gpslogger.senders.IFileSender;
-import com.mendhak.gpslogger.senders.email.AutoEmailActivity;
-import com.mendhak.gpslogger.senders.ftp.AutoFtpActivity;
 
-import java.io.File;
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -61,6 +52,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      * General all purpose handler used for updating the UI from threads.
      */
     private static Intent serviceIntent;
+
     /**
      * Provides a connection to the GPS Logging Service
      */
@@ -105,6 +97,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 OnSetAnnotation();
         }
     };
+
     private GpsLoggingService loggingService;
     private MenuItem mnuAnnotate;
     private Menu menu;
@@ -403,8 +396,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         {
             Utilities.LogError("ShowPreferencesSummary", ex);
         }
-
-
     }
 
     /**
@@ -463,20 +454,11 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 Intent settingsActivity = new Intent(getApplicationContext(), GpsSettingsActivity.class);
                 startActivity(settingsActivity);
                 break;
-            case R.id.mnuFtp:
-                SendToFtp();
-                break;
-            case R.id.mnuEmail:
-                SelectAndEmailFile();
-                break;
             case R.id.mnuAnnotate:
                 Annotate();
                 break;
-            case R.id.mnuShare:
-                Share();
-                break;
             case R.id.mnuEmailnow:
-                EmailNow();
+                SendNow();
                 break;
             case R.id.mnuFAQ:
                 Intent faqtivity = new Intent(getApplicationContext(), Faqtivity.class);
@@ -495,13 +477,13 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         return false;
     }
 
-    private void EmailNow()
+    private void SendNow()
     {
-        Utilities.LogDebug("GpsMainActivity.EmailNow");
+        Utilities.LogDebug("GpsMainActivity.SendNow");
 
         if (AppSettings.isAutoSendEnabled())
         {
-            loggingService.ForceEmailLogFile();
+            loggingService.ForceSend();
         }
         else
         {
@@ -510,207 +492,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             startActivity(pref);
         }
 
-    }
-
-    /**
-     * Allows user to send a GPX/KML file along with location, or location only
-     * using a provider. 'Provider' means any application that can accept such
-     * an intent (Facebook, SMS, Twitter, Email, K-9, Bluetooth)
-     */
-    private void Share()
-    {
-        Utilities.LogDebug("GpsMainActivity.Share");
-        try
-        {
-
-            final String locationOnly = getString(R.string.sharing_location_only);
-
-            final File gpxFolder = new File(AppSettings.getGpsLoggerFolder());
-            if (gpxFolder.exists())
-            {
-
-                File[] enumeratedFiles = gpxFolder.listFiles();
-
-                Arrays.sort(enumeratedFiles, new Comparator<File>()
-                {
-                    public int compare(File f1, File f2)
-                    {
-                        return -1 * Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                    }
-                });
-
-                List<String> fileList = new ArrayList<String>(enumeratedFiles.length);
-
-                for (File f : enumeratedFiles)
-                {
-                    fileList.add(f.getName());
-                }
-
-                fileList.add(0, locationOnly);
-                final String[] files = fileList.toArray(new String[fileList.size()]);
-
-                final Dialog dialog = new Dialog(this);
-                dialog.setTitle(R.string.sharing_pick_file);
-                dialog.setContentView(R.layout.filelist);
-                ListView thelist = (ListView) dialog.findViewById(R.id.listViewFiles);
-
-                thelist.setAdapter(new ArrayAdapter<String>(getApplicationContext(),
-                        android.R.layout.simple_list_item_single_choice, files));
-
-                thelist.setOnItemClickListener(new OnItemClickListener()
-                {
-
-                    public void onItemClick(AdapterView<?> av, View v, int index, long arg)
-                    {
-                        dialog.dismiss();
-                        String chosenFileName = files[index];
-
-                        final Intent intent = new Intent(Intent.ACTION_SEND);
-
-                        // intent.setType("text/plain");
-                        intent.setType("*/*");
-
-                        if (chosenFileName.equalsIgnoreCase(locationOnly))
-                        {
-                            intent.setType("text/plain");
-                        }
-
-                        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.sharing_mylocation));
-                        if (Session.hasValidLocation())
-                        {
-                            String bodyText = getString(R.string.sharing_googlemaps_link,
-                                    String.valueOf(Session.getCurrentLatitude()),
-                                    String.valueOf(Session.getCurrentLongitude()));
-                            intent.putExtra(Intent.EXTRA_TEXT, bodyText);
-                            intent.putExtra("sms_body", bodyText);
-                        }
-
-                        if (chosenFileName.length() > 0
-                                && !chosenFileName.equalsIgnoreCase(locationOnly))
-                        {
-                            intent.putExtra(Intent.EXTRA_STREAM,
-                                    Uri.fromFile(new File(gpxFolder, chosenFileName)));
-                        }
-
-                        startActivity(Intent.createChooser(intent, getString(R.string.sharing_via)));
-
-                    }
-                });
-                dialog.show();
-            }
-            else
-            {
-                Utilities.MsgBox(getString(R.string.sorry), getString(R.string.no_files_found), this);
-            }
-        }
-        catch (Exception ex)
-        {
-            Utilities.LogError("Share", ex);
-        }
-
-    }
-
-    private void SelectAndEmailFile()
-    {
-        Utilities.LogDebug("GpsMainActivity.SelectAndEmailFile");
-
-        Intent settingsIntent = new Intent(getApplicationContext(), AutoEmailActivity.class);
-
-        if (!Utilities.IsEmailSetup())
-        {
-
-            startActivity(settingsIntent);
-        }
-        else
-        {
-            ShowFileListDialog(settingsIntent, FileSenderFactory.GetEmailSender(this));
-        }
-
-    }
-
-    private void SendToFtp()
-    {
-        Utilities.LogDebug("GpsMainActivity.SendToFTP");
-
-        Intent settingsIntent = new Intent(getApplicationContext(), AutoFtpActivity.class);
-
-        if(!Utilities.IsFtpSetup())
-        {
-            startActivity(settingsIntent);
-        }
-        else
-        {
-            IFileSender fs = FileSenderFactory.GetFtpSender(getApplicationContext(), this);
-            ShowFileListDialog(settingsIntent, fs);
-
-        }
-    }
-
-    private void ShowFileListDialog(final Intent settingsIntent, final IFileSender sender)
-    {
-
-        final File gpxFolder = new File(AppSettings.getGpsLoggerFolder());
-
-        if (gpxFolder.exists())
-        {
-            File[] enumeratedFiles = gpxFolder.listFiles(sender);
-
-            Arrays.sort(enumeratedFiles, new Comparator<File>()
-            {
-                public int compare(File f1, File f2)
-                {
-                    return -1 * Long.valueOf(f1.lastModified()).compareTo(f2.lastModified());
-                }
-            });
-
-            List<String> fileList = new ArrayList<String>(enumeratedFiles.length);
-
-            for (File f : enumeratedFiles)
-            {
-                fileList.add(f.getName());
-            }
-
-            final String settingsText = getString(R.string.menu_settings);
-
-            fileList.add(0, settingsText);
-            final String[] files = fileList.toArray(new String[fileList.size()]);
-
-            final Dialog dialog = new Dialog(this);
-            dialog.setTitle(R.string.osm_pick_file);
-            dialog.setContentView(R.layout.filelist);
-            ListView displayList = (ListView) dialog.findViewById(R.id.listViewFiles);
-
-            displayList.setAdapter(new ArrayAdapter<String>(getApplicationContext(),
-                    android.R.layout.simple_list_item_single_choice, files));
-
-            displayList.setOnItemClickListener(new OnItemClickListener()
-            {
-                public void onItemClick(AdapterView<?> av, View v, int index, long arg)
-                {
-
-                    dialog.dismiss();
-                    String chosenFileName = files[index];
-
-                    if (chosenFileName.equalsIgnoreCase(settingsText))
-                    {
-                        startActivity(settingsIntent);
-                    }
-                    else
-                    {
-                        Utilities.ShowProgress(GpsMainActivity.this, getString(R.string.please_wait),
-                                getString(R.string.please_wait));
-                        List<File> files = new ArrayList<File>();
-                        files.add(new File(gpxFolder, chosenFileName));
-                        sender.UploadFile(files);
-                    }
-                }
-            });
-            dialog.show();
-        }
-        else
-        {
-            Utilities.MsgBox(getString(R.string.sorry), getString(R.string.no_files_found), this);
-        }
     }
 
     /**

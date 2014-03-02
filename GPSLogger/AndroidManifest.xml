@@ -71,6 +71,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.mendhak.gpslogger.senders.post.AutoPostActivity"
+                  android:label="@string/autopost_setup_title" android:screenOrientation="portrait">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.mendhak.gpslogger.AUTOPOST_SETUP"/>
+            </intent-filter>
+        </activity>
+
         <activity android:name="com.mendhak.gpslogger.loggers.customurl.CustomUrlLoggerActivity"
                   android:label="Custom URL Logging">
             <intent-filter>
