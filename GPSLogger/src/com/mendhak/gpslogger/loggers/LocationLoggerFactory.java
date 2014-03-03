@@ -18,33 +18,19 @@
 package com.mendhak.gpslogger.loggers;
 
 import android.content.Context;
-import android.os.Environment;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.db.LocationDbHelper;
 import com.mendhak.gpslogger.loggers.customurl.HttpUrlLogger;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileLoggerFactory
+public class LocationLoggerFactory
 {
-    public static List<IFileLogger> GetFileLoggers(Context context)
+    public static List<ILocationLogger> getLoggers(Context context)
     {
-        File gpxFolder = new File(AppSettings.getGpsLoggerFolder());
-        if (!gpxFolder.exists())
-        {
-            gpxFolder.mkdirs();
-        }
-
-        List<IFileLogger> loggers = new ArrayList<IFileLogger>();
-
-        if (AppSettings.shouldLogToPlainText())
-        {
-            File file = new File(gpxFolder.getPath(), Session.getCurrentFileName() + ".txt");
-            loggers.add(new PlainTextFileLogger(file));
-        }
+        List<ILocationLogger> loggers = new ArrayList<ILocationLogger>();
 
         if(AppSettings.shouldLogToCustomUrl())
         {

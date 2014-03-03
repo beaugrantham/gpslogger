@@ -38,8 +38,8 @@ import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.loggers.FileLoggerFactory;
-import com.mendhak.gpslogger.loggers.IFileLogger;
+import com.mendhak.gpslogger.loggers.LocationLoggerFactory;
+import com.mendhak.gpslogger.loggers.ILocationLogger;
 
 import java.text.NumberFormat;
 import java.util.Date;
@@ -313,12 +313,12 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             TextView txtDistance = (TextView) findViewById(R.id.txtDistance);
             TextView txtAutoEmail = (TextView) findViewById(R.id.txtAutoEmail);
 
-            List<IFileLogger> loggers = FileLoggerFactory.GetFileLoggers(this);
+            List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
 
             if (loggers.size() > 0)
             {
 
-                ListIterator<IFileLogger> li = loggers.listIterator();
+                ListIterator<ILocationLogger> li = loggers.listIterator();
                 String logTo = li.next().getName();
                 while (li.hasNext())
                 {
@@ -391,8 +391,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 TableRow trAutoEmail = (TableRow) findViewById(R.id.trAutoEmail);
                 trAutoEmail.setVisibility(View.INVISIBLE);
             }
-
-            onFileName(Session.getCurrentFileName());
         }
         catch (Exception ex)
         {
@@ -855,18 +853,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     {
         SetSatelliteInfo(count);
 
-    }
-
-    public void onFileName(String newFileName)
-    {
-        if (newFileName == null || newFileName.length() <= 0)
-        {
-            return;
-        }
-
-        TextView txtFilename = (TextView) findViewById(R.id.txtFileName);
-
-        txtFilename.setText("");
     }
 
     public void OnStatusMessage(String message)

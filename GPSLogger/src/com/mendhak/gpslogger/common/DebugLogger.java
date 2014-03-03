@@ -30,7 +30,7 @@ import android.os.Environment;
 public class DebugLogger
 {
 
-    public static void Write(String message)
+    public static void log(String message)
     {
         Thread t = new Thread(new DebugLogWriter(message));
         t.start();
@@ -57,8 +57,7 @@ class DebugLogWriter implements Runnable
 
         try
         {
-            File gpxFolder = new File(
-                    AppSettings.getGpsLoggerFolder());
+            File gpxFolder = new File(AppSettings.getGpsLoggerFolder());
 
             if (!gpxFolder.exists())
             {

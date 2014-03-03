@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
-import com.mendhak.gpslogger.loggers.IFileLogger;
+import com.mendhak.gpslogger.loggers.ILocationLogger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map;
  * Time: 11:35 AM
  * To change this template use File | Settings | File Templates.
  */
-public class LocationDbHelper extends SQLiteOpenHelper implements IFileLogger {
+public class LocationDbHelper extends SQLiteOpenHelper implements ILocationLogger {
    public static final int DATABASE_VERSION = 1;
 
    public static final String DATABASE_NAME = "gpslogger.db";
@@ -70,7 +70,7 @@ public class LocationDbHelper extends SQLiteOpenHelper implements IFileLogger {
    }
 
    @Override
-   public void Write(Location loc) throws Exception {
+   public void log(Location loc) throws Exception {
       SQLiteDatabase db = this.getWritableDatabase();
 
       ContentValues values = new ContentValues();
@@ -88,7 +88,7 @@ public class LocationDbHelper extends SQLiteOpenHelper implements IFileLogger {
    }
 
    @Override
-   public void Annotate(String description, Location loc) throws Exception {
+   public void log(String description, Location loc) throws Exception {
       // TODO
    }
 

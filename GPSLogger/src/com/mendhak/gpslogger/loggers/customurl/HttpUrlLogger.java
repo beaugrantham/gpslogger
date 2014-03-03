@@ -21,7 +21,7 @@ import android.location.Location;
 import android.os.Build;
 import com.mendhak.gpslogger.common.RejectionHandler;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.loggers.IFileLogger;
+import com.mendhak.gpslogger.loggers.ILocationLogger;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,7 +31,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class HttpUrlLogger implements IFileLogger {
+public class HttpUrlLogger implements ILocationLogger {
 
     private final static ThreadPoolExecutor EXECUTOR = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS,
             new LinkedBlockingQueue<Runnable>(128), new RejectionHandler());
@@ -46,12 +46,12 @@ public class HttpUrlLogger implements IFileLogger {
     }
 
     @Override
-    public void Write(Location loc) throws Exception {
-        Annotate("", loc);
+    public void log(Location loc) throws Exception {
+        log("", loc);
     }
 
     @Override
-    public void Annotate(String description, Location loc) throws Exception {
+    public void log(String description, Location loc) throws Exception {
         HttpUrlLogHandler writeHandler = new HttpUrlLogHandler(customLoggingUrl, loc, description, satellites);
         Utilities.LogDebug(String.format("There are currently %s tasks waiting on the GPX10 EXECUTOR.", EXECUTOR.getQueue().size()));
         EXECUTOR.execute(writeHandler);

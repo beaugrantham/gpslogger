@@ -39,8 +39,8 @@ import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.loggers.FileLoggerFactory;
-import com.mendhak.gpslogger.loggers.IFileLogger;
+import com.mendhak.gpslogger.loggers.LocationLoggerFactory;
+import com.mendhak.gpslogger.loggers.ILocationLogger;
 import com.mendhak.gpslogger.senders.AlarmReceiver;
 import com.mendhak.gpslogger.senders.PublisherFactory;
 
@@ -339,10 +339,8 @@ public class GpsLoggingService extends Service implements IActionListener {
 
       this.getPreferences();
       this.Notify();
-      this.resetCurrentFileName(true);
       this.clearForm();
       this.startGpsManager();
-
    }
 
    /**
@@ -521,38 +519,6 @@ public class GpsLoggingService extends Service implements IActionListener {
    }
 
    /**
-    * Sets the current file name based on user preference.
-    */
-   private void resetCurrentFileName(boolean newLogEachStart) {
-
-      Utilities.LogDebug("GpsLoggingService.resetCurrentFileName");
-
-        /* Pick up saved settings, if any. (Saved static file) */
-      String newFileName = Session.getCurrentFileName();
-
-        /* Update the file name, if required. (New day, Re-start service) */
-      if (AppSettings.isStaticFile()) {
-         newFileName = AppSettings.getStaticFileName();
-         Session.setCurrentFileName(AppSettings.getStaticFileName());
-      } else if (AppSettings.shouldCreateNewFileOnceADay()) {
-         // 20100114.gpx
-         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-         newFileName = sdf.format(new Date());
-         Session.setCurrentFileName(newFileName);
-      } else if (newLogEachStart) {
-         // 20100114183329.gpx
-         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-         newFileName = sdf.format(new Date());
-         Session.setCurrentFileName(newFileName);
-      }
-
-      if (isMainFormVisible()) {
-         mainServiceClient.onFileName(newFileName);
-      }
-
-   }
-
-   /**
     * Gives a status message to the main service client to display
     *
     * @param status The status message
@@ -666,7 +632,6 @@ public class GpsLoggingService extends Service implements IActionListener {
       }
 
       Utilities.LogInfo("New location obtained");
-      resetCurrentFileName(false);
       Session.setLatestTimeStamp(System.currentTimeMillis());
       Session.setCurrentLocationInfo(loc);
       setDistanceTraveled(loc);
@@ -758,15 +723,15 @@ public class GpsLoggingService extends Service implements IActionListener {
     */
    private void writeToFile(Location loc) {
       Utilities.LogDebug("GpsLoggingService.writeToFile");
-      List<IFileLogger> loggers = FileLoggerFactory.GetFileLoggers(this);
+      List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
       Session.setAddNewTrackSegment(false);
       boolean atLeastOneAnnotationSuccess = false;
 
-      for (IFileLogger logger : loggers) {
+      for (ILocationLogger logger : loggers) {
          try {
-            logger.Write(loc);
+            logger.log(loc);
             if (Session.hasDescription()) {
-               logger.Annotate(Session.getDescription(), loc);
+               logger.log(Session.getDescription(), loc);
                atLeastOneAnnotationSuccess = true;
             }
          } catch (Exception e) {

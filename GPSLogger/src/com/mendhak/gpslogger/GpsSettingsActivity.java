@@ -97,16 +97,6 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
 
         Preference enableDisablePref = findPreference("enableDisableGps");
         enableDisablePref.setOnPreferenceClickListener(new AndroidLocationPreferenceClickListener());
-
-        /** 
-         * Logging Details - New file creation 
-         */
-        ListPreference newFilePref = (ListPreference) findPreference("new_file_creation");
-        newFilePref.setOnPreferenceChangeListener(new FileCreationPreferenceChangeListener());
-        /* Trigger artificially the listener and perform validations. */
-        newFilePref.getOnPreferenceChangeListener()
-                   .onPreferenceChange(newFilePref, newFilePref.getValue());
-
     }
 
 
@@ -195,26 +185,6 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
         public boolean onPreferenceClick(Preference preference)
         {
             startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
-            return true;
-        }
-    }
-
-    /** 
-     * New file creation preference listener, if enabled let the user 
-     * choose a file name. 
-     * 
-     * TODO: Prompt the user immediately for a new file name or confirmation of
-     * the current name.
-     */
-    private class FileCreationPreferenceChangeListener implements Preference.OnPreferenceChangeListener
-    {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            
-        	boolean isFileStaticEnabled = newValue.equals("static");
-            Preference prefFileStaticName = (Preference)findPreference("new_file_static_name");
-            prefFileStaticName.setEnabled(isFileStaticEnabled);
-
             return true;
         }
     }

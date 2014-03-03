@@ -27,14 +27,12 @@ public class AppSettings extends Application
     private static boolean useImperial = false;
     private static boolean newFileOnceADay;
     private static boolean preferCellTower;
-    private static boolean logToPlainText;
     private static boolean logToCustomUrl;
     private static String customLoggingUrl;
     private static boolean showInNotificationBar;
     private static int minimumSeconds;
     private static boolean keepFix;
     private static int retryInterval;
-    private static String newFileCreation;
     private static Float autoSendDelay = 0f;
     private static boolean autoSendEnabled = false;
 
@@ -53,12 +51,7 @@ public class AppSettings extends Application
     private static boolean autoPostEnabled = false;
     private static String postUrl;
 
-    private static String staticFileName;
-    private static boolean isStaticFile;
-
     private static String gpsLoggerFolder;
-
-
 
     /**
      * @return the useImperial
@@ -106,16 +99,6 @@ public class AppSettings extends Application
     static void setPreferCellTower(boolean preferCellTower)
     {
         AppSettings.preferCellTower = preferCellTower;
-    }
-
-    public static boolean shouldLogToPlainText()
-    {
-        return logToPlainText;
-    }
-
-    static void setLogToPlainText(boolean logToPlainText)
-    {
-        AppSettings.logToPlainText = logToPlainText;
     }
 
     /**
@@ -216,24 +199,6 @@ public class AppSettings extends Application
     {
         AppSettings.minimumAccuracy = minimumAccuracy;
     }
-
-
-    /**
-     * @return the newFileCreation
-     */
-    static String getNewFileCreation()
-    {
-        return newFileCreation;
-    }
-
-    /**
-     * @param newFileCreation the newFileCreation to set
-     */
-    static void setNewFileCreation(String newFileCreation)
-    {
-        AppSettings.newFileCreation = newFileCreation;
-    }
-
 
     /**
      * @return the autoSendDelay
@@ -402,26 +367,6 @@ public class AppSettings extends Application
         AppSettings.autoSendEnabled = autoSendEnabled;
     }
 
-    public static String getStaticFileName()
-    {
-        return staticFileName;
-    }
-
-    public static void setStaticFileName(String staticFileName)
-    {
-        AppSettings.staticFileName = staticFileName;
-    }
-
-    public static boolean isStaticFile()
-    {
-        return isStaticFile;
-    }
-
-    public static void setStaticFile(boolean staticFile)
-    {
-        AppSettings.isStaticFile = staticFile;
-    }
-
     public static boolean shouldLogToCustomUrl() {
         return logToCustomUrl;
     }
@@ -447,11 +392,11 @@ public class AppSettings extends Application
         AppSettings.gpsLoggerFolder = gpsLoggerFolder;
     }
 
-   public static String getPostUrl() {
-      return postUrl;
-   }
+    public static String getPostUrl() {
+       return postUrl;
+    }
 
-   public static void setPostUrl(String postUrl) {
-      AppSettings.postUrl = postUrl;
-   }
+    public static void setPostUrl(String postUrl) {
+       AppSettings.postUrl = postUrl;
+    }
 }

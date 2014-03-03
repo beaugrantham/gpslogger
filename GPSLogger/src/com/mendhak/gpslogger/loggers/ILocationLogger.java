@@ -19,12 +19,12 @@ package com.mendhak.gpslogger.loggers;
 
 import android.location.Location;
 
-public interface IFileLogger
+public interface ILocationLogger
 {
 
-    void Write(Location loc) throws Exception;
+    void log(Location loc) throws Exception;
 
-    void Annotate(String description, Location loc) throws Exception;
+    void log(String description, Location loc) throws Exception;
 
     String getName();
 

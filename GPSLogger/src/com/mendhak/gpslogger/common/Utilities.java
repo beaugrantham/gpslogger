@@ -28,12 +28,6 @@ import android.util.Log;
 
 import com.mendhak.gpslogger.R;
 
-import org.w3c.dom.Document;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -49,7 +43,7 @@ public class Utilities
     {
         if (AppSettings.isDebugToFile())
         {
-            DebugLogger.Write(message);
+            DebugLogger.log(message);
         }
     }
 
@@ -120,8 +114,6 @@ public class Utilities
 
         AppSettings.setUseImperial(prefs.getBoolean("useImperial", false));
 
-        AppSettings.setLogToPlainText(prefs.getBoolean("log_plain_text", false));
-
         AppSettings.setLogToCustomUrl(prefs.getBoolean("log_customurl_enabled", false));
         AppSettings.setCustomLoggingUrl(prefs.getString("log_customurl_url", ""));
 
@@ -181,30 +173,6 @@ public class Utilities
         else
         {
              AppSettings.setRetryInterval(60);
-        }
-
-        /** 
-         * New file creation preference: 
-         *     onceaday, 
-         *     fixed file (static),
-         *     every time the service starts 
-         */
-        AppSettings.setNewFileCreation(prefs.getString("new_file_creation", "onceaday"));
-
-        if (AppSettings.getNewFileCreation().equals("onceaday"))
-        {
-            AppSettings.setNewFileOnceADay(true);
-            AppSettings.setStaticFile(false);
-        }
-        else if(AppSettings.getNewFileCreation().equals("static"))
-        {
-            AppSettings.setStaticFile(true);
-            AppSettings.setStaticFileName(prefs.getString("new_file_static_name", "gpslogger"));
-        }
-        else /* new log with each start */
-        {
-            AppSettings.setNewFileOnceADay(false);
-            AppSettings.setStaticFile(false);
         }
 
         AppSettings.setAutoSendEnabled(prefs.getBoolean("autosend_enabled", false));

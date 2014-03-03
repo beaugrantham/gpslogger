@@ -17,7 +17,11 @@
 
 package com.mendhak.gpslogger;
 
-import android.location.*;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationProvider;
 import android.os.Bundle;
 import com.mendhak.gpslogger.common.Utilities;
 
@@ -39,8 +43,6 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
      */
     public void onLocationChanged(Location loc)
     {
-
-
         try
         {
             if (loc != null)
@@ -55,7 +57,6 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
             Utilities.LogError("GeneralLocationListener.onLocationChanged", ex);
             mainActivity.setStatus(ex.getMessage());
         }
-
     }
 
     public void onProviderDisabled(String provider)
