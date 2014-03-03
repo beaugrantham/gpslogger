@@ -252,10 +252,6 @@
     <string name="autosend_frequency_summary">How frequently log files should be sent</string>
     <string name="autosend_frequency">How often?</string>
 
-    <string name="autosend_sendzip_title">Send zip file</string>
-    <string name="autosend_sendzip_summary">Send zip file where applicable. Disable to send individual files, or if the zip option is not
-        working for you
-    </string>
     <string name="autosend_targets_category">Auto Send Targets</string>
     <string name="menu_email_now">Auto Send Now</string>
     <string name="autosend_sending">Auto sending</string>
@@ -267,34 +263,6 @@
     <string name="shortcut_start">Start</string>
     <string name="shortcut_stop">Stop</string>
     <string name="shortcut_pickaction">Pick an action</string>
-
-    <string name="autoftp_server">FTP Server</string>
-    <string name="autoftp_server_summary">IP address or hostname</string>
-    <string name="autoftp_username">Username</string>
-    <string name="autoftp_password">Password</string>
-    <string name="autoftp_advanced_settings">Advanced settings</string>
-    <string name="autoftp_port">Port</string>
-    <string name="autoftp_useftps">Use FTPS</string>
-    <string name="autoftp_useftps_summary">Enable FTP over SSL. SSL/TLS and Implicit are ignored if this is unchecked.</string>
-    <string name="autoftp_ssltls">SSL/TLS</string>
-    <string name="autoftp_ssltls_summary">None, SSL or TLS. Use none for regular unsecured connections.</string>
-    <string name="autoftp_ssltls_none">None</string>
-    <string name="autoftp_ssltls_ssl">SSL</string>
-    <string name="autoftp_ssltls_tls">TLS</string>
-    <string name="autoftp_implicit">Implicit FTP over SSL</string>
-    <string name="autoftp_implicit_summary">Leave unchecked if you don\'t know.</string>
-    <string name="autoftp_test">Test FTP Upload</string>
-    <string name="autoftp_test_summary">Upload a test file to the FTP server</string>
-    <string name="autoftp_testing">Testing FTP upload</string>
-    <string name="autoftp_invalid_settings">Invalid settings</string>
-    <string name="autoftp_invalid_summary">Some of your settings are invalid. Please ensure that you have filled out all
-        relevant fields.
-    </string>
-    <string name="autoftp_enabled">FTP enabled</string>
-    <string name="ftp_upload">FTP upload</string>
-
-    <string name="autoftp_setup_title">FTP Setup</string>
-    <string name="autoftp_setup_summary">Upload your files to an FTP(S) server. Note: This does not cover SFTP.</string>
 
     <string name="location_history_screen_title">Location History</string>
     <string name="faq_screen_title">Frequently asked questions</string>

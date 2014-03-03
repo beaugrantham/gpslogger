@@ -20,61 +20,42 @@ package com.mendhak.gpslogger.senders;
 import android.content.Context;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
-import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.senders.email.AutoEmailHelper;
-import com.mendhak.gpslogger.senders.ftp.FtpHelper;
 import com.mendhak.gpslogger.senders.post.AutoPostHelper;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class FileSenderFactory
+public class PublisherFactory
 {
 
-    public static IFileSender GetEmailSender(IActionListener callback)
-    {
-        return new AutoEmailHelper(callback);
-    }
-
-    public static IFileSender GetFtpSender(Context applicationContext, IActionListener callback)
-    {
-        return new FtpHelper(callback);
-    }
-
-    public static void SendFiles(Context applicationContext, IActionListener callback)
+    public static void publish(Context applicationContext, IActionListener callback)
     {
 //        if (!gpxFolder.exists())
 //        {
-//            callback.OnFailure();
+//            callback.onFailure();
 //            return;
 //        }
 
-        List<IFileSender> senders = GetFileSenders(applicationContext, callback);
+        List<IPublisher> senders = getPublishers(applicationContext, callback);
 
-        for (IFileSender sender : senders)
+        for (IPublisher sender : senders)
         {
-            sender.UploadFile(null);
+            sender.publish();
         }
     }
 
 
-    public static List<IFileSender> GetFileSenders(Context applicationContext, IActionListener callback)
+    public static List<IPublisher> getPublishers(Context applicationContext, IActionListener callback)
     {
-        Utilities.LogInfo("Getting available file senders");
-        List<IFileSender> senders = new ArrayList<IFileSender>();
+        Utilities.LogInfo("Getting available publishers");
+
+        List<IPublisher> senders = new ArrayList<IPublisher>();
 
         if (AppSettings.isAutoEmailEnabled())
         {
             senders.add(new AutoEmailHelper(callback));
-        }
-
-        if(AppSettings.isAutoFtpEnabled())
-        {
-            senders.add(new FtpHelper(callback));
         }
 
         if (AppSettings.isAutoPostEnabled())

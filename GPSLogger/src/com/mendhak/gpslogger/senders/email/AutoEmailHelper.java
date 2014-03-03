@@ -20,14 +20,12 @@ package com.mendhak.gpslogger.senders.email;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.senders.IFileSender;
+import com.mendhak.gpslogger.senders.IPublisher;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class AutoEmailHelper implements IActionListener, IFileSender
+public class AutoEmailHelper implements IActionListener, IPublisher
 {
 
     IActionListener callback;
@@ -38,27 +36,14 @@ public class AutoEmailHelper implements IActionListener, IFileSender
     }
 
     @Override
-    public void UploadFile(List<File> files)
+    public void publish()
     {
 
-        ArrayList<File> filesToSend = new ArrayList<File>();
-
-        //If a zip file exists, remove others
-        for (File f : files)
-        {
-            filesToSend.add(f);
-
-            if (f.getName().contains(".zip"))
-            {
-                filesToSend.clear();
-                filesToSend.add(f);
-                break;
-            }
-        }
+        throw new RuntimeException("Deprecated, to be removed.");
 
 
-        Thread t = new Thread(new AutoSendHandler(filesToSend.toArray(new File[filesToSend.size()]), this));
-        t.start();
+//        Thread t = new Thread(new AutoSendHandler(filesToSend.toArray(new File[filesToSend.size()]), this));
+//        t.start();
     }
 
 
@@ -73,20 +58,19 @@ public class AutoEmailHelper implements IActionListener, IFileSender
     }
 
 
-    public void OnComplete()
+    public void onComplete()
     {
         // This was a success
         Utilities.LogInfo("Email sent");
 
-        callback.OnComplete();
+        callback.onComplete();
     }
 
-    public void OnFailure()
+    public void onFailure()
     {
-        callback.OnFailure();
+        callback.onFailure();
     }
 
-    @Override
     public boolean accept(File dir, String name)
     {
         return name.toLowerCase().endsWith(".zip")
@@ -139,16 +123,16 @@ class AutoSendHandler implements Runnable
 
             if (m.send())
             {
-                helper.OnComplete();
+                helper.onComplete();
             }
             else
             {
-                helper.OnFailure();
+                helper.onFailure();
             }
         }
         catch (Exception e)
         {
-            helper.OnFailure();
+            helper.onFailure();
             Utilities.LogError("AutoSendHandler.run", e);
         }
 
@@ -215,16 +199,16 @@ class TestEmailHandler implements Runnable
             Utilities.LogInfo("Sending email...");
             if (m.send())
             {
-                helper.OnComplete();
+                helper.onComplete();
             }
             else
             {
-                helper.OnFailure();
+                helper.onFailure();
             }
         }
         catch (Exception e)
         {
-            helper.OnFailure();
+            helper.onFailure();
             Utilities.LogError("AutoSendHandler.run", e);
         }
 

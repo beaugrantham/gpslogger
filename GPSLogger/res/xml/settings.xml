@@ -107,18 +107,10 @@
                         android:entries="@array/autosend_frequencies" android:defaultValue="0"
                         android:entryValues="@array/autosend_values"/>
 
-        <CheckBoxPreference android:key="autosend_sendzip" android:defaultValue="true"
-                            android:title="@string/autosend_sendzip_title"
-                            android:summary="@string/autosend_sendzip_summary"/>
-
         <PreferenceCategory android:title="@string/autosend_targets_category">
             <Preference android:title="@string/autoemail_title"
                         android:summary="@string/autoemail_summary" android:key="autoemail_setup">
                 <intent android:action="com.mendhak.gpslogger.AUTOEMAIL_SETUP"/>
-            </Preference>
-            <Preference android:title="@string/autoftp_setup_title"
-                         android:summary="@string/autoftp_setup_summary" android:key="autoftp_setup">
-                <intent android:action="com.mendhak.gpslogger.AUTOFTP_SETUP" />
             </Preference>
             <Preference android:title="@string/autopost_setup_title"
                         android:summary="@string/autopost_setup_summary" android:key="autopost_setup">

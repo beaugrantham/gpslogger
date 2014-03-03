@@ -27,8 +27,6 @@ public class AppSettings extends Application
     private static boolean useImperial = false;
     private static boolean newFileOnceADay;
     private static boolean preferCellTower;
-    private static boolean logToKml;
-    private static boolean logToGpx;
     private static boolean logToPlainText;
     private static boolean logToCustomUrl;
     private static String customLoggingUrl;
@@ -51,19 +49,9 @@ public class AppSettings extends Application
     private static boolean debugToFile;
     private static int minimumDistance;
     private static int minimumAccuracy;
-    private static boolean shouldSendZipFile;
 
-   private static boolean autoPostEnabled = false;
+    private static boolean autoPostEnabled = false;
     private static String postUrl;
-
-    private static boolean autoFtpEnabled;
-    private static String ftpServerName;
-    private static int ftpPort;
-    private static String ftpUsername;
-    private static String ftpPassword;
-    private static boolean ftpUseFtps;
-    private static String ftpProtocol;
-    private static boolean ftpImplicit;
 
     private static String staticFileName;
     private static boolean isStaticFile;
@@ -118,39 +106,6 @@ public class AppSettings extends Application
     static void setPreferCellTower(boolean preferCellTower)
     {
         AppSettings.preferCellTower = preferCellTower;
-    }
-
-
-    /**
-     * @return the logToKml
-     */
-    public static boolean shouldLogToKml()
-    {
-        return logToKml;
-    }
-
-    /**
-     * @param logToKml the logToKml to set
-     */
-    static void setLogToKml(boolean logToKml)
-    {
-        AppSettings.logToKml = logToKml;
-    }
-
-    /**
-     * @return the logToGpx
-     */
-    public static boolean shouldLogToGpx()
-    {
-        return logToGpx;
-    }
-
-    /**
-     * @param logToGpx the logToGpx to set
-     */
-    static void setLogToGpx(boolean logToGpx)
-    {
-        AppSettings.logToGpx = logToGpx;
     }
 
     public static boolean shouldLogToPlainText()
@@ -412,17 +367,6 @@ public class AppSettings extends Application
         AppSettings.debugToFile = debugToFile;
     }
 
-
-    public static boolean shouldSendZipFile()
-    {
-        return shouldSendZipFile;
-    }
-
-    public static void setShouldSendZipFile(boolean shouldSendZipFile)
-    {
-        AppSettings.shouldSendZipFile = shouldSendZipFile;
-    }
-
     private static String getSmtpFrom()
     {
         return smtpFrom;
@@ -456,86 +400,6 @@ public class AppSettings extends Application
     public static void setAutoSendEnabled(boolean autoSendEnabled)
     {
         AppSettings.autoSendEnabled = autoSendEnabled;
-    }
-
-    public static String getFtpServerName()
-    {
-        return ftpServerName;
-    }
-
-    public static void setFtpServerName(String ftpServerName)
-    {
-        AppSettings.ftpServerName = ftpServerName;
-    }
-
-    public static int getFtpPort()
-    {
-        return ftpPort;
-    }
-
-    public static void setFtpPort(int ftpPort)
-    {
-        AppSettings.ftpPort = ftpPort;
-    }
-
-    public static String getFtpUsername()
-    {
-        return ftpUsername;
-    }
-
-    public static void setFtpUsername(String ftpUsername)
-    {
-        AppSettings.ftpUsername = ftpUsername;
-    }
-
-    public static String getFtpPassword()
-    {
-        return ftpPassword;
-    }
-
-    public static void setFtpPassword(String ftpPassword)
-    {
-        AppSettings.ftpPassword = ftpPassword;
-    }
-
-    public static boolean FtpUseFtps()
-    {
-        return ftpUseFtps;
-    }
-
-    public static void setFtpUseFtps(boolean ftpUseFtps)
-    {
-        AppSettings.ftpUseFtps = ftpUseFtps;
-    }
-
-    public static String getFtpProtocol()
-    {
-        return ftpProtocol;
-    }
-
-    public static void setFtpProtocol(String ftpProtocol)
-    {
-        AppSettings.ftpProtocol = ftpProtocol;
-    }
-
-    public static boolean FtpImplicit()
-    {
-        return ftpImplicit;
-    }
-
-    public static void setFtpImplicit(boolean ftpImplicit)
-    {
-        AppSettings.ftpImplicit = ftpImplicit;
-    }
-
-    public static boolean isAutoFtpEnabled()
-    {
-        return autoFtpEnabled;
-    }
-
-    public static void setAutoFtpEnabled(boolean autoFtpEnabled)
-    {
-        AppSettings.autoFtpEnabled = autoFtpEnabled;
     }
 
     public static String getStaticFileName()

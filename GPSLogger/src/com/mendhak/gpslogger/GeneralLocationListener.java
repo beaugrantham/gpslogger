@@ -46,14 +46,14 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
             if (loc != null)
             {
                 Utilities.LogVerbose("GeneralLocationListener.onLocationChanged");
-                mainActivity.OnLocationChanged(loc);
+                mainActivity.onLocationChanged(loc);
             }
 
         }
         catch (Exception ex)
         {
             Utilities.LogError("GeneralLocationListener.onLocationChanged", ex);
-            mainActivity.SetStatus(ex.getMessage());
+            mainActivity.setStatus(ex.getMessage());
         }
 
     }
@@ -62,7 +62,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
     {
         Utilities.LogInfo("Provider disabled");
         Utilities.LogDebug(provider);
-        mainActivity.RestartGpsManagers();
+        mainActivity.restartGpsManagers();
     }
 
     public void onProviderEnabled(String provider)
@@ -70,7 +70,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
 
         Utilities.LogInfo("Provider enabled");
         Utilities.LogDebug(provider);
-        mainActivity.RestartGpsManagers();
+        mainActivity.restartGpsManagers();
     }
 
     public void onStatusChanged(String provider, int status, Bundle extras)
@@ -78,7 +78,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         if (status == LocationProvider.OUT_OF_SERVICE)
         {
             Utilities.LogDebug(provider + " is out of service");
-            mainActivity.StopManagerAndResetAlarm();
+            mainActivity.stopManagerAndResetAlarm();
         }
 
         if (status == LocationProvider.AVAILABLE)
@@ -89,7 +89,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
         {
             Utilities.LogDebug(provider + " is temporarily unavailable");
-            mainActivity.StopManagerAndResetAlarm();
+            mainActivity.stopManagerAndResetAlarm();
         }
     }
 
@@ -100,7 +100,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         {
             case GpsStatus.GPS_EVENT_FIRST_FIX:
                 Utilities.LogDebug("GPS Event First Fix");
-                mainActivity.SetStatus(mainActivity.getString(R.string.fix_obtained));
+                mainActivity.setStatus(mainActivity.getString(R.string.fix_obtained));
                 break;
 
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
@@ -119,17 +119,17 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
                     count++;
                 }
 
-                mainActivity.SetSatelliteInfo(count);
+                mainActivity.setSatelliteInfo(count);
                 break;
 
             case GpsStatus.GPS_EVENT_STARTED:
                 Utilities.LogInfo("GPS started, waiting for fix");
-                mainActivity.SetStatus(mainActivity.getString(R.string.started_waiting));
+                mainActivity.setStatus(mainActivity.getString(R.string.started_waiting));
                 break;
 
             case GpsStatus.GPS_EVENT_STOPPED:
                 Utilities.LogInfo("GPS Stopped");
-                mainActivity.SetStatus(mainActivity.getString(R.string.gps_stopped));
+                mainActivity.setStatus(mainActivity.getString(R.string.gps_stopped));
                 break;
 
         }

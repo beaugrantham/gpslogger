@@ -20,7 +20,8 @@ package com.mendhak.gpslogger.common;
 public interface IActionListener
 {
 
-    public void OnComplete();
+    void onComplete();
 
-    public void OnFailure();
+    void onFailure();
+
 }

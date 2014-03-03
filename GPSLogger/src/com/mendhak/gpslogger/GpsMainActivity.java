@@ -42,7 +42,9 @@ import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.IFileLogger;
 
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.ListIterator;
 
 public class GpsMainActivity extends SherlockActivity implements OnCheckedChangeListener,
         IGpsLoggerServiceClient, View.OnClickListener, IActionListener
@@ -67,7 +69,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         public void onServiceConnected(ComponentName name, IBinder service)
         {
             loggingService = ((GpsLoggingService.GpsLoggingBinder) service).getService();
-            GpsLoggingService.SetServiceClient(GpsMainActivity.this);
+            GpsLoggingService.setServiceClient(GpsMainActivity.this);
 
 
             Button buttonSinglePoint = (Button) findViewById(R.id.buttonSinglePoint);
@@ -227,13 +229,13 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         {
             GetPreferences();
             SetSinglePointButtonEnabled(false);
-            loggingService.SetupAutoSendTimers();
-            loggingService.StartLogging();
+            loggingService.setupAutoSendTimers();
+            loggingService.startLogging();
         }
         else
         {
             SetSinglePointButtonEnabled(true);
-            loggingService.StopLogging();
+            loggingService.stopLogging();
         }
     }
 
@@ -247,12 +249,12 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         if (!Session.isStarted())
         {
             SetMainButtonEnabled(false);
-            loggingService.StartLogging();
+            loggingService.startLogging();
             Session.setSinglePointMode(true);
         }
         else if (Session.isStarted() && Session.isSinglePointMode())
         {
-            loggingService.StopLogging();
+            loggingService.stopLogging();
             SetMainButtonEnabled(true);
             Session.setSinglePointMode(false);
         }
@@ -455,10 +457,10 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 startActivity(settingsActivity);
                 break;
             case R.id.mnuAnnotate:
-                Annotate();
+                annotate();
                 break;
             case R.id.mnuEmailnow:
-                SendNow();
+                publishNow();
                 break;
             case R.id.mnuFAQ:
                 Intent faqtivity = new Intent(getApplicationContext(), Faqtivity.class);
@@ -469,7 +471,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 startActivity(locationHistory);
                 break;
             case R.id.mnuExit:
-                loggingService.StopLogging();
+                loggingService.stopLogging();
                 loggingService.stopSelf();
                 finish();
                 break;
@@ -477,13 +479,13 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         return false;
     }
 
-    private void SendNow()
+    private void publishNow()
     {
-        Utilities.LogDebug("GpsMainActivity.SendNow");
+        Utilities.LogDebug("GpsMainActivity.publishNow");
 
         if (AppSettings.isAutoSendEnabled())
         {
-            loggingService.ForceSend();
+            loggingService.forcePublish();
         }
         else
         {
@@ -495,27 +497,11 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     }
 
     /**
-     * Annotates GPX and KML files, TXT files are ignored.
-     *
-     * The annotation is done like this:
-     *     <wpt lat="##.##" lon="##.##">
-     *         <name>user input</name>
-     *     </wpt>
-     *
-     * The user is prompted for the content of the <name> tag. If a valid
-     * description is given, the logging service starts in single point mode.
-     *
+     * Collect a single point and annotate with a description.
      */
-    private void Annotate()
+    private void annotate()
     {
-        Utilities.LogDebug("GpsMainActivity.Annotate");
-
-        if (!AppSettings.shouldLogToGpx() && !AppSettings.shouldLogToKml() && !AppSettings.shouldLogToCustomUrl())
-        {
-            Toast.makeText(getApplicationContext(), getString(R.string.annotation_requires_logging), 1000).show();
-
-            return;
-        }
+        Utilities.LogDebug("GpsMainActivity.annotate");
 
         AlertDialog.Builder alert = new AlertDialog.Builder(GpsMainActivity.this);
 
@@ -544,7 +530,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                     OnSetAnnotation();
                     if (!Session.isStarted()) // logOnce will start single point mode.
                         SetMainButtonEnabled(false);
-                    loggingService.LogOnce();
+                    loggingService.logOnce();
                 }
             }
 
@@ -623,7 +609,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      */
     private void SetStatus(String message)
     {
-        Utilities.LogDebug("GpsMainActivity.SetStatus: " + message);
+        Utilities.LogDebug("GpsMainActivity.setStatus: " + message);
         TextView tvStatus = (TextView) findViewById(R.id.textStatus);
         tvStatus.setText(message);
         Utilities.LogInfo(message);
@@ -838,7 +824,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             return;
         }
 
-        if(!AppSettings.shouldLogToGpx() && !AppSettings.shouldLogToKml() && !AppSettings.shouldLogToCustomUrl())
+        if(!AppSettings.shouldLogToCustomUrl())
         {
             // mnuAnnotate.setIcon(R.drawable.ic_menu_edit_disabled);
            mnuAnnotate.setIcon(R.drawable.ic_menu_edit_active);
@@ -858,7 +844,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         if (Session.isSinglePointMode())
         {
-            loggingService.StopLogging();
+            loggingService.stopLogging();
             SetMainButtonEnabled(true);
             Session.setSinglePointMode(false);
         }
@@ -880,18 +866,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         TextView txtFilename = (TextView) findViewById(R.id.txtFileName);
 
-        if (AppSettings.shouldLogToGpx() || AppSettings.shouldLogToKml())
-        {
-
-
-            txtFilename.setText(Session.getCurrentFileName() + " (" + AppSettings.getGpsLoggerFolder() + ")" );
-        }
-        else
-        {
-            txtFilename.setText("");
-        }
-
-
+        txtFilename.setText("");
     }
 
     public void OnStatusMessage(String message)
@@ -910,13 +885,13 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     }
 
     @Override
-    public void OnComplete()
+    public void onComplete()
     {
         Utilities.HideProgress();
     }
 
     @Override
-    public void OnFailure()
+    public void onFailure()
     {
         Utilities.HideProgress();
     }

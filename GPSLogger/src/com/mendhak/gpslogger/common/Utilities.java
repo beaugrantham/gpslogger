@@ -27,7 +27,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.mendhak.gpslogger.R;
-import com.mendhak.gpslogger.senders.ftp.FtpHelper;
 
 import org.w3c.dom.Document;
 
@@ -117,47 +116,35 @@ public class Utilities
     {
 
         Utilities.LogInfo("Getting preferences");
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         AppSettings.setUseImperial(prefs.getBoolean("useImperial", false));
-
-        AppSettings.setLogToKml(prefs.getBoolean("log_kml", false));
-
-        AppSettings.setLogToGpx(prefs.getBoolean("log_gpx", true));
 
         AppSettings.setLogToPlainText(prefs.getBoolean("log_plain_text", false));
 
         AppSettings.setLogToCustomUrl(prefs.getBoolean("log_customurl_enabled", false));
         AppSettings.setCustomLoggingUrl(prefs.getString("log_customurl_url", ""));
 
-        AppSettings.setShowInNotificationBar(prefs.getBoolean(
-                "show_notification", true));
+        AppSettings.setShowInNotificationBar(prefs.getBoolean("show_notification", true));
 
-        AppSettings.setPreferCellTower(prefs.getBoolean("prefer_celltower",
-                false));
+        AppSettings.setPreferCellTower(prefs.getBoolean("prefer_celltower", false));
 
-
-        String minimumDistanceString = prefs.getString(
-                "distance_before_logging", "0");
+        String minimumDistanceString = prefs.getString("distance_before_logging", "0");
 
         if (minimumDistanceString != null && minimumDistanceString.length() > 0)
         {
-            AppSettings.setMinimumDistanceInMeters(Integer
-                    .valueOf(minimumDistanceString));
+            AppSettings.setMinimumDistanceInMeters(Integer.valueOf(minimumDistanceString));
         }
         else
         {
             AppSettings.setMinimumDistanceInMeters(0);
         }
 
-        String minimumAccuracyString = prefs.getString(
-                "accuracy_before_logging", "0");
+        String minimumAccuracyString = prefs.getString("accuracy_before_logging", "0");
 
         if (minimumAccuracyString != null && minimumAccuracyString.length() > 0)
         {
-            AppSettings.setMinimumAccuracyInMeters(Integer
-                    .valueOf(minimumAccuracyString));
+            AppSettings.setMinimumAccuracyInMeters(Integer.valueOf(minimumAccuracyString));
         }
         else
         {
@@ -166,37 +153,30 @@ public class Utilities
 
         if (AppSettings.shouldUseImperial())
         {
-            AppSettings.setMinimumDistanceInMeters(Utilities.FeetToMeters(AppSettings
-                    .getMinimumDistanceInMeters()));
+            AppSettings.setMinimumDistanceInMeters(Utilities.FeetToMeters(AppSettings.getMinimumDistanceInMeters()));
 
-            AppSettings.setMinimumAccuracyInMeters(Utilities.FeetToMeters(AppSettings
-                    .getMinimumAccuracyInMeters()));
+            AppSettings.setMinimumAccuracyInMeters(Utilities.FeetToMeters(AppSettings.getMinimumAccuracyInMeters()));
         }
 
 
-        String minimumSecondsString = prefs.getString("time_before_logging",
-                "60");
+        String minimumSecondsString = prefs.getString("time_before_logging", "60");
 
         if (minimumSecondsString != null && minimumSecondsString.length() > 0)
         {
-            AppSettings
-                    .setMinimumSeconds(Integer.valueOf(minimumSecondsString));
+            AppSettings.setMinimumSeconds(Integer.valueOf(minimumSecondsString));
         }
         else
         {
             AppSettings.setMinimumSeconds(60);
         }
 
-        AppSettings.setKeepFix(prefs.getBoolean("keep_fix",
-                false));
+        AppSettings.setKeepFix(prefs.getBoolean("keep_fix", false));
 
-        String retryIntervalString = prefs.getString("retry_time",
-                "60");
+        String retryIntervalString = prefs.getString("retry_time", "60");
 
         if (retryIntervalString != null && retryIntervalString.length() > 0)
         {
-            AppSettings
-                    .setRetryInterval(Integer.valueOf(retryIntervalString));
+            AppSettings.setRetryInterval(Integer.valueOf(retryIntervalString));
         }
         else
         {
@@ -209,8 +189,7 @@ public class Utilities
          *     fixed file (static),
          *     every time the service starts 
          */
-        AppSettings.setNewFileCreation(prefs.getString("new_file_creation",
-                "onceaday"));
+        AppSettings.setNewFileCreation(prefs.getString("new_file_creation", "onceaday"));
 
         if (AppSettings.getNewFileCreation().equals("onceaday"))
         {
@@ -233,8 +212,7 @@ public class Utilities
         AppSettings.setAutoPostEnabled(prefs.getBoolean("autopost_enabled", false));
         AppSettings.setPostUrl(prefs.getString("post_url", "http://localhost:8080/post.do"));
 
-        AppSettings.setAutoEmailEnabled(prefs.getBoolean("autoemail_enabled",
-                false));
+        AppSettings.setAutoEmailEnabled(prefs.getBoolean("autoemail_enabled", false));
 
         if (Float.valueOf(prefs.getString("autosend_frequency", "0")) >= 8f)
         {
@@ -243,8 +221,7 @@ public class Utilities
             editor.commit();
         }
 
-        AppSettings.setAutoSendDelay(Float.valueOf(prefs.getString(
-                "autosend_frequency", "0")));
+        AppSettings.setAutoSendDelay(Float.valueOf(prefs.getString("autosend_frequency", "0")));
 
         AppSettings.setSmtpServer(prefs.getString("smtp_server", ""));
         AppSettings.setSmtpPort(prefs.getString("smtp_port", "25"));
@@ -253,19 +230,9 @@ public class Utilities
         AppSettings.setSmtpPassword(prefs.getString("smtp_password", ""));
         AppSettings.setAutoEmailTargets(prefs.getString("autoemail_target", ""));
         AppSettings.setDebugToFile(prefs.getBoolean("debugtofile", false));
-        AppSettings.setShouldSendZipFile(prefs.getBoolean("autosend_sendzip", true));
         AppSettings.setSmtpFrom(prefs.getString("smtp_from", ""));
 
-        AppSettings.setAutoFtpEnabled(prefs.getBoolean("autoftp_enabled",false));
-        AppSettings.setFtpServerName(prefs.getString("autoftp_server",""));
-        AppSettings.setFtpUsername(prefs.getString("autoftp_username",""));
-        AppSettings.setFtpPassword(prefs.getString("autoftp_password",""));
-        AppSettings.setFtpPort(Integer.valueOf(prefs.getString("autoftp_port", "21")));
-        AppSettings.setFtpUseFtps(prefs.getBoolean("autoftp_useftps", false));
-        AppSettings.setFtpProtocol(prefs.getString("autoftp_ssltls",""));
-        AppSettings.setFtpImplicit(prefs.getBoolean("autoftp_implicit", false));
         AppSettings.setGpsLoggerFolder(prefs.getString("gpslogger_folder", Environment.getExternalStorageDirectory() + "/GPSLogger"));
-
     }
 
     public static void ShowProgress(Context ctx, String title, String message)
@@ -592,26 +559,6 @@ public class Utilities
         return MetersToFeet((int) m);
     }
 
-    public static boolean IsEmailSetup()
-    {
-        return AppSettings.isAutoEmailEnabled()
-                && AppSettings.getAutoEmailTargets().length() > 0
-                && AppSettings.getSmtpServer().length() > 0
-                && AppSettings.getSmtpPort().length() > 0
-                && AppSettings.getSmtpUsername().length() > 0;
-
-    }
-
-    public static boolean IsFtpSetup()
-    {
-
-        FtpHelper helper = new FtpHelper(null);
-
-        return helper.ValidSettings(AppSettings.getFtpServerName(), AppSettings.getFtpUsername(),
-                AppSettings.getFtpPassword(), AppSettings.getFtpPort(), AppSettings.FtpUseFtps(),
-                AppSettings.getFtpProtocol(), AppSettings.FtpImplicit());
-    }
-
     /**
      * Uses the Haversine formula to calculate the distnace between to lat-long coordinates
      *
@@ -645,180 +592,5 @@ public class Utilities
         return 6371 * c * 1000; //Distance in meters
 
     }
-
-
-    /**
-     * Checks if a string is null or empty
-     *
-     * @param text
-     * @return
-     */
-    public static boolean IsNullOrEmpty(String text)
-    {
-        return text == null || text.length() == 0;
-    }
-
-
-    public static byte[] GetByteArrayFromInputStream(InputStream is)
-    {
-
-        try
-        {
-            int length;
-            int size = 1024;
-            byte[] buffer;
-
-            if (is instanceof ByteArrayInputStream)
-            {
-                size = is.available();
-                buffer = new byte[size];
-                is.read(buffer, 0, size);
-            }
-            else
-            {
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                buffer = new byte[size];
-                while ((length = is.read(buffer, 0, size)) != -1)
-                {
-                    outputStream.write(buffer, 0, length);
-                }
-
-                buffer = outputStream.toByteArray();
-            }
-            return buffer;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                is.close();
-            }
-            catch (Exception e)
-            {
-                Utilities.LogWarning("GetStringFromInputStream - could not close stream");
-            }
-        }
-
-        return null;
-
-    }
-
-    /**
-     * Loops through an input stream and converts it into a string, then closes the input stream
-     *
-     * @param is
-     * @return
-     */
-    public static String GetStringFromInputStream(InputStream is)
-    {
-        String line;
-        StringBuilder total = new StringBuilder();
-
-        // Wrap a BufferedReader around the InputStream
-        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-
-        // Read response until the end
-        try
-        {
-            while ((line = rd.readLine()) != null)
-            {
-                total.append(line);
-            }
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                is.close();
-            }
-            catch (Exception e)
-            {
-                Utilities.LogWarning("GetStringFromInputStream - could not close stream");
-            }
-        }
-
-        // Return full string
-        return total.toString();
-    }
-
-
-    /**
-     * Converts an input stream containing an XML response into an XML Document object
-     *
-     * @param stream
-     * @return
-     */
-    public static Document GetDocumentFromInputStream(InputStream stream)
-    {
-        Document doc;
-
-        try
-        {
-            DocumentBuilderFactory xmlFactory = DocumentBuilderFactory.newInstance();
-            xmlFactory.setNamespaceAware(true);
-            DocumentBuilder builder = xmlFactory.newDocumentBuilder();
-            doc = builder.parse(stream);
-        }
-        catch (Exception e)
-        {
-            doc = null;
-        }
-
-        return doc;
-    }
-
-    /**
-     * Gets the GPSLogger-specific MIME type to use for a given filename/extension
-     *
-     * @param fileName
-     * @return
-     */
-    public static String GetMimeTypeFromFileName(String fileName)
-    {
-
-        if (fileName == null || fileName.length() == 0)
-        {
-            return "";
-        }
-
-
-        int pos = fileName.lastIndexOf(".");
-        if (pos == -1)
-        {
-            return "application/octet-stream";
-        }
-        else
-        {
-
-            String extension = fileName.substring(pos + 1, fileName.length());
-
-
-            if (extension.equalsIgnoreCase("gpx"))
-            {
-                return "application/gpx+xml";
-            }
-            else if (extension.equalsIgnoreCase("kml"))
-            {
-                return "application/vnd.google-earth.kml+xml";
-            }
-            else if (extension.equalsIgnoreCase("zip"))
-            {
-                return "application/zip";
-            }
-        }
-
-        //Unknown mime type
-        return "application/octet-stream";
-
-    }
-
 
 }

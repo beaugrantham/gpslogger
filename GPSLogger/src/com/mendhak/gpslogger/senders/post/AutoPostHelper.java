@@ -2,11 +2,7 @@ package com.mendhak.gpslogger.senders.post;
 
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.senders.IFileSender;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import com.mendhak.gpslogger.senders.IPublisher;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +11,7 @@ import java.util.List;
  * Time: 9:41 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AutoPostHelper implements IActionListener, IFileSender {
+public class AutoPostHelper implements IActionListener, IPublisher {
 
    IActionListener callback;
 
@@ -25,53 +21,29 @@ public class AutoPostHelper implements IActionListener, IFileSender {
    }
 
    @Override
-   public void UploadFile(List<File> files)
+   public void publish()
    {
-      Utilities.LogInfo("AutoPostHelper - UploadFile");
+      Utilities.LogInfo("AutoPostHelper - publish");
 
       // TODO
-      // This sender no longer deals with files
-      // Replace interface as appropriate for sending db records
-//      ArrayList<File> filesToSend = new ArrayList<File>();
-
-//      //If a zip file exists, remove others
-//      for (File f : files)
-//      {
-//         filesToSend.add(f);
-//
-//         if (f.getName().contains(".zip"))
-//         {
-//            filesToSend.clear();
-//            filesToSend.add(f);
-//            break;
-//         }
-//      }
-
+      // Query for un-published records, pass into new thread below
 
 //      Thread t = new Thread(new AutoSendHandler(filesToSend.toArray(new File[filesToSend.size()]), this));
       Thread t = new Thread(new AutoSendHandler(this));
       t.start();
    }
 
-   public void OnComplete()
+   public void onComplete()
    {
       // This was a success
       Utilities.LogInfo("POST complete");
 
-      callback.OnComplete();
+      callback.onComplete();
    }
 
-   public void OnFailure()
+   public void onFailure()
    {
-      callback.OnFailure();
-   }
-
-   @Override
-   public boolean accept(File dir, String name)
-   {
-      return name.toLowerCase().endsWith(".zip")
-              || name.toLowerCase().endsWith(".gpx")
-              || name.toLowerCase().endsWith(".kml");
+      callback.onFailure();
    }
 
 }
@@ -102,18 +74,18 @@ class AutoSendHandler implements Runnable
 
 //         if (success)
 //         {
-//            helper.OnComplete();
+//            helper.onComplete();
 //         }
 //         else
 //         {
-//            helper.OnFailure();
+//            helper.onFailure();
 //         }
 
-         helper.OnComplete();
+         helper.onComplete();
       }
       catch (Exception e)
       {
-         helper.OnFailure();
+         helper.onFailure();
          Utilities.LogError("AutoSendHandler.run", e);
       }
 

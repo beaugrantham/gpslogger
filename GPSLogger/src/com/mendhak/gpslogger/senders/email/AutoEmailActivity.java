@@ -256,12 +256,12 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
                 getString(R.string.autoemail_testresult_success), this);
     }
 
-    public void OnComplete()
+    public void onComplete()
     {
         handler.post(successfullySent);
     }
 
-    public void OnFailure()
+    public void onFailure()
     {
 
         handler.post(failedSend);

@@ -131,11 +131,11 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
       Utilities.MsgBox(getString(R.string.success), getString(R.string.success), this);
    }
 
-   public void OnComplete() {
+   public void onComplete() {
       handler.post(successfullySent);
    }
 
-   public void OnFailure() {
+   public void onFailure() {
 
       handler.post(failedSend);
 
