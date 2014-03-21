@@ -127,8 +127,8 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
 
    private void SuccessfulSending() {
       Utilities.HideProgress();
-      // Utilities.MsgBox(getString(R.string.success), getString(R.string.autopost_success), this);
-      Utilities.MsgBox(getString(R.string.success), getString(R.string.success), this);
+      Utilities.MsgBox(getString(R.string.success), getString(R.string.autopost_success), this);
+      // Utilities.MsgBox(getString(R.string.success), getString(R.string.success), this);
    }
 
    public void onComplete() {

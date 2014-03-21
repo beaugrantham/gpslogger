@@ -20,7 +20,7 @@ package com.mendhak.gpslogger.loggers;
 import android.content.Context;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.Session;
-import com.mendhak.gpslogger.db.LocationDbHelper;
+import com.mendhak.gpslogger.loggers.db.DatabaseLogger;
 import com.mendhak.gpslogger.loggers.customurl.HttpUrlLogger;
 
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class LocationLoggerFactory
             loggers.add(new HttpUrlLogger(AppSettings.getCustomLoggingUrl(), Session.getSatelliteCount()));
         }
 
-        loggers.add(new LocationDbHelper(context));
+        loggers.add(new DatabaseLogger(context, Session.getSatelliteCount()));
 
         return loggers;
     }

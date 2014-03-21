@@ -86,10 +86,10 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
         }
 
 
-        Preference gpsloggerFolder = (Preference) findPreference("gpslogger_folder");
-        gpsloggerFolder.setOnPreferenceClickListener(new GpsLoggerFolderPreferenceClickListener());
+        Preference gpsLoggerFolder = findPreference("gpslogger_folder");
+        gpsLoggerFolder.setOnPreferenceClickListener(new GpsLoggerFolderPreferenceClickListener());
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        gpsloggerFolder.setSummary(prefs.getString("gpslogger_folder", Environment.getExternalStorageDirectory() + "/GPSLogger"));
+        gpsLoggerFolder.setSummary(prefs.getString("gpslogger_folder", Environment.getExternalStorageDirectory() + "/GPSLogger"));
 
         CheckBoxPreference imperialCheckBox = (CheckBoxPreference) findPreference("useImperial");
         imperialCheckBox.setOnPreferenceChangeListener(new ImperialPreferenceChangeListener(prefs, distanceBeforeLogging, accuracyBeforeLogging));
@@ -103,7 +103,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
     public synchronized void onActivityResult(final int requestCode, int resultCode, final Intent data)
     {
 
-        if(requestCode==SELECT_FOLDER_DIALOG)
+        if(requestCode == SELECT_FOLDER_DIALOG)
         {
             if (resultCode == Activity.RESULT_OK)
             {
@@ -115,8 +115,8 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
                 editor.putString("gpslogger_folder", filePath);
                 editor.commit();
 
-                Preference gpsloggerFolder = (Preference) findPreference("gpslogger_folder");
-                gpsloggerFolder.setSummary(filePath);
+                Preference gpsLoggerFolder = findPreference("gpslogger_folder");
+                gpsLoggerFolder.setSummary(filePath);
 
             }
             else if (resultCode == Activity.RESULT_CANCELED)

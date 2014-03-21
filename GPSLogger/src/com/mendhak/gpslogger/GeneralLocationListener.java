@@ -41,6 +41,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
     /**
      * Event raised when a new fix is received.
      */
+    @Override
     public void onLocationChanged(Location loc)
     {
         try
@@ -59,6 +60,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         }
     }
 
+    @Override
     public void onProviderDisabled(String provider)
     {
         Utilities.LogInfo("Provider disabled");
@@ -66,6 +68,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         mainActivity.restartGpsManagers();
     }
 
+    @Override
     public void onProviderEnabled(String provider)
     {
 
@@ -74,6 +77,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         mainActivity.restartGpsManagers();
     }
 
+    @Override
     public void onStatusChanged(String provider, int status, Bundle extras)
     {
         if (status == LocationProvider.OUT_OF_SERVICE)
@@ -94,6 +98,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         }
     }
 
+    @Override
     public void onGpsStatusChanged(int event)
     {
 

@@ -36,6 +36,7 @@ public class LocationHistoryActivity extends SherlockActivity {
    /**
     * Called when one of the menu items is selected.
     */
+   @Override
    public boolean onOptionsItemSelected(MenuItem item) {
 
       int itemId = item.getItemId();

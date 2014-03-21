@@ -23,7 +23,6 @@ import android.location.Location;
 interface IGpsLoggerServiceClient
 {
 
-
     /**
      * New message from the service to be displayed on the activity form.
      *

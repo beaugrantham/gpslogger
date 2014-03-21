@@ -20,6 +20,7 @@ package com.mendhak.gpslogger.loggers.customurl;
 import android.location.Location;
 import android.os.Build;
 import com.mendhak.gpslogger.common.RejectionHandler;
+import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.loggers.ILocationLogger;
 
@@ -47,12 +48,14 @@ public class HttpUrlLogger implements ILocationLogger {
 
     @Override
     public void log(Location loc) throws Exception {
-        log("", loc);
+       if (!Session.hasDescription()) {
+           log(loc, "");
+       }
     }
 
     @Override
-    public void log(String description, Location loc) throws Exception {
-        HttpUrlLogHandler writeHandler = new HttpUrlLogHandler(customLoggingUrl, loc, description, satellites);
+    public void log(Location loc, String annotation) throws Exception {
+        HttpUrlLogHandler writeHandler = new HttpUrlLogHandler(customLoggingUrl, loc, annotation, satellites);
         Utilities.LogDebug(String.format("There are currently %s tasks waiting on the GPX10 EXECUTOR.", EXECUTOR.getQueue().size()));
         EXECUTOR.execute(writeHandler);
     }

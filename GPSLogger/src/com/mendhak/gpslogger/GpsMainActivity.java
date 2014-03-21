@@ -80,15 +80,15 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             {
                 if (Session.isSinglePointMode())
                 {
-                    SetMainButtonEnabled(false);
+                    setMainButtonEnabled(false);
                 }
                 else
                 {
-                    SetMainButtonChecked(true);
-                    SetSinglePointButtonEnabled(false);
+                    setMainButtonChecked(true);
+                    setSinglePointButtonEnabled(false);
                 }
 
-                DisplayLocationInfo(Session.getCurrentLocationInfo());
+                displayLocationInfo(Session.getCurrentLocationInfo());
             }
 
             // Form setup - toggle button, display existing location info
@@ -120,9 +120,9 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         setContentView(R.layout.main);
 
         // Moved to onResume to update the list of loggers
-        //GetPreferences();
+        //getPreferences();
 
-        StartAndBindService();
+        startAndBindService();
         ShowWhatsNew();
     }
 
@@ -153,7 +153,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     {
         Utilities.LogDebug("GpsMainActivity.onStart");
         super.onStart();
-        StartAndBindService();
+        startAndBindService();
     }
 
     @Override
@@ -161,18 +161,19 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     {
         Utilities.LogDebug("GpsMainactivity.onResume");
         super.onResume();
-        GetPreferences();
-        StartAndBindService();
+        getPreferences();
+        startAndBindService();
 
-        EnableDisableMenuItems();
+        enableDisableMenuItems();
     }
 
     /**
      * Starts the service and binds the activity to it.
      */
-    private void StartAndBindService()
+    private void startAndBindService()
     {
-        Utilities.LogDebug("StartAndBindService - binding now");
+        Utilities.LogDebug("startAndBindService - binding now");
+
         serviceIntent = new Intent(this, GpsLoggingService.class);
         // Start the service in case it isn't already running
         startService(serviceIntent);
@@ -184,9 +185,10 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     /**
      * Stops the service if it isn't logging. Also unbinds.
      */
-    private void StopAndUnbindServiceIfRequired()
+    private void stopAndUnbindServiceIfRequired()
     {
-        Utilities.LogDebug("GpsMainActivity.StopAndUnbindServiceIfRequired");
+        Utilities.LogDebug("GpsMainActivity.stopAndUnbindServiceIfRequired");
+
         if (Session.isBoundToService())
         {
             unbindService(gpsServiceConnection);
@@ -206,7 +208,8 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     protected void onPause()
     {
         Utilities.LogDebug("GpsMainActivity.onPause");
-        StopAndUnbindServiceIfRequired();
+
+        stopAndUnbindServiceIfRequired();
         super.onPause();
     }
 
@@ -214,7 +217,8 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     protected void onDestroy()
     {
         Utilities.LogDebug("GpsMainActivity.onDestroy");
-        StopAndUnbindServiceIfRequired();
+
+        stopAndUnbindServiceIfRequired();
         super.onDestroy();
     }
 
@@ -227,14 +231,14 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         if (isChecked)
         {
-            GetPreferences();
-            SetSinglePointButtonEnabled(false);
+            getPreferences();
+            setSinglePointButtonEnabled(false);
             loggingService.setupAutoSendTimers();
             loggingService.startLogging();
         }
         else
         {
-            SetSinglePointButtonEnabled(true);
+            setSinglePointButtonEnabled(true);
             loggingService.stopLogging();
         }
     }
@@ -248,25 +252,25 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         if (!Session.isStarted())
         {
-            SetMainButtonEnabled(false);
+            setMainButtonEnabled(false);
             loggingService.startLogging();
             Session.setSinglePointMode(true);
         }
         else if (Session.isStarted() && Session.isSinglePointMode())
         {
             loggingService.stopLogging();
-            SetMainButtonEnabled(true);
+            setMainButtonEnabled(true);
             Session.setSinglePointMode(false);
         }
     }
 
-    public void SetSinglePointButtonEnabled(boolean enabled)
+    public void setSinglePointButtonEnabled(boolean enabled)
     {
         Button buttonSinglePoint = (Button) findViewById(R.id.buttonSinglePoint);
         buttonSinglePoint.setEnabled(enabled);
     }
 
-    public void SetAnnotationButtonMarked(boolean marked)
+    public void setAnnotationButtonMarked(boolean marked)
     {
         if (marked)
         {
@@ -278,13 +282,13 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
     }
 
-    public void SetMainButtonEnabled(boolean enabled)
+    public void setMainButtonEnabled(boolean enabled)
     {
         ToggleButton buttonOnOff = (ToggleButton) findViewById(R.id.buttonOnOff);
         buttonOnOff.setEnabled(enabled);
     }
 
-    public void SetMainButtonChecked(boolean checked)
+    public void setMainButtonChecked(boolean checked)
     {
         ToggleButton buttonOnOff = (ToggleButton) findViewById(R.id.buttonOnOff);
         buttonOnOff.setChecked(checked);
@@ -293,19 +297,19 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     /**
      * Gets preferences chosen by the user
      */
-    private void GetPreferences()
+    private void getPreferences()
     {
         Utilities.PopulateAppSettings(getApplicationContext());
-        ShowPreferencesSummary();
+        showPreferencesSummary();
     }
 
     /**
      * Displays a human readable summary of the preferences chosen by the user
      * on the main form
      */
-    private void ShowPreferencesSummary()
+    private void showPreferencesSummary()
     {
-        Utilities.LogDebug("GpsMainActivity.ShowPreferencesSummary");
+        Utilities.LogDebug("GpsMainActivity.showPreferencesSummary");
         try
         {
             TextView txtLoggingTo = (TextView) findViewById(R.id.txtLoggingTo);
@@ -394,7 +398,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
         catch (Exception ex)
         {
-            Utilities.LogError("ShowPreferencesSummary", ex);
+            Utilities.LogError("showPreferencesSummary", ex);
         }
     }
 
@@ -407,7 +411,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         if (keyCode == KeyEvent.KEYCODE_BACK && Session.isBoundToService())
         {
-            StopAndUnbindServiceIfRequired();
+            stopAndUnbindServiceIfRequired();
         }
 
         return super.onKeyDown(keyCode, event);
@@ -431,7 +435,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
         inflater.inflate(R.menu.optionsmenu, menu);
         mnuAnnotate = menu.findItem(R.id.mnuAnnotate);
-        EnableDisableMenuItems();
+        enableDisableMenuItems();
         this.menu = menu;
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -444,8 +448,8 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      */
     public boolean onOptionsItemSelected(MenuItem item)
     {
-
         int itemId = item.getItemId();
+
         Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
         switch (itemId)
@@ -527,7 +531,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                     Session.setDescription(desc);
                     OnSetAnnotation();
                     if (!Session.isStarted()) // logOnce will start single point mode.
-                        SetMainButtonEnabled(false);
+                        setMainButtonEnabled(false);
                     loggingService.logOnce();
                 }
             }
@@ -551,9 +555,9 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     /**
      * Clears the table, removes all values.
      */
+    @Override
     public void ClearForm()
     {
-
         Utilities.LogDebug("GpsMainActivity.ClearForm");
 
         TextView tvLatitude = (TextView) findViewById(R.id.txtLatitude);
@@ -582,22 +586,28 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         Session.setTotalTravelled(0d);
     }
 
+    @Override
     public void OnStopLogging()
     {
         Utilities.LogDebug("GpsMainActivity.OnStopLogging");
-        SetMainButtonChecked(false);
+
+        setMainButtonChecked(false);
     }
 
+    @Override
     public void OnSetAnnotation()
     {
         Utilities.LogDebug("GpsMainActivity.OnSetAnnotation");
-        SetAnnotationButtonMarked(true);
+
+        setAnnotationButtonMarked(true);
     }
 
+    @Override
     public void OnClearAnnotation()
     {
         Utilities.LogDebug("GpsMainActivity.OnClearAnnotation");
-        SetAnnotationButtonMarked(false);
+
+        setAnnotationButtonMarked(false);
     }
 
     /**
@@ -605,9 +615,10 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      *
      * @param message The status message
      */
-    private void SetStatus(String message)
+    private void setStatus(String message)
     {
         Utilities.LogDebug("GpsMainActivity.setStatus: " + message);
+
         TextView tvStatus = (TextView) findViewById(R.id.textStatus);
         tvStatus.setText(message);
         Utilities.LogInfo(message);
@@ -618,7 +629,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      *
      * @param number The number of satellites
      */
-    private void SetSatelliteInfo(int number)
+    private void setSatelliteInfo(int number)
     {
         Session.setSatelliteCount(number);
         TextView txtSatellites = (TextView) findViewById(R.id.txtSatellites);
@@ -631,12 +642,12 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
      *
      * @param loc Location information
      */
-    private void DisplayLocationInfo(Location loc)
+    private void displayLocationInfo(Location loc)
     {
-        Utilities.LogDebug("GpsMainActivity.DisplayLocationInfo");
+        Utilities.LogDebug("GpsMainActivity.displayLocationInfo");
+
         try
         {
-
             if (loc == null)
             {
                 return;
@@ -744,8 +755,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
                 direction = Utilities.GetBearingDescription(bearingDegrees, getApplicationContext());
 
-                txtDirection.setText(direction + "(" + String.valueOf(Math.round(bearingDegrees))
-                        + getString(R.string.degree_symbol) + ")");
+                txtDirection.setText(direction + "(" + String.valueOf(Math.round(bearingDegrees)) + getString(R.string.degree_symbol) + ")");
             }
             else
             {
@@ -765,14 +775,12 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
                 if (AppSettings.shouldUseImperial())
                 {
-                    txtAccuracy.setText(getString(R.string.accuracy_within,
-                            nf.format(Utilities.MetersToFeet(accuracy)), getString(R.string.feet)));
+                    txtAccuracy.setText(getString(R.string.accuracy_within, nf.format(Utilities.MetersToFeet(accuracy)), getString(R.string.feet)));
 
                 }
                 else
                 {
-                    txtAccuracy.setText(getString(R.string.accuracy_within, nf.format(accuracy),
-                            getString(R.string.meters)));
+                    txtAccuracy.setText(getString(R.string.accuracy_within, nf.format(accuracy), getString(R.string.meters)));
                 }
 
             }
@@ -805,18 +813,16 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 }
             }
 
-            txtTravelled.setText(String.valueOf(Math.round(distanceValue)) + " " + distanceUnit +
-                    " (" + Session.getNumLegs() + " points)");
+            txtTravelled.setText(String.valueOf(Math.round(distanceValue)) + " " + distanceUnit + " (" + Session.getNumLegs() + " points)");
 
         }
         catch (Exception ex)
         {
-            SetStatus(getString(R.string.error_displaying, ex.getMessage()));
+            setStatus(getString(R.string.error_displaying, ex.getMessage()));
         }
-
     }
 
-    private void EnableDisableMenuItems() {
+    private void enableDisableMenuItems() {
         if(mnuAnnotate == null)
         {
             return;
@@ -833,38 +839,44 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         }
     }
 
+    @Override
     public void OnLocationUpdate(Location loc)
     {
         Utilities.LogDebug("GpsMainActivity.OnLocationUpdate");
-        DisplayLocationInfo(loc);
-        ShowPreferencesSummary();
-        SetMainButtonChecked(true);
+
+        displayLocationInfo(loc);
+        showPreferencesSummary();
+        setMainButtonChecked(true);
 
         if (Session.isSinglePointMode())
         {
             loggingService.stopLogging();
-            SetMainButtonEnabled(true);
+            setMainButtonEnabled(true);
             Session.setSinglePointMode(false);
         }
 
     }
 
+    @Override
     public void OnSatelliteCount(int count)
     {
-        SetSatelliteInfo(count);
+        setSatelliteInfo(count);
 
     }
 
+    @Override
     public void OnStatusMessage(String message)
     {
-        SetStatus(message);
+        setStatus(message);
     }
 
+    @Override
     public void OnFatalMessage(String message)
     {
         Utilities.MsgBox(getString(R.string.sorry), message, this);
     }
 
+    @Override
     public Activity GetActivity()
     {
         return this;

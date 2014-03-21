@@ -17,14 +17,12 @@
 
 package com.mendhak.gpslogger;
 
-
 import com.mendhak.gpslogger.common.Utilities;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 
 public class StartupReceiver extends BroadcastReceiver
 {
@@ -37,8 +35,7 @@ public class StartupReceiver extends BroadcastReceiver
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
             boolean startImmediately = prefs.getBoolean("startonbootup", false);
 
-            Utilities.LogInfo("Did the user ask for start on bootup? - "
-                    + String.valueOf(startImmediately));
+            Utilities.LogInfo("Did the user ask for start on bootup? - " + String.valueOf(startImmediately));
 
             if (startImmediately)
             {
@@ -53,7 +50,6 @@ public class StartupReceiver extends BroadcastReceiver
             Utilities.LogError("StartupReceiver", ex);
 
         }
-
     }
 
 }

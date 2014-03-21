@@ -6,12 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
+import android.text.TextUtils;
+import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.loggers.ILocationLogger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,24 +24,12 @@ import java.util.Map;
  * Time: 11:35 AM
  * To change this template use File | Settings | File Templates.
  */
-public class LocationDbHelper extends SQLiteOpenHelper implements ILocationLogger {
-   public static final int DATABASE_VERSION = 1;
+public class LocationDbHelper extends SQLiteOpenHelper {
+   public static final int DATABASE_VERSION = 3;
 
    public static final String DATABASE_NAME = "gpslogger.db";
 
-   private static final String TABLE_NAME = "location";
-
-   public static final String COLUMN_NAME_ID = "id";
-   public static final String COLUMN_NAME_LATITUDE = "latitude";
-   public static final String COLUMN_NAME_LONGITUDE = "longitude";
-   public static final String COLUMN_NAME_ANNOTATION = "annotation";
-   public static final String COLUMN_NAME_SATELLITES = "satellites";
-   public static final String COLUMN_NAME_ALTITUDE = "altitude";
-   public static final String COLUMN_NAME_SPEED = "speed";
-   public static final String COLUMN_NAME_ACCURACY = "accuracy";
-   public static final String COLUMN_NAME_DIRECTION = "direction";
-   public static final String COLUMN_NAME_PROVIDER = "provider";
-   public static final String COLUMN_NAME_TIME = "time";
+   public static final String TABLE_NAME = "location";
 
    public LocationDbHelper(Context context) {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,17 +38,18 @@ public class LocationDbHelper extends SQLiteOpenHelper implements ILocationLogge
    public void onCreate(SQLiteDatabase db) {
       final String createLocationTable =
               "CREATE TABLE " + TABLE_NAME + " (" +
-                      COLUMN_NAME_ID + " INTEGER PRIMARY KEY, " +
-                      COLUMN_NAME_LATITUDE + " TEXT, " +
-                      COLUMN_NAME_LONGITUDE + " TEXT, " +
-                      COLUMN_NAME_ANNOTATION + " TEXT, " +
-                      COLUMN_NAME_SATELLITES + " TEXT, " +
-                      COLUMN_NAME_ALTITUDE + " TEXT, " +
-                      COLUMN_NAME_SPEED + " TEXT, " +
-                      COLUMN_NAME_ACCURACY + " TEXT, " +
-                      COLUMN_NAME_DIRECTION + " TEXT, " +
-                      COLUMN_NAME_PROVIDER + " TEXT, " +
-                      COLUMN_NAME_TIME + " TEXT" +
+                      LocationDbColumnType.ID.getColumnName() + " INTEGER PRIMARY KEY, " +
+                      LocationDbColumnType.LATITUDE.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.LONGITUDE.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.ANNOTATION.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.SATELLITES.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.ALTITUDE.getColumnName()  + " TEXT, " +
+                      LocationDbColumnType.SPEED.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.ACCURACY.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.DIRECTION.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.PROVIDER.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.TIME.getColumnName() + " TEXT, " +
+                      LocationDbColumnType.PUBLISHED.getColumnName() + " INTEGER" +
                       " )";
 
       db.execSQL(createLocationTable);
@@ -69,93 +62,65 @@ public class LocationDbHelper extends SQLiteOpenHelper implements ILocationLogge
       this.onCreate(db);
    }
 
-   @Override
-   public void log(Location loc) throws Exception {
-      SQLiteDatabase db = this.getWritableDatabase();
-
-      ContentValues values = new ContentValues();
-      values.put(COLUMN_NAME_LATITUDE, loc.getLatitude());
-      values.put(COLUMN_NAME_LONGITUDE, loc.getLongitude());
-      values.put(COLUMN_NAME_ALTITUDE, loc.getAltitude());
-      values.put(COLUMN_NAME_SPEED, loc.getSpeed());
-      values.put(COLUMN_NAME_ACCURACY, loc.getAccuracy());
-      values.put(COLUMN_NAME_DIRECTION, loc.getBearing());
-      values.put(COLUMN_NAME_TIME, loc.getTime());
-
-      db.insert(TABLE_NAME, null, values);
-
-      db.close();
-   }
-
-   @Override
-   public void log(String description, Location loc) throws Exception {
-      // TODO
-   }
-
-   @Override
-   public String getName() {
-      return "db";
-   }
-
-   public List<String> getRecords() {
-      List<String> records = new ArrayList<String>();
-
-      SQLiteDatabase db = this.getWritableDatabase();
-      Cursor cursor = db.query(TABLE_NAME, new String[]{COLUMN_NAME_ID, COLUMN_NAME_LATITUDE, COLUMN_NAME_LONGITUDE}, null, null, null, null, null);
-
-      if (cursor.moveToFirst()) {
-         do {
-            String s = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_ID));
-            s += ":" + cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_LATITUDE));
-            s += ":" + cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_LONGITUDE));
-
-            records.add(s);
-         } while (cursor.moveToNext());
-      }
-
-      return records;
-   }
-
-   public List<Map<String, String>> getRecordsAsMap() {
+   public List<Map<String, String>> getRecords() {
       List<Map<String, String>> records = new ArrayList<Map<String, String>>();
 
       SQLiteDatabase db = this.getReadableDatabase();
-      Cursor cursor = db.query(
-              TABLE_NAME,
-              new String[] {
-                      COLUMN_NAME_ID,
-                      COLUMN_NAME_LATITUDE,
-                      COLUMN_NAME_LONGITUDE,
-                      COLUMN_NAME_ANNOTATION,
-                      COLUMN_NAME_SATELLITES,
-                      COLUMN_NAME_ALTITUDE,
-                      COLUMN_NAME_SPEED,
-                      COLUMN_NAME_ACCURACY,
-                      COLUMN_NAME_DIRECTION,
-                      COLUMN_NAME_PROVIDER,
-                      COLUMN_NAME_TIME
-              }, null, null, null, null, null);
+      Cursor cursor = db.query(TABLE_NAME, LocationDbColumnType.getColumnNames(), null, null, null, null, null);
 
       if (cursor.moveToFirst()) {
          do {
             Map<String, String> map = new HashMap<String, String>();
 
-            map.put(COLUMN_NAME_ID, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_ID)));
-            map.put(COLUMN_NAME_LATITUDE, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_LATITUDE)));
-            map.put(COLUMN_NAME_LONGITUDE, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_LONGITUDE)));
-            map.put(COLUMN_NAME_ANNOTATION, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_ANNOTATION)));
-            map.put(COLUMN_NAME_SATELLITES, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_SATELLITES)));
-            map.put(COLUMN_NAME_ALTITUDE, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_ALTITUDE)));
-            map.put(COLUMN_NAME_SPEED, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_SPEED)));
-            map.put(COLUMN_NAME_ACCURACY, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_ACCURACY)));
-            map.put(COLUMN_NAME_DIRECTION, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_DIRECTION)));
-            map.put(COLUMN_NAME_PROVIDER, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_PROVIDER)));
-            map.put(COLUMN_NAME_TIME, cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME_TIME)));
+            for (String columnName : LocationDbColumnType.getColumnNames()) {
+               map.put(columnName, cursor.getString(cursor.getColumnIndexOrThrow(columnName)));
+            }
 
             records.add(map);
          } while (cursor.moveToNext());
       }
 
       return records;
+   }
+
+   public Map<Integer, Map<String, String>> getUnPublishedRecords() {
+      Map<Integer, Map<String, String>> records = new TreeMap<Integer, Map<String, String>>();
+
+      SQLiteDatabase db = this.getReadableDatabase();
+      Cursor cursor = db.query(
+              TABLE_NAME,
+              LocationDbColumnType.getColumnNames(),
+              LocationDbColumnType.PUBLISHED + " = 0", null,
+              null, null,
+              LocationDbColumnType.ID.getColumnName());
+
+      if (cursor.moveToFirst()) {
+         do {
+            Map<String, String> record = new HashMap<String, String>();
+
+            for (String columnName : LocationDbColumnType.getColumnNames()) {
+               record.put(columnName, cursor.getString(cursor.getColumnIndexOrThrow(columnName)));
+            }
+
+            records.put(Integer.parseInt(record.get(LocationDbColumnType.ID.getColumnName())), record);
+         } while (cursor.moveToNext());
+      }
+
+      return records;
+   }
+
+   public int publish(Collection<Integer> ids) {
+      SQLiteDatabase db = this.getWritableDatabase();
+
+      ContentValues cv = new ContentValues();
+      cv.put(LocationDbColumnType.PUBLISHED.getColumnName(), 1);
+
+      int rowsUpdated = db.update(TABLE_NAME, cv, LocationDbColumnType.ID.getColumnName() + " IN (" + TextUtils.join(",", ids) + ")", null);
+
+      db.close();
+
+      Utilities.LogInfo("Flagged " + rowsUpdated + " as published");
+
+      return rowsUpdated;
    }
 }

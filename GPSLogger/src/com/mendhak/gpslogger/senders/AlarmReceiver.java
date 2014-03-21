@@ -26,13 +26,13 @@ import com.mendhak.gpslogger.common.Utilities;
 public class AlarmReceiver extends BroadcastReceiver
 {
 
-
     @Override
     public void onReceive(Context context, Intent intent)
     {
         try
         {
             Utilities.LogInfo("Auto Send alarm received");
+
             Intent serviceIntent = new Intent(context.getPackageName() + ".GpsLoggingService");
             serviceIntent.putExtra("emailAlarm", true);
             // Start the service in case it isn't already running
@@ -42,7 +42,5 @@ public class AlarmReceiver extends BroadcastReceiver
         {
              Utilities.LogError("AlarmReceiver.onReceive", ex);
         }
-
-
     }
 }

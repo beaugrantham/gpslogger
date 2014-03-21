@@ -24,7 +24,7 @@ public interface ILocationLogger
 
     void log(Location loc) throws Exception;
 
-    void log(String description, Location loc) throws Exception;
+    void log(Location loc, String annotation) throws Exception;
 
     String getName();
 

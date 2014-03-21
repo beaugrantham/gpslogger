@@ -30,7 +30,7 @@ import java.util.List;
 public class PublisherFactory
 {
 
-    public static void publish(Context applicationContext, IActionListener callback)
+    public static void publish(IActionListener callback, Context context)
     {
 //        if (!gpxFolder.exists())
 //        {
@@ -38,7 +38,7 @@ public class PublisherFactory
 //            return;
 //        }
 
-        List<IPublisher> senders = getPublishers(applicationContext, callback);
+        List<IPublisher> senders = getPublishers(callback, context);
 
         for (IPublisher sender : senders)
         {
@@ -47,7 +47,7 @@ public class PublisherFactory
     }
 
 
-    public static List<IPublisher> getPublishers(Context applicationContext, IActionListener callback)
+    public static List<IPublisher> getPublishers(IActionListener callback, Context context)
     {
         Utilities.LogInfo("Getting available publishers");
 
@@ -61,10 +61,10 @@ public class PublisherFactory
         if (AppSettings.isAutoPostEnabled())
         {
            Utilities.LogInfo("Creating AutoPostHelper");
-           senders.add(new AutoPostHelper(callback));
+           senders.add(new AutoPostHelper(callback, context));
         }
 
-       Utilities.LogInfo("Returning " + senders.size() + " senders");
+        Utilities.LogInfo("Returning " + senders.size() + " senders");
 
         return senders;
 

@@ -224,8 +224,6 @@
     <string name="emailprovider_manual">Manual</string>
     <string name="btn_single_point">Log a single point</string>
 
-    <string name="menu_upload">Upload</string>
-
     <string name="autoemail_from">From address</string>
     <string name="autoemail_from_summary">Some email providers require a from address. Use this only if you need it.
     </string>
@@ -234,18 +232,18 @@
 
     <string name="autoemail_sendto_csv">Comma separated email addresses</string>
 
-    <string name="autosend_enabled">Allow auto sending</string>
-    <string name="autosend_enabled_summary">Allows sending the files to various targets</string>
-    <string name="autosend_frequency_summary">How frequently log files should be sent</string>
+    <string name="autosend_enabled">Allow auto publishing</string>
+    <string name="autosend_enabled_summary">Allows publishing location history to various targets</string>
+    <string name="autosend_frequency_summary">How frequently location(s) should be published</string>
     <string name="autosend_frequency">How often?</string>
 
     <string name="autosend_targets_category">Auto Send Targets</string>
-    <string name="menu_email_now">Auto Send Now</string>
-    <string name="autosend_sending">Auto sending</string>
-    <string name="summary_autosend">Auto send:</string>
+    <string name="menu_publish_now">Auto Publishing Now</string>
+    <string name="autosend_sending">Auto publishing</string>
+    <string name="summary_autosend">Auto publish:</string>
 
-    <string name="pref_autosend_title">Auto send, email and upload</string>
-    <string name="pref_autosend_summary">Email, share and upload options</string>
+    <string name="pref_autosend_title">Auto publishing</string>
+    <string name="pref_autosend_summary">Options for auto publishing</string>
 
     <string name="shortcut_start">Start</string>
     <string name="shortcut_stop">Stop</string>
@@ -266,7 +264,6 @@
     <string name="txt_annotation">Annotation:</string>
     <string name="txt_time_isoformat">Time UTC (2011-12-25T15:27:33Z):</string>
     <string name="txt_provider">Provider:</string>
-    <string name="annotation_requires_logging">Annotations require logging to GPX/KML/Custom URL</string>
     <string name="filedialog_location">Location</string>
     <string name="filedialog_cantreadfolder">Folder can\'t be read</string>
     <string name="filedialog_new">New</string>
