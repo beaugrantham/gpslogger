@@ -126,7 +126,6 @@
                     <!--<nativeLibrariesDirectory>${project.basedir}/libs</nativeLibrariesDirectory>-->
                     <sdk>
                         <platform>16</platform>
-                        <path>/opt/android-sdk-linux/</path>
                     </sdk>
                     <runDebug>true</runDebug>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>

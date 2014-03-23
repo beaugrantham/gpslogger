@@ -77,7 +77,7 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
     {
 
         int itemId = item.getItemId();
-        Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
+        Utilities.logInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
         switch (itemId)
         {
@@ -96,15 +96,15 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
     public boolean onPreferenceClick(Preference preference)
     {
 
-        if (!IsFormValid())
+        if (!isFormValid())
         {
-            Utilities.MsgBox(getString(R.string.autoemail_invalid_form),
+            Utilities.msgBox(getString(R.string.autoemail_invalid_form),
                     getString(R.string.autoemail_invalid_form_message),
                     AutoEmailActivity.this);
             return false;
         }
 
-        Utilities.ShowProgress(this, getString(R.string.autoemail_sendingtest),
+        Utilities.showProgress(this, getString(R.string.autoemail_sendingtest),
                 getString(R.string.please_wait));
 
         CheckBoxPreference chkUseSsl = (CheckBoxPreference) findPreference("smtp_ssl");
@@ -125,7 +125,7 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
         return true;
     }
 
-    private boolean IsFormValid()
+    private boolean isFormValid()
     {
 
         CheckBoxPreference chkEnabled = (CheckBoxPreference) findPreference("autoemail_enabled");
@@ -148,9 +148,9 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
     {
         if (keyCode == KeyEvent.KEYCODE_BACK)
         {
-            if (!IsFormValid())
+            if (!isFormValid())
             {
-                Utilities.MsgBox(getString(R.string.autoemail_invalid_form),
+                Utilities.msgBox(getString(R.string.autoemail_invalid_form),
                         getString(R.string.autoemail_invalid_form_message),
                         this);
                 return false;
@@ -167,7 +167,7 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
     }
 
 
-    public void MessageBoxResult(int which)
+    public void messageBoxResult(int which)
     {
         finish();
     }
@@ -183,15 +183,15 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
             {
                 case 0:
                     // Gmail
-                    SetSmtpValues("smtp.gmail.com", "465", true);
+                    setSmtpValues("smtp.gmail.com", "465", true);
                     break;
                 case 1:
                     // Windows live mail
-                    SetSmtpValues("smtp.live.com", "587", false);
+                    setSmtpValues("smtp.live.com", "587", false);
                     break;
                 case 2:
                     // Yahoo
-                    SetSmtpValues("smtp.mail.yahoo.com", "465", true);
+                    setSmtpValues("smtp.mail.yahoo.com", "465", true);
                     break;
                 case 99:
                     // manual
@@ -203,7 +203,7 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
         return true;
     }
 
-    private void SetSmtpValues(String server, String port, boolean useSsl)
+    private void setSmtpValues(String server, String port, boolean useSsl)
     {
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(getApplicationContext());
@@ -230,7 +230,7 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
     {
         public void run()
         {
-            SuccessfulSending();
+            successfulSending();
         }
     };
 
@@ -239,20 +239,20 @@ public class AutoEmailActivity extends SherlockPreferenceActivity implements
 
         public void run()
         {
-            FailureSending();
+            failureSending();
         }
     };
 
-    private void FailureSending()
+    private void failureSending()
     {
-        Utilities.HideProgress();
-        Utilities.MsgBox(getString(R.string.sorry), getString(R.string.error_connection), this);
+        Utilities.hideProgress();
+        Utilities.msgBox(getString(R.string.sorry), getString(R.string.error_connection), this);
     }
 
-    private void SuccessfulSending()
+    private void successfulSending()
     {
-        Utilities.HideProgress();
-        Utilities.MsgBox(getString(R.string.success),
+        Utilities.hideProgress();
+        Utilities.msgBox(getString(R.string.success),
                 getString(R.string.autoemail_testresult_success), this);
     }
 

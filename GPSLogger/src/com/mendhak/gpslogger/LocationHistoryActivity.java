@@ -21,7 +21,7 @@ public class LocationHistoryActivity extends SherlockActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
 
-      Utilities.LogDebug("LocationHistoryActivity.onCreate");
+      Utilities.logDebug("LocationHistoryActivity.onCreate");
 
       super.onCreate(savedInstanceState);
 
@@ -40,7 +40,7 @@ public class LocationHistoryActivity extends SherlockActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
 
       int itemId = item.getItemId();
-      Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
+      Utilities.logInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
       switch (itemId) {
          case android.R.id.home:

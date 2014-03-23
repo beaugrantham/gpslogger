@@ -31,7 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver
     {
         try
         {
-            Utilities.LogInfo("Auto Send alarm received");
+            Utilities.logInfo("Auto Send alarm received");
 
             Intent serviceIntent = new Intent(context.getPackageName() + ".GpsLoggingService");
             serviceIntent.putExtra("emailAlarm", true);
@@ -40,7 +40,7 @@ public class AlarmReceiver extends BroadcastReceiver
         }
         catch (Exception ex)
         {
-             Utilities.LogError("AlarmReceiver.onReceive", ex);
+             Utilities.logError("AlarmReceiver.onReceive", ex);
         }
     }
 }

@@ -30,7 +30,7 @@ public class ShortcutStop extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        Utilities.LogInfo("Shortcut - stop logging");
+        Utilities.logInfo("Shortcut - stop logging");
         Intent serviceIntent = new Intent(getApplicationContext(), GpsLoggingService.class);
         serviceIntent.putExtra("immediatestop", true);
         getApplicationContext().startService(serviceIntent);

@@ -19,6 +19,5 @@ package com.mendhak.gpslogger.common;
 
 public interface IMessageBoxCallback
 {
-
-    public void MessageBoxResult(int which);
+    void messageBoxResult(int which);
 }

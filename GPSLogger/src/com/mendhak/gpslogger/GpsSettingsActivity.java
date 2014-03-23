@@ -23,8 +23,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.preference.*;
+
+import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
+import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.util.Log;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -108,7 +113,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
             if (resultCode == Activity.RESULT_OK)
             {
                 String filePath = data.getStringExtra(FileDialog.RESULT_PATH);
-                Utilities.LogDebug("Folder path selected" + filePath);
+                Utilities.logDebug("Folder path selected" + filePath);
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = prefs.edit();
@@ -121,7 +126,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
             }
             else if (resultCode == Activity.RESULT_CANCELED)
             {
-                Utilities.LogDebug("No file selected");
+                Utilities.logDebug("No file selected");
             }
         }
     }
@@ -134,7 +139,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
     {
 
         int itemId = item.getItemId();
-        Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
+        Utilities.logInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
         switch (itemId)
         {
@@ -205,7 +210,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
         public boolean onPreferenceChange(Preference preference, final Object newValue)
         {
 
-            Utilities.ShowProgress(GpsSettingsActivity.this, getString(R.string.settings_converting_title),
+            Utilities.showProgress(GpsSettingsActivity.this, getString(R.string.settings_converting_title),
                     getString(R.string.settings_converting_description));
 
             new Thread()
@@ -259,20 +264,20 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
                         distanceBeforeLogging.setDialogTitle(R.string.settings_distance_in_feet);
                         distanceBeforeLogging.getEditText().setHint(R.string.settings_enter_feet);
 
-                        minimumDistance = Utilities.MetersToFeet(minimumDistance);
+                        minimumDistance = Utilities.metersToFeet(minimumDistance);
                         
                         accuracyBeforeLogging.setDialogTitle(R.string.settings_accuracy_in_feet);
                         accuracyBeforeLogging.getEditText().setHint(R.string.settings_enter_feet);
 
-                        minimumAccuracy = Utilities.MetersToFeet(minimumAccuracy);
+                        minimumAccuracy = Utilities.metersToFeet(minimumAccuracy);
                     }
                     else
                     {
-                        minimumDistance = Utilities.FeetToMeters(minimumDistance);
+                        minimumDistance = Utilities.feetToMeters(minimumDistance);
                         distanceBeforeLogging.setDialogTitle(R.string.settings_distance_in_meters);
                         distanceBeforeLogging.getEditText().setHint(R.string.settings_enter_meters);
                                                     
-                        minimumAccuracy = Utilities.FeetToMeters(minimumAccuracy);
+                        minimumAccuracy = Utilities.feetToMeters(minimumAccuracy);
                         accuracyBeforeLogging.setDialogTitle(R.string.settings_accuracy_in_meters);
                         accuracyBeforeLogging.getEditText().setHint(R.string.settings_enter_meters);
                         
@@ -295,7 +300,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
                     editor.commit();
 
                     handler.post(updateResults);
-                    Utilities.HideProgress();
+                    Utilities.hideProgress();
                 }
             }.start();
 
@@ -307,7 +312,7 @@ public class GpsSettingsActivity extends SherlockPreferenceActivity
     @Override
     public void onWindowFocusChanged(boolean hasFocus)
     {
-        Utilities.LogDebug("GpsSettingsActivity.onWindowFocusChanged");
+        Utilities.logDebug("GpsSettingsActivity.onWindowFocusChanged");
         if (hasFocus)
         {
 

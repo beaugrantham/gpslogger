@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">GPSLogger</string>
+    <string name="app_name">GPSlogger</string>
     <string name="settings_screen_name">GPSLogger Settings</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -253,8 +253,6 @@
     <string name="faq_screen_title">Frequently asked questions</string>
     <string name="menu_faq">Help and FAQ</string>
     <string name="menu_location_history">Location History</string>
-    <string name="gpsf_missing">Missing Service</string>
-    <string name="gpsf_missing_description">You will need Google Play Services Framework to use this feature.</string>
     <string name="pref_loggingto_title">Log to...</string>
     <string name="pref_loggingto_summary">Files and destinations to log your location to</string>
     <string name="log_customurl_title">Log to custom URL</string>

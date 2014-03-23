@@ -29,7 +29,7 @@ public class ShortcutStart extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        Utilities.LogInfo("Shortcut - start logging");
+        Utilities.logInfo("Shortcut - start logging");
         Intent serviceIntent = new Intent(getApplicationContext(), GpsLoggingService.class);
         serviceIntent.putExtra("immediate", true);
         getApplicationContext().startService(serviceIntent);

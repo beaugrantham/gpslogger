@@ -30,7 +30,6 @@ public class ShortcutCreate extends Activity
     {
         super.onCreate(savedInstanceState);
 
-
         AlertDialog alert;
         final CharSequence[] items = {getString(R.string.shortcut_start), getString(R.string.shortcut_stop)};
 

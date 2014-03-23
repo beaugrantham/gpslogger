@@ -39,7 +39,7 @@ public class Utilities
     private static final int LOGLEVEL = 5;
     private static ProgressDialog pd;
 
-    private static void LogToDebugFile(String message)
+    private static void logToDebugFile(String message)
     {
         if (AppSettings.isDebugToFile())
         {
@@ -47,22 +47,22 @@ public class Utilities
         }
     }
 
-    public static void LogInfo(String message)
+    public static void logInfo(String message)
     {
         if (LOGLEVEL >= 3)
         {
             Log.i("GPSLogger", message);
         }
 
-        LogToDebugFile(message);
+        logToDebugFile(message);
 
     }
 
-    public static void LogError(String methodName, Exception ex)
+    public static void logError(String methodName, Exception ex)
     {
         try
         {
-            LogError(methodName + ":" + ex.getMessage());
+            logError(methodName + ":" + ex.getMessage());
         }
         catch (Exception e)
         {
@@ -70,46 +70,46 @@ public class Utilities
         }
     }
 
-    private static void LogError(String message)
+    private static void logError(String message)
     {
         Log.e("GPSLogger", message);
-        LogToDebugFile(message);
+        logToDebugFile(message);
     }
 
-    public static void LogDebug(String message)
+    public static void logDebug(String message)
     {
         if (LOGLEVEL >= 4)
         {
             Log.d("GPSLogger", message);
         }
-        LogToDebugFile(message);
+        logToDebugFile(message);
     }
 
-    public static void LogWarning(String message)
+    public static void logWarning(String message)
     {
         if (LOGLEVEL >= 2)
         {
             Log.w("GPSLogger", message);
         }
-        LogToDebugFile(message);
+        logToDebugFile(message);
     }
 
-    public static void LogVerbose(String message)
+    public static void logVerbose(String message)
     {
         if (LOGLEVEL >= 5)
         {
             Log.v("GPSLogger", message);
         }
-        LogToDebugFile(message);
+        logToDebugFile(message);
     }
 
     /**
      * Gets user preferences, populates the AppSettings class.
      */
-    public static void PopulateAppSettings(Context context)
+    public static void populateAppSettings(Context context)
     {
 
-        Utilities.LogInfo("Getting preferences");
+        Utilities.logInfo("Getting preferences");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         AppSettings.setUseImperial(prefs.getBoolean("useImperial", false));
@@ -145,9 +145,9 @@ public class Utilities
 
         if (AppSettings.shouldUseImperial())
         {
-            AppSettings.setMinimumDistanceInMeters(Utilities.FeetToMeters(AppSettings.getMinimumDistanceInMeters()));
+            AppSettings.setMinimumDistanceInMeters(Utilities.feetToMeters(AppSettings.getMinimumDistanceInMeters()));
 
-            AppSettings.setMinimumAccuracyInMeters(Utilities.FeetToMeters(AppSettings.getMinimumAccuracyInMeters()));
+            AppSettings.setMinimumAccuracyInMeters(Utilities.feetToMeters(AppSettings.getMinimumAccuracyInMeters()));
         }
 
 
@@ -203,7 +203,7 @@ public class Utilities
         AppSettings.setGpsLoggerFolder(prefs.getString("gpslogger_folder", Environment.getExternalStorageDirectory() + "/GPSLogger"));
     }
 
-    public static void ShowProgress(Context ctx, String title, String message)
+    public static void showProgress(Context ctx, String title, String message)
     {
         if (ctx != null)
         {
@@ -215,7 +215,7 @@ public class Utilities
         }
     }
 
-    public static void HideProgress()
+    public static void hideProgress()
     {
         if (pd != null)
         {
@@ -231,9 +231,9 @@ public class Utilities
      * @param className The calling class, such as GpsMainActivity.this or
      *                  mainActivity.
      */
-    public static void MsgBox(String title, String message, Context className)
+    public static void msgBox(String title, String message, Context className)
     {
-        MsgBox(title, message, className, null);
+        msgBox(title, message, className, null);
     }
 
     /**
@@ -246,7 +246,7 @@ public class Utilities
      * @param msgCallback An object which implements IHasACallBack so that the 
      *                    click event can call the callback method.
      */
-    private static void MsgBox(String title, String message, Context className,
+    private static void msgBox(String title, String message, Context className,
                                final IMessageBoxCallback msgCallback)
     {
     	AlertDialog.Builder alertBuilder = new AlertDialog.Builder(className);
@@ -261,7 +261,7 @@ public class Utilities
                        
                             	if (msgCallback != null)
                             	{
-                            		msgCallback.MessageBoxResult(which);
+                            		msgCallback.messageBoxResult(which);
                             	}
                             }
                     	}
@@ -278,7 +278,7 @@ public class Utilities
      * @param numberOfSeconds
      * @return
      */
-    public static String GetDescriptiveTimeString(int numberOfSeconds,
+    public static String getDescriptiveTimeString(int numberOfSeconds,
                                                   Context context)
     {
 
@@ -355,7 +355,7 @@ public class Utilities
      * @param bearingDegrees
      * @return
      */
-    public static String GetBearingDescription(float bearingDegrees,
+    public static String getBearingDescription(float bearingDegrees,
                                                Context context)
     {
 
@@ -444,7 +444,7 @@ public class Utilities
      * @param desc
      * @return
      */
-    public static String CleanDescription(String desc)
+    public static String cleanDescription(String desc)
     {
         desc = desc.replace("<", "");
         desc = desc.replace(">", "");
@@ -462,7 +462,7 @@ public class Utilities
      * @param dateToFormat The Date object to format.
      * @return The ISO 8601 formatted string.
      */
-    public static String GetIsoDateTime(Date dateToFormat)
+    public static String getIsoDateTime(Date dateToFormat)
     {
     	/**
         * This function is used in gpslogger.loggers.* and for most of them the
@@ -481,10 +481,10 @@ public class Utilities
         return sdf.format(dateToFormat);
     }
 
-    public static String GetReadableDateTime(Date dateToFormat)
+    public static String getReadableDateTime(Date dateToFormat)
     {
     	/**
-    	 * Similar to GetIsoDateTime(), this function is used in 
+    	 * Similar to getIsoDateTime(), this function is used in
     	 * AutoEmailHelper, and we want machine-readable output.
     	 */
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm", 
@@ -498,7 +498,7 @@ public class Utilities
      * @param m
      * @return
      */
-    public static int MetersToFeet(int m)
+    public static int metersToFeet(int m)
     {
         return (int) Math.round(m * 3.2808399);
     }
@@ -510,7 +510,7 @@ public class Utilities
      * @param f
      * @return
      */
-    public static int FeetToMeters(int f)
+    public static int feetToMeters(int f)
     {
         return (int) Math.round(f / 3.2808399);
     }
@@ -522,9 +522,9 @@ public class Utilities
      * @param m
      * @return
      */
-    public static int MetersToFeet(double m)
+    public static int metersToFeet(double m)
     {
-        return MetersToFeet((int) m);
+        return metersToFeet((int) m);
     }
 
     /**
@@ -536,7 +536,7 @@ public class Utilities
      * @param longitude2 The second point's longitude
      * @return The distance between the two points in meters
      */
-    public static double CalculateDistance(double latitude1, double longitude1, double latitude2, double longitude2)
+    public static double calculateDistance(double latitude1, double longitude1, double latitude2, double longitude2)
     {
         /*
             Haversine formula:

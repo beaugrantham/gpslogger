@@ -1,10 +1,8 @@
 package com.mendhak.gpslogger.loggers.customurl;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -13,7 +11,6 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.mendhak.gpslogger.GpsMainActivity;
 import com.mendhak.gpslogger.R;
-import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Utilities;
 
 import java.text.MessageFormat;
@@ -24,7 +21,7 @@ public class CustomUrlLoggerActivity extends SherlockActivity  {
 
     public void onCreate(Bundle savedInstanceState)
     {
-        Utilities.LogDebug("CustomUrlLogger Settings Screen");
+        Utilities.logDebug("CustomUrlLogger Settings Screen");
         super.onCreate(savedInstanceState);
         // enable the home button so you can go back to the main screen
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,7 +62,7 @@ public class CustomUrlLoggerActivity extends SherlockActivity  {
     {
 
         int itemId = item.getItemId();
-        Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
+        Utilities.logInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
         switch (itemId)
         {
@@ -82,7 +79,7 @@ public class CustomUrlLoggerActivity extends SherlockActivity  {
     @Override
     public void onBackPressed()
     {
-        Utilities.LogDebug("CustomUrlLoggerActivity - Back pressed, saving values");
+        Utilities.logDebug("CustomUrlLoggerActivity - Back pressed, saving values");
         EditText urlText = (EditText)findViewById(R.id.customUrlText);
         CheckBox urlEnabled = (CheckBox)findViewById(R.id.customUrlEnabled);
 

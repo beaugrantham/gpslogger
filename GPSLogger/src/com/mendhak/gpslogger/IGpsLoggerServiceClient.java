@@ -28,54 +28,54 @@ interface IGpsLoggerServiceClient
      *
      * @param message
      */
-    public void OnStatusMessage(String message);
+    public void onStatusMessage(String message);
 
     /**
      * Indicates that a fatal error has occurred, logging will stop.
      *
      * @param message
      */
-    public void OnFatalMessage(String message);
+    public void onFatalMessage(String message);
 
     /**
      * A new location fix has been obtained.
      *
      * @param loc
      */
-    public void OnLocationUpdate(Location loc);
+    public void onLocationUpdate(Location loc);
 
     /**
      * New satellite count has been obtained.
      *
      * @param count
      */
-    public void OnSatelliteCount(int count);
+    public void onSatelliteCount(int count);
 
     /**
      * Asking the calling activity form to clear itself.
      */
-    public void ClearForm();
+    public void clearForm();
 
     /**
      * Asking the calling activity form to indicate that logging has stopped
      */
-    public void OnStopLogging();
+    public void onStopLogging();
 
     /**
      * Asking the calling activity form to indicate that an annotation is pending
      */
-    public void OnSetAnnotation();
+    public void onSetAnnotation();
 
     /**
      * Asking the calling activity form to indicate that no annotation is pending
      */
-    public void OnClearAnnotation();
+    public void onClearAnnotation();
 
     /**
      * Returns the activity
      *
      * @return
      */
-    public Activity GetActivity();
+    public Activity getActivity();
 
 }

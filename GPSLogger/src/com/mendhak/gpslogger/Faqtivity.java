@@ -35,7 +35,7 @@ public class Faqtivity extends SherlockActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Utilities.LogDebug("Faqtivity.onCreate");
+        Utilities.logDebug("Faqtivity.onCreate");
 
         super.onCreate(savedInstanceState);
 
@@ -57,7 +57,7 @@ public class Faqtivity extends SherlockActivity
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int itemId = item.getItemId();
-        Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
+        Utilities.logInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
         switch (itemId)
         {

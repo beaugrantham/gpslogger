@@ -49,7 +49,7 @@ public class PublisherFactory
 
     public static List<IPublisher> getPublishers(IActionListener callback, Context context)
     {
-        Utilities.LogInfo("Getting available publishers");
+        Utilities.logInfo("Getting available publishers");
 
         List<IPublisher> senders = new ArrayList<IPublisher>();
 
@@ -60,11 +60,11 @@ public class PublisherFactory
 
         if (AppSettings.isAutoPostEnabled())
         {
-           Utilities.LogInfo("Creating AutoPostHelper");
+           Utilities.logInfo("Creating AutoPostHelper");
            senders.add(new AutoPostHelper(callback, context));
         }
 
-        Utilities.LogInfo("Returning " + senders.size() + " senders");
+        Utilities.logInfo("Returning " + senders.size() + " senders");
 
         return senders;
 

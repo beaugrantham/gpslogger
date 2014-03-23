@@ -25,7 +25,6 @@ public class AppSettings extends Application
     // User Preferences
     // ---------------------------------------------------
     private static boolean useImperial = false;
-    private static boolean newFileOnceADay;
     private static boolean preferCellTower;
     private static boolean logToCustomUrl;
     private static String customLoggingUrl;
@@ -67,22 +66,6 @@ public class AppSettings extends Application
     static void setUseImperial(boolean useImperial)
     {
         AppSettings.useImperial = useImperial;
-    }
-
-    /**
-     * @return the newFileOnceADay
-     */
-    public static boolean shouldCreateNewFileOnceADay()
-    {
-        return newFileOnceADay;
-    }
-
-    /**
-     * @param newFileOnceADay the newFileOnceADay to set
-     */
-    static void setNewFileOnceADay(boolean newFileOnceADay)
-    {
-        AppSettings.newFileOnceADay = newFileOnceADay;
     }
 
     /**

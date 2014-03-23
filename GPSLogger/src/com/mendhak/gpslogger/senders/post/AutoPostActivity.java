@@ -1,13 +1,11 @@
 package com.mendhak.gpslogger.senders.post;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -64,7 +62,7 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
    public boolean onOptionsItemSelected(MenuItem item) {
 
       int itemId = item.getItemId();
-      Utilities.LogInfo("Option item selected - " + String.valueOf(item.getTitle()));
+      Utilities.logInfo("Option item selected - " + String.valueOf(item.getTitle()));
 
       switch (itemId) {
          case android.R.id.home:
@@ -80,7 +78,7 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
    public boolean onPreferenceClick(Preference preference) {
 
       if (!IsFormValid()) {
-         Utilities.MsgBox(getString(R.string.autopost_invalid_form),
+         Utilities.msgBox(getString(R.string.autopost_invalid_form),
                  getString(R.string.autopost_invalid_form_message),
                  AutoPostActivity.this);
          return false;
@@ -99,7 +97,7 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
    public boolean onKeyDown(int keyCode, KeyEvent event) {
       if (keyCode == KeyEvent.KEYCODE_BACK) {
          if (!IsFormValid()) {
-            Utilities.MsgBox(getString(R.string.autopost_invalid_form),
+            Utilities.msgBox(getString(R.string.autopost_invalid_form),
                     getString(R.string.autopost_invalid_form_message),
                     this);
             return false;
@@ -111,7 +109,7 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
       }
    }
 
-   public void MessageBoxResult(int which) {
+   public void messageBoxResult(int which) {
       finish();
    }
 
@@ -121,14 +119,14 @@ public class AutoPostActivity extends SherlockPreferenceActivity implements
    }
 
    private void FailureSending() {
-      Utilities.HideProgress();
-      Utilities.MsgBox(getString(R.string.sorry), getString(R.string.error_connection), this);
+      Utilities.hideProgress();
+      Utilities.msgBox(getString(R.string.sorry), getString(R.string.error_connection), this);
    }
 
    private void SuccessfulSending() {
-      Utilities.HideProgress();
-      Utilities.MsgBox(getString(R.string.success), getString(R.string.autopost_success), this);
-      // Utilities.MsgBox(getString(R.string.success), getString(R.string.success), this);
+      Utilities.hideProgress();
+      Utilities.msgBox(getString(R.string.success), getString(R.string.autopost_success), this);
+      // Utilities.msgBox(getString(R.string.success), getString(R.string.success), this);
    }
 
    public void onComplete() {

@@ -5,10 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
 import android.text.TextUtils;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.loggers.ILocationLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -119,7 +117,7 @@ public class LocationDbHelper extends SQLiteOpenHelper {
 
       db.close();
 
-      Utilities.LogInfo("Flagged " + rowsUpdated + " as published");
+      Utilities.logInfo("Flagged " + rowsUpdated + " as published");
 
       return rowsUpdated;
    }

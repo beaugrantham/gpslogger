@@ -61,7 +61,7 @@ public class AutoEmailHelper implements IActionListener, IPublisher
     public void onComplete()
     {
         // This was a success
-        Utilities.LogInfo("Email sent");
+        Utilities.logInfo("Email sent");
 
         callback.onComplete();
     }
@@ -105,9 +105,9 @@ class AutoSendHandler implements Runnable
             m.setTo(toArr);
             m.setFrom(AppSettings.getSenderAddress());
             m.setSubject("GPS Log file generated at "
-                    + Utilities.GetReadableDateTime(new Date()));
+                    + Utilities.getReadableDateTime(new Date()));
             m.setBody("GPS Log file generated at "
-                    + Utilities.GetReadableDateTime(new Date()));
+                    + Utilities.getReadableDateTime(new Date()));
 
             m.setPort(AppSettings.getSmtpPort());
             m.setSecurePort(AppSettings.getSmtpPort());
@@ -119,7 +119,7 @@ class AutoSendHandler implements Runnable
                 m.addAttachment(f.getName(), f.getAbsolutePath());
             }
 
-            Utilities.LogInfo("Sending email...");
+            Utilities.logInfo("Sending email...");
 
             if (m.send())
             {
@@ -133,7 +133,7 @@ class AutoSendHandler implements Runnable
         catch (Exception e)
         {
             helper.onFailure();
-            Utilities.LogError("AutoSendHandler.run", e);
+            Utilities.logError("AutoSendHandler.run", e);
         }
 
     }
@@ -186,9 +186,9 @@ class TestEmailHandler implements Runnable
 
 
             m.setSubject("Test Email from GPSLogger at "
-                    + Utilities.GetReadableDateTime(new Date()));
+                    + Utilities.getReadableDateTime(new Date()));
             m.setBody("Test Email from GPSLogger at "
-                    + Utilities.GetReadableDateTime(new Date()));
+                    + Utilities.getReadableDateTime(new Date()));
 
             m.setPort(smtpPort);
             m.setSecurePort(smtpPort);
@@ -196,7 +196,7 @@ class TestEmailHandler implements Runnable
             m.setSsl(smtpUseSsl);
             m.setDebuggable(true);
 
-            Utilities.LogInfo("Sending email...");
+            Utilities.logInfo("Sending email...");
             if (m.send())
             {
                 helper.onComplete();
@@ -209,7 +209,7 @@ class TestEmailHandler implements Runnable
         catch (Exception e)
         {
             helper.onFailure();
-            Utilities.LogError("AutoSendHandler.run", e);
+            Utilities.logError("AutoSendHandler.run", e);
         }
 
     }

@@ -1,31 +1,18 @@
 package com.mendhak.gpslogger.senders.post;
 
 import android.content.Context;
-import android.os.Build;
 import com.google.gson.Gson;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.db.LocationDbColumnType;
 import com.mendhak.gpslogger.db.LocationDbHelper;
 import com.mendhak.gpslogger.senders.IPublisher;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,7 +36,7 @@ public class AutoPostHelper implements IActionListener, IPublisher {
    @Override
    public void publish()
    {
-      Utilities.LogInfo("AutoPostHelper - publish");
+      Utilities.logInfo("AutoPostHelper - publish");
 
       Thread t = new Thread(new AutoSendHandler(this, context));
       t.start();
@@ -57,7 +44,7 @@ public class AutoPostHelper implements IActionListener, IPublisher {
 
    public void onComplete()
    {
-      Utilities.LogInfo("POST complete");
+      Utilities.logInfo("POST complete");
 
       callback.onComplete();
    }
@@ -87,12 +74,12 @@ class AutoSendHandler implements Runnable
    {
       try
       {
-         Utilities.LogInfo("Publishing via POST");
+         Utilities.logInfo("Publishing via POST");
 
          Map<Integer, Map<String, String>> records = locationDbHelper.getUnPublishedRecords();
 
          if (records == null || records.isEmpty()) {
-            Utilities.LogInfo("No records to publish");
+            Utilities.logInfo("No records to publish");
 
             helper.onComplete();
 
@@ -119,11 +106,11 @@ class AutoSendHandler implements Runnable
             throw new Exception("Only " + rowsUpdated + " of " + records.size() + " flagged as published");
          }
 
-         Utilities.LogInfo("POSTed " + rowsUpdated + " records");
+         Utilities.logInfo("POSTed " + rowsUpdated + " records");
       }
       catch (Exception e)
       {
-         Utilities.LogError("AutoSendHandler.run", e);
+         Utilities.logError("AutoSendHandler.run", e);
 
          helper.onFailure();
 

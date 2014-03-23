@@ -31,12 +31,10 @@ public class Session extends Application
     private static boolean gpsEnabled;
     private static boolean isStarted;
     private static boolean isUsingGps;
-    private static String currentFileName;
     private static int satellites;
     private static boolean notificationVisible;
     private static float autoSendDelay;
     private static long latestTimeStamp;
-    private static boolean addNewTrackSegment = true;
     private static Location currentLocationInfo;
     private static Location previousLocationInfo;
     private static double totalTravelled;
@@ -122,23 +120,6 @@ public class Session extends Application
     public static void setUsingGps(boolean isUsingGps)
     {
         Session.isUsingGps = isUsingGps;
-    }
-
-    /**
-     * @return the currentFileName (without extension)
-     */
-    public static String getCurrentFileName()
-    {
-        return currentFileName;
-    }
-
-    /**
-     * @param currentFileName the currentFileName to set
-     */
-    public static void setCurrentFileName(String currentFileName)
-    {
-        Utilities.LogInfo("Setting file name - " + currentFileName);
-        Session.currentFileName = currentFileName;
     }
 
     /**
@@ -288,22 +269,6 @@ public class Session extends Application
     public static void setLatestTimeStamp(long latestTimeStamp)
     {
         Session.latestTimeStamp = latestTimeStamp;
-    }
-
-    /**
-     * @return whether to create a new track segment
-     */
-    public static boolean shouldAddNewTrackSegment()
-    {
-        return addNewTrackSegment;
-    }
-
-    /**
-     * @param addNewTrackSegment set whether to create a new track segment
-     */
-    public static void setAddNewTrackSegment(boolean addNewTrackSegment)
-    {
-        Session.addNewTrackSegment = addNewTrackSegment;
     }
 
     /**

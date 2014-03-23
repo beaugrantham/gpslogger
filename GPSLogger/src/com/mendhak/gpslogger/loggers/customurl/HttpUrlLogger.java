@@ -56,7 +56,7 @@ public class HttpUrlLogger implements ILocationLogger {
     @Override
     public void log(Location loc, String annotation) throws Exception {
         HttpUrlLogHandler writeHandler = new HttpUrlLogHandler(customLoggingUrl, loc, annotation, satellites);
-        Utilities.LogDebug(String.format("There are currently %s tasks waiting on the GPX10 EXECUTOR.", EXECUTOR.getQueue().size()));
+        Utilities.logDebug(String.format("There are currently %s tasks waiting on the GPX10 EXECUTOR.", EXECUTOR.getQueue().size()));
         EXECUTOR.execute(writeHandler);
     }
 
@@ -83,7 +83,7 @@ class HttpUrlLogHandler implements Runnable {
     @Override
     public void run() {
         try {
-            Utilities.LogDebug("Writing HTTP URL Logger");
+            Utilities.logDebug("Writing HTTP URL Logger");
             HttpURLConnection conn = null;
 
             //String logUrl = "http://192.168.1.65:8000/test?lat=%LAT&lon=%LON&sat=%SAT&desc=%DESC&alt=%ALT&acc=%ACC&dir=%DIR&prov=%PROV&spd=%SPD&time=%TIME";
@@ -97,10 +97,10 @@ class HttpUrlLogHandler implements Runnable {
             logUrl = logUrl.replaceAll("(?i)%dir", String.valueOf(loc.getBearing()));
             logUrl = logUrl.replaceAll("(?i)%prov", String.valueOf(loc.getProvider()));
             logUrl = logUrl.replaceAll("(?i)%spd", String.valueOf(loc.getSpeed()));
-            logUrl = logUrl.replaceAll("(?i)%time", String.valueOf(Utilities.GetIsoDateTime(new Date(loc.getTime()))));
+            logUrl = logUrl.replaceAll("(?i)%time", String.valueOf(Utilities.getIsoDateTime(new Date(loc.getTime()))));
 
 
-            Utilities.LogDebug(logUrl);
+            Utilities.logDebug(logUrl);
 
 
             if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
@@ -116,7 +116,7 @@ class HttpUrlLogHandler implements Runnable {
             conn.setRequestProperty("User-Agent", "GPSLogger for Android");
             InputStream response = conn.getInputStream();
         } catch (Exception e) {
-            Utilities.LogError("HttpUrlLogHandler.run", e);
+            Utilities.logError("HttpUrlLogHandler.run", e);
 
         }
     }

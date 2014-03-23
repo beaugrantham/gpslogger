@@ -44,7 +44,7 @@ public class DatabaseLogger implements ILocationLogger {
    @Override
    public void log(Location loc, String annotation) throws Exception {
       DatabaseLogHandler handler = new DatabaseLogHandler(context, loc, annotation, satellites);
-      Utilities.LogDebug(String.format("There are currently %s tasks waiting on the DatabaseLogger EXECUTOR.", EXECUTOR.getQueue().size()));
+      Utilities.logDebug(String.format("There are currently %s tasks waiting on the DatabaseLogger EXECUTOR.", EXECUTOR.getQueue().size()));
       EXECUTOR.execute(handler);
    }
 

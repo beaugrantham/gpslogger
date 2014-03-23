@@ -34,7 +34,7 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
 
     GeneralLocationListener(GpsLoggingService activity)
     {
-        Utilities.LogDebug("GeneralLocationListener constructor");
+        Utilities.logDebug("GeneralLocationListener constructor");
         mainActivity = activity;
     }
 
@@ -48,14 +48,14 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         {
             if (loc != null)
             {
-                Utilities.LogVerbose("GeneralLocationListener.onLocationChanged");
+                Utilities.logVerbose("GeneralLocationListener.onLocationChanged");
                 mainActivity.onLocationChanged(loc);
             }
 
         }
         catch (Exception ex)
         {
-            Utilities.LogError("GeneralLocationListener.onLocationChanged", ex);
+            Utilities.logError("GeneralLocationListener.onLocationChanged", ex);
             mainActivity.setStatus(ex.getMessage());
         }
     }
@@ -63,8 +63,8 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
     @Override
     public void onProviderDisabled(String provider)
     {
-        Utilities.LogInfo("Provider disabled");
-        Utilities.LogDebug(provider);
+        Utilities.logInfo("Provider disabled");
+        Utilities.logDebug(provider);
         mainActivity.restartGpsManagers();
     }
 
@@ -72,8 +72,8 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
     public void onProviderEnabled(String provider)
     {
 
-        Utilities.LogInfo("Provider enabled");
-        Utilities.LogDebug(provider);
+        Utilities.logInfo("Provider enabled");
+        Utilities.logDebug(provider);
         mainActivity.restartGpsManagers();
     }
 
@@ -82,18 +82,18 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
     {
         if (status == LocationProvider.OUT_OF_SERVICE)
         {
-            Utilities.LogDebug(provider + " is out of service");
+            Utilities.logDebug(provider + " is out of service");
             mainActivity.stopManagerAndResetAlarm();
         }
 
         if (status == LocationProvider.AVAILABLE)
         {
-            Utilities.LogDebug(provider + " is available");
+            Utilities.logDebug(provider + " is available");
         }
 
         if (status == LocationProvider.TEMPORARILY_UNAVAILABLE)
         {
-            Utilities.LogDebug(provider + " is temporarily unavailable");
+            Utilities.logDebug(provider + " is temporarily unavailable");
             mainActivity.stopManagerAndResetAlarm();
         }
     }
@@ -105,13 +105,13 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
         switch (event)
         {
             case GpsStatus.GPS_EVENT_FIRST_FIX:
-                Utilities.LogDebug("GPS Event First Fix");
+                Utilities.logDebug("GPS Event First Fix");
                 mainActivity.setStatus(mainActivity.getString(R.string.fix_obtained));
                 break;
 
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
 
-                Utilities.LogDebug("GPS Satellite status obtained");
+                Utilities.logDebug("GPS Satellite status obtained");
                 GpsStatus status = mainActivity.gpsLocationManager.getGpsStatus(null);
 
                 int maxSatellites = status.getMaxSatellites();
@@ -129,12 +129,12 @@ class GeneralLocationListener implements LocationListener, GpsStatus.Listener
                 break;
 
             case GpsStatus.GPS_EVENT_STARTED:
-                Utilities.LogInfo("GPS started, waiting for fix");
+                Utilities.logInfo("GPS started, waiting for fix");
                 mainActivity.setStatus(mainActivity.getString(R.string.started_waiting));
                 break;
 
             case GpsStatus.GPS_EVENT_STOPPED:
-                Utilities.LogInfo("GPS Stopped");
+                Utilities.logInfo("GPS Stopped");
                 mainActivity.setStatus(mainActivity.getString(R.string.gps_stopped));
                 break;
 
