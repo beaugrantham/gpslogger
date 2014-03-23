@@ -43,6 +43,7 @@ import com.mendhak.gpslogger.loggers.LocationLoggerFactory;
 import com.mendhak.gpslogger.loggers.ILocationLogger;
 import com.mendhak.gpslogger.senders.AlarmReceiver;
 import com.mendhak.gpslogger.senders.PublisherFactory;
+import org.nologs.gpslogger.R;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

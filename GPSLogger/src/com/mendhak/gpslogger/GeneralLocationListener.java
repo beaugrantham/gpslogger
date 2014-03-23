@@ -24,6 +24,7 @@ import android.location.LocationListener;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import com.mendhak.gpslogger.common.Utilities;
+import org.nologs.gpslogger.R;
 
 import java.util.Iterator;
 

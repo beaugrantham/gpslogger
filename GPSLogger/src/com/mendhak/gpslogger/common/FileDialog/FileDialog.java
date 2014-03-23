@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import com.mendhak.gpslogger.R;
+import org.nologs.gpslogger.R;
 
 /**
  * https://code.google.com/p/android-file-dialog/

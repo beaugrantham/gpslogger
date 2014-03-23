@@ -52,6 +52,7 @@ import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.loggers.LocationLoggerFactory;
 import com.mendhak.gpslogger.loggers.ILocationLogger;
+import org.nologs.gpslogger.R;
 
 import java.text.NumberFormat;
 import java.util.Date;

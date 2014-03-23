@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.mendhak.gpslogger.common.Utilities;
+import org.nologs.gpslogger.R;
 
 /**
  * Created with IntelliJ IDEA.

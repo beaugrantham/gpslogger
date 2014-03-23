@@ -25,8 +25,7 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
-import com.mendhak.gpslogger.R;
+import org.nologs.gpslogger.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

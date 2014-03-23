@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.mendhak.gpslogger.GpsMainActivity;
-import com.mendhak.gpslogger.R;
 import com.mendhak.gpslogger.common.Utilities;
+import org.nologs.gpslogger.R;
 
 import java.text.MessageFormat;
 

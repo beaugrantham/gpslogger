@@ -35,6 +35,7 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.mendhak.gpslogger.common.FileDialog.FileDialog;
 import com.mendhak.gpslogger.common.Utilities;
+import org.nologs.gpslogger.R;
 
 public class GpsSettingsActivity extends SherlockPreferenceActivity
 {
