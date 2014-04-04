@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import org.nologs.gpslogger.R;
 
@@ -174,7 +175,8 @@ public class Utilities
              AppSettings.setRetryInterval(60);
         }
 
-        AppSettings.setTimeoutSeconds(Integer.valueOf(prefs.getString("timeout_time", "0")));
+        String timeout = prefs.getString("timeout_time", "0");
+        AppSettings.setTimeoutSeconds(!TextUtils.isEmpty(timeout) ? Integer.valueOf(timeout) : 0);
 
         AppSettings.setAutoPublishEnabled(prefs.getBoolean("autopublish_enabled", false));
 
