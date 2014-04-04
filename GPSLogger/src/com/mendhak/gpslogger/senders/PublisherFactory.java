@@ -21,7 +21,6 @@ import android.content.Context;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
 import com.mendhak.gpslogger.common.Utilities;
-import com.mendhak.gpslogger.senders.email.AutoEmailHelper;
 import com.mendhak.gpslogger.senders.post.AutoPostHelper;
 
 import java.util.ArrayList;
@@ -52,11 +51,6 @@ public class PublisherFactory
         Utilities.logInfo("Getting available publishers");
 
         List<IPublisher> senders = new ArrayList<IPublisher>();
-
-        if (AppSettings.isAutoEmailEnabled())
-        {
-            senders.add(new AutoEmailHelper(callback));
-        }
 
         if (AppSettings.isAutoPostEnabled())
         {

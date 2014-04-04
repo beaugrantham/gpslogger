@@ -32,17 +32,9 @@ public class AppSettings extends Application
     private static int minimumSeconds;
     private static boolean keepFix;
     private static int retryInterval;
-    private static Float autoSendDelay = 0f;
-    private static boolean autoSendEnabled = false;
+    private static Float autoPublishDelay = 0f;
+    private static boolean autoPublishEnabled = false;
 
-    private static boolean autoEmailEnabled = false;
-    private static String smtpServer;
-    private static String smtpPort;
-    private static String smtpUsername;
-    private static String smtpPassword;
-    private static String smtpFrom;
-    private static String autoEmailTargets;
-    private static boolean smtpSsl;
     private static boolean debugToFile;
     private static int minimumDistance;
     private static int minimumAccuracy;
@@ -51,6 +43,8 @@ public class AppSettings extends Application
     private static String postUrl;
 
     private static String gpsLoggerFolder;
+
+    private static int timeoutSeconds;
 
     /**
      * @return the useImperial
@@ -184,35 +178,35 @@ public class AppSettings extends Application
     }
 
     /**
-     * @return the autoSendDelay
+     * @return the autoPublishDelay
      */
-    public static Float getAutoSendDelay()
+    public static Float getAutoPublishDelay()
     {
-        if (autoSendDelay >= 8f)
+        if (autoPublishDelay >= 8f)
         {
             return 8f;
         }
         else
         {
-            return autoSendDelay;
+            return autoPublishDelay;
         }
 
 
     }
 
     /**
-     * @param autoSendDelay the autoSendDelay to set
+     * @param autoPublishDelay the autoPublishDelay to set
      */
-    static void setAutoSendDelay(Float autoSendDelay)
+    static void setAutoPublishDelay(Float autoPublishDelay)
     {
 
-        if (autoSendDelay >= 8f)
+        if (autoPublishDelay >= 8f)
         {
-            AppSettings.autoSendDelay = 8f;
+            AppSettings.autoPublishDelay = 8f;
         }
         else
         {
-            AppSettings.autoSendDelay = autoSendDelay;
+            AppSettings.autoPublishDelay = autoPublishDelay;
         }
 
 
@@ -227,84 +221,6 @@ public class AppSettings extends Application
       AppSettings.autoPostEnabled = autoPostEnabled;
    }
 
-    /**
-     * @return the autoEmailEnabled
-     */
-    public static boolean isAutoEmailEnabled()
-    {
-        return autoEmailEnabled;
-    }
-
-    /**
-     * @param autoEmailEnabled the autoEmailEnabled to set
-     */
-    static void setAutoEmailEnabled(boolean autoEmailEnabled)
-    {
-        AppSettings.autoEmailEnabled = autoEmailEnabled;
-    }
-
-
-    static void setSmtpServer(String smtpServer)
-    {
-        AppSettings.smtpServer = smtpServer;
-    }
-
-    public static String getSmtpServer()
-    {
-        return smtpServer;
-    }
-
-    static void setSmtpPort(String smtpPort)
-    {
-        AppSettings.smtpPort = smtpPort;
-    }
-
-    public static String getSmtpPort()
-    {
-        return smtpPort;
-    }
-
-    static void setSmtpUsername(String smtpUsername)
-    {
-        AppSettings.smtpUsername = smtpUsername;
-    }
-
-    public static String getSmtpUsername()
-    {
-        return smtpUsername;
-    }
-
-
-    static void setSmtpPassword(String smtpPassword)
-    {
-        AppSettings.smtpPassword = smtpPassword;
-    }
-
-    public static String getSmtpPassword()
-    {
-        return smtpPassword;
-    }
-
-    static void setSmtpSsl(boolean smtpSsl)
-    {
-        AppSettings.smtpSsl = smtpSsl;
-    }
-
-    public static boolean isSmtpSsl()
-    {
-        return smtpSsl;
-    }
-
-    static void setAutoEmailTargets(String autoEmailTargets)
-    {
-        AppSettings.autoEmailTargets = autoEmailTargets;
-    }
-
-    public static String getAutoEmailTargets()
-    {
-        return autoEmailTargets;
-    }
-
     public static boolean isDebugToFile()
     {
         return debugToFile;
@@ -315,39 +231,14 @@ public class AppSettings extends Application
         AppSettings.debugToFile = debugToFile;
     }
 
-    private static String getSmtpFrom()
+    public static boolean isAutoPublishEnabled()
     {
-        return smtpFrom;
+        return autoPublishEnabled;
     }
 
-    public static void setSmtpFrom(String smtpFrom)
+    public static void setAutoPublishEnabled(boolean autoPublishEnabled)
     {
-        AppSettings.smtpFrom = smtpFrom;
-    }
-
-    /**
-     * Returns the from value to use when sending an email
-     *
-     * @return
-     */
-    public static String getSenderAddress()
-    {
-        if (getSmtpFrom() != null && getSmtpFrom().length() > 0)
-        {
-            return getSmtpFrom();
-        }
-
-        return getSmtpUsername();
-    }
-
-    public static boolean isAutoSendEnabled()
-    {
-        return autoSendEnabled;
-    }
-
-    public static void setAutoSendEnabled(boolean autoSendEnabled)
-    {
-        AppSettings.autoSendEnabled = autoSendEnabled;
+        AppSettings.autoPublishEnabled = autoPublishEnabled;
     }
 
     public static boolean shouldLogToCustomUrl() {
@@ -381,5 +272,13 @@ public class AppSettings extends Application
 
     public static void setPostUrl(String postUrl) {
        AppSettings.postUrl = postUrl;
+    }
+
+    public static int getTimeoutSeconds() {
+       return timeoutSeconds;
+    }
+
+    public static void setTimeoutSeconds(int timeoutSeconds) {
+       AppSettings.timeoutSeconds = timeoutSeconds;
     }
 }

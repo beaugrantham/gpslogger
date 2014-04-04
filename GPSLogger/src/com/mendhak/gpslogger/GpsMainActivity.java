@@ -30,9 +30,11 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -123,7 +125,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-
         Utilities.logDebug("GpsMainActivity.onCreate");
 
         super.onCreate(savedInstanceState);
@@ -169,11 +170,31 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         startAndBindService();
     }
 
+   @Override
+   protected void onNewIntent(Intent intent) {
+      if (intent != null) {
+         String action = intent.getAction();
+         String type = intent.getType();
+
+         if (Intent.ACTION_SEND.equals(action) && type != null) {
+            Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
+
+            // TODO
+            // Placeholder for sharing images
+
+            Utilities.msgBox("intent", "action - " + intent.getAction(), this);
+
+            annotate(imageUri.toString());
+         }
+      }
+   }
+
     @Override
     protected void onResume()
     {
         Utilities.logDebug("GpsMainactivity.onResume");
         super.onResume();
+
         getPreferences();
         startAndBindService();
 
@@ -187,7 +208,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     {
         Utilities.logDebug("startAndBindService - binding now");
 
-        serviceIntent = new Intent(this, GpsLoggingService.class);
+       serviceIntent = new Intent(this, GpsLoggingService.class);
         // Start the service in case it isn't already running
         startService(serviceIntent);
         // Now bind to service
@@ -330,7 +351,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             TextView txtLoggingTo = (TextView) findViewById(R.id.txtLoggingTo);
             TextView txtFrequency = (TextView) findViewById(R.id.txtFrequency);
             TextView txtDistance = (TextView) findViewById(R.id.txtDistance);
-            TextView txtAutoEmail = (TextView) findViewById(R.id.txtAutoEmail);
+            TextView txtAutoPublish = (TextView) findViewById(R.id.txtAutoPublish);
 
             List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
 
@@ -385,30 +406,28 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
                 txtDistance.setText(R.string.summary_dist_regardless);
             }
 
-
-            if (AppSettings.isAutoSendEnabled())
+            if (AppSettings.isAutoPublishEnabled())
             {
-                String autoEmailResx;
+                String autoPublishResx;
 
-                if (AppSettings.getAutoSendDelay() == 0)
+                if (AppSettings.getAutoPublishDelay() == 0)
                 {
-                    autoEmailResx = "autoemail_frequency_whenistop";
+                    autoPublishResx = "autopublish_frequency_whenistop";
                 }
                 else
                 {
 
-                    autoEmailResx = "autoemail_frequency_"
-                            + String.valueOf(AppSettings.getAutoSendDelay()).replace(".", "");
+                    autoPublishResx = "autopublish_frequency_"
+                            + String.valueOf(AppSettings.getAutoPublishDelay()).replace(".", "");
                 }
 
-                String autoEmailDesc = getString(getResources().getIdentifier(autoEmailResx, "string", getPackageName()));
+                String autoPublishDesc = getString(getResources().getIdentifier(autoPublishResx, "string", getPackageName()));
 
-                txtAutoEmail.setText(autoEmailDesc);
+                txtAutoPublish.setText(autoPublishDesc);
             }
             else
             {
-                TableRow trAutoEmail = (TableRow) findViewById(R.id.trAutoEmail);
-                trAutoEmail.setVisibility(View.INVISIBLE);
+               txtAutoPublish.setText(R.string.disabled);
             }
         }
         catch (Exception ex)
@@ -500,7 +519,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
     {
         Utilities.logDebug("GpsMainActivity.publishNow");
 
-        if (AppSettings.isAutoSendEnabled())
+        if (AppSettings.isAutoPublishEnabled())
         {
             loggingService.forcePublish();
         }
@@ -513,10 +532,14 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
     }
 
+    private void annotate() {
+       annotate(null);
+    }
+
     /**
      * Collect a single point and annotate with a description.
      */
-    private void annotate()
+    private void annotate(String description)
     {
         Utilities.logDebug("GpsMainActivity.annotate");
 
@@ -527,7 +550,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
 
         // Set an EditText view to get user input
         final EditText input = new EditText(getApplicationContext());
-        input.setText(Session.getDescription());
+        input.setText(TextUtils.isEmpty(description) ? Session.getDescription() : description);
         alert.setView(input);
 
         /* ok */
@@ -680,6 +703,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             TextView txtDirection = (TextView) findViewById(R.id.txtDirection);
             TextView txtAccuracy = (TextView) findViewById(R.id.txtAccuracy);
             TextView txtTravelled = (TextView) findViewById(R.id.txtDistanceTravelled);
+
             String providerName = loc.getProvider();
 
             if (providerName.equalsIgnoreCase("gps"))
@@ -829,7 +853,6 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             }
 
             txtTravelled.setText(String.valueOf(Math.round(distanceValue)) + " " + distanceUnit + " (" + Session.getNumLegs() + " points)");
-
         }
         catch (Exception ex)
         {

@@ -20,6 +20,8 @@ package com.mendhak.gpslogger.common;
 
 import android.app.Application;
 import android.location.Location;
+import android.widget.TextView;
+import org.nologs.gpslogger.R;
 
 public class Session extends Application
 {
@@ -44,6 +46,7 @@ public class Session extends Application
     private static String description = "";
     private static boolean isSinglePointMode = false;
     private static int retryTimeout=0;
+    private static boolean idle = true;
 
     public static boolean isSinglePointMode()
     {
@@ -359,4 +362,11 @@ public class Session extends Application
         description = newDescription;
     }
 
+   public static boolean isIdle() {
+      return idle;
+   }
+
+   public static void setIdle(boolean idle) {
+      Session.idle = idle;
+   }
 }

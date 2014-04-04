@@ -174,30 +174,23 @@ public class Utilities
              AppSettings.setRetryInterval(60);
         }
 
-        AppSettings.setAutoSendEnabled(prefs.getBoolean("autosend_enabled", false));
+        AppSettings.setTimeoutSeconds(Integer.valueOf(prefs.getString("timeout_time", "0")));
+
+        AppSettings.setAutoPublishEnabled(prefs.getBoolean("autopublish_enabled", false));
 
         AppSettings.setAutoPostEnabled(prefs.getBoolean("autopost_enabled", false));
         AppSettings.setPostUrl(prefs.getString("post_url", "http://localhost:8080/post.do"));
 
-        AppSettings.setAutoEmailEnabled(prefs.getBoolean("autoemail_enabled", false));
-
-        if (Float.valueOf(prefs.getString("autosend_frequency", "0")) >= 8f)
+        if (Float.valueOf(prefs.getString("autopublish_frequency", "0")) >= 8f)
         {
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putString("autosend_frequency", "8");
+            editor.putString("autopublish_frequency", "8");
             editor.commit();
         }
 
-        AppSettings.setAutoSendDelay(Float.valueOf(prefs.getString("autosend_frequency", "0")));
+        AppSettings.setAutoPublishDelay(Float.valueOf(prefs.getString("autopublish_frequency", "0")));
 
-        AppSettings.setSmtpServer(prefs.getString("smtp_server", ""));
-        AppSettings.setSmtpPort(prefs.getString("smtp_port", "25"));
-        AppSettings.setSmtpSsl(prefs.getBoolean("smtp_ssl", true));
-        AppSettings.setSmtpUsername(prefs.getString("smtp_username", ""));
-        AppSettings.setSmtpPassword(prefs.getString("smtp_password", ""));
-        AppSettings.setAutoEmailTargets(prefs.getString("autoemail_target", ""));
         AppSettings.setDebugToFile(prefs.getBoolean("debugtofile", false));
-        AppSettings.setSmtpFrom(prefs.getString("smtp_from", ""));
 
         AppSettings.setGpsLoggerFolder(prefs.getString("gpslogger_folder", Environment.getExternalStorageDirectory() + "/GPSLogger"));
     }

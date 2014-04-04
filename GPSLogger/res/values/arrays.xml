@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="autosend_frequencies">
-        <item>@string/autoemail_frequency_whenistop</item>
-        <item>@string/autoemail_frequency_8</item>
-        <item>@string/autoemail_frequency_6</item>
-        <item>@string/autoemail_frequency_5</item>
-        <item>@string/autoemail_frequency_4</item>
-        <item>@string/autoemail_frequency_3</item>
-        <item>@string/autoemail_frequency_2</item>
-        <item>@string/autoemail_frequency_1</item>
-        <item>@string/autoemail_frequency_05</item>
-        <item>@string/autoemail_frequency_008</item>
+    <string-array name="autopublish_frequencies">
+        <item>@string/autopublish_frequency_whenistop</item>
+        <item>@string/autopublish_frequency_8</item>
+        <item>@string/autopublish_frequency_6</item>
+        <item>@string/autopublish_frequency_5</item>
+        <item>@string/autopublish_frequency_4</item>
+        <item>@string/autopublish_frequency_3</item>
+        <item>@string/autopublish_frequency_2</item>
+        <item>@string/autopublish_frequency_1</item>
+        <item>@string/autopublish_frequency_05</item>
+        <item>@string/autopublish_frequency_008</item>
     </string-array>
 
-    <string-array name="autosend_values">
+    <string-array name="autopublish_values">
         <item>0</item>
         <item>8</item>
         <item>6</item>
@@ -24,19 +24,5 @@
         <item>1</item>
         <item>0.5</item>
         <item>0.08</item>
-    </string-array>
-
-    <string-array name="autoemail_presets">
-        <item>@string/emailprovider_google</item>
-        <item>@string/emailprovider_msn</item>
-        <item>@string/emailprovider_yahoo</item>
-        <item>@string/emailprovider_manual</item>
-    </string-array>
-
-    <string-array name="autoemail_presetvalues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>99</item>
     </string-array>
 </resources>

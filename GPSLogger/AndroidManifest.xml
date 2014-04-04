@@ -38,6 +38,11 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
         </activity>
 
         <activity android:name="com.mendhak.gpslogger.common.FileDialog.FileDialog" ></activity>
@@ -55,14 +60,6 @@
         <activity android:name="com.mendhak.gpslogger.GpsSettingsActivity"
                   android:label="@string/settings_screen_name"
                   android:screenOrientation="portrait">
-        </activity>
-
-        <activity android:name="com.mendhak.gpslogger.senders.email.AutoEmailActivity"
-                  android:label="@string/autoemail_title" android:screenOrientation="portrait">
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="com.mendhak.gpslogger.AUTOEMAIL_SETUP"/>
-            </intent-filter>
         </activity>
 
         <activity android:name="com.mendhak.gpslogger.senders.post.AutoPostActivity"

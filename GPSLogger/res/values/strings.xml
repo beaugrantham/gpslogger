@@ -13,6 +13,8 @@
     <string name="add_description">Add a description</string>
     <string name="letters_numbers">Use only letters and numbers</string>
 
+    <string name="disabled">Disabled</string>
+
     <!-- menu strings -->
     <string name="menu_settings">Settings</string>
 
@@ -160,49 +162,19 @@
     <string name="startonbootup_title">Start on bootup</string>
     <string name="startonbootup_summary">Launch app and start logging when phone starts</string>
 
-    <string name="autoemail_title">Auto Email Setup</string>
-    <string name="autoemail_summary">Automatically emails the log file to an address of your choice</string>
-
     <string name="please_wait">Please wait.</string>
 
-    <string name="autoemail_autosend">Enable emails</string>
-    <string name="autoemail_autosend_summary">Enables sending the log file to an email address of your choosing.
-    </string>
+    <string name="autopublish_frequency_whenistop">When I press stop</string>
 
-    <string name="autoemail_target">Target email addresses</string>
-
-    <string name="autoemail_frequency_whenistop">When I press stop</string>
-
-    <string name="autoemail_frequency_8">After 8 hours</string>
-    <string name="autoemail_frequency_6">After 6 hours</string>
-    <string name="autoemail_frequency_5">After 5 hours</string>
-    <string name="autoemail_frequency_4">After 4 hours</string>
-    <string name="autoemail_frequency_3">After 3 hours</string>
-    <string name="autoemail_frequency_2">After 2 hours</string>
-    <string name="autoemail_frequency_1">After 1 hour</string>
-    <string name="autoemail_frequency_05">After 0.5 hour</string>
-    <string name="autoemail_frequency_008">After 5 minutes</string>
-    <string name="autoemail_smtp_category">Email Settings</string>
-    <string name="autoemail_username">Username</string>
-    <string name="autoemail_username_summary">Username with your email provider</string>
-    <string name="autoemail_password">Password</string>
-    <string name="autoemail_password_summary">Password with your email provider</string>
-    <string name="autoemail_port">Port</string>
-    <string name="autoemail_port_summary">SMTP Port</string>
-    <string name="autoemail_ssl">Use SSL?</string>
-    <string name="autoemail_ssl_summary">Try toggling this if you cannot connect</string>
-    <string name="autoemail_server">SMTP Server</string>
-    <string name="autoemail_server_summary">Hostname of the SMTP server to use</string>
-    <string name="autoemail_choosepreset">Mail Provider</string>
-    <string name="autoemail_choosepreset_summary">Pick a provider or choose manual</string>
-    <string name="autoemail_smtp_testemail">Test email</string>
-    <string name="autoemail_test">Send a test email using the above settings</string>
-    <string name="autoemail_sendingtest">Sending a test email</string>
-    <string name="autoemail_testresult_success">Email was sent</string>
-
-    <string name="autoemail_invalid_form">Invalid values</string>
-    <string name="autoemail_invalid_form_message">Please ensure that all of the fields have been filled in properly
-    </string>
+    <string name="autopublish_frequency_8">After 8 hours</string>
+    <string name="autopublish_frequency_6">After 6 hours</string>
+    <string name="autopublish_frequency_5">After 5 hours</string>
+    <string name="autopublish_frequency_4">After 4 hours</string>
+    <string name="autopublish_frequency_3">After 3 hours</string>
+    <string name="autopublish_frequency_2">After 2 hours</string>
+    <string name="autopublish_frequency_1">After 1 hour</string>
+    <string name="autopublish_frequency_05">After 0.5 hour</string>
+    <string name="autopublish_frequency_008">After 5 minutes</string>
 
     <string name="fix_obtained">Fix obtained</string>
     <string name="started_waiting">GPS started, waiting for fix</string>
@@ -217,33 +189,20 @@
     <string name="pref_general_title">General Options</string>
     <string name="pref_general_summary">Startup and display options</string>
 
-
-    <string name="emailprovider_google">Google Mail</string>
-    <string name="emailprovider_yahoo">Yahoo! Mail</string>
-    <string name="emailprovider_msn">Windows Live Mail</string>
-    <string name="emailprovider_manual">Manual</string>
     <string name="btn_single_point">Log a single point</string>
 
-    <string name="autoemail_from">From address</string>
-    <string name="autoemail_from_summary">Some email providers require a from address. Use this only if you need it.
-    </string>
+    <string name="autopublish_enabled">Allow auto publishing</string>
+    <string name="autopublish_enabled_summary">Allows publishing location history to various targets</string>
+    <string name="autopublish_frequency_summary">How frequently location(s) should be published</string>
+    <string name="autopublish_frequency">How often?</string>
 
-    <string name="email_upload">Email a file</string>
-
-    <string name="autoemail_sendto_csv">Comma separated email addresses</string>
-
-    <string name="autosend_enabled">Allow auto publishing</string>
-    <string name="autosend_enabled_summary">Allows publishing location history to various targets</string>
-    <string name="autosend_frequency_summary">How frequently location(s) should be published</string>
-    <string name="autosend_frequency">How often?</string>
-
-    <string name="autosend_targets_category">Auto Send Targets</string>
+    <string name="autopublish_targets_category">Auto Send Targets</string>
     <string name="menu_publish_now">Auto Publishing Now</string>
-    <string name="autosend_sending">Auto publishing</string>
+    <string name="autopublish_sending">Auto publishing</string>
     <string name="summary_autosend">Auto publish:</string>
 
-    <string name="pref_autosend_title">Auto publishing</string>
-    <string name="pref_autosend_summary">Options for auto publishing</string>
+    <string name="pref_autopublish_title">Auto publishing</string>
+    <string name="pref_autopublish_summary">Options for auto publishing</string>
 
     <string name="shortcut_start">Start</string>
     <string name="shortcut_stop">Stop</string>

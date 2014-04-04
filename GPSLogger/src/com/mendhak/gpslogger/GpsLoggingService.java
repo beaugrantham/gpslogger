@@ -32,6 +32,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.text.format.DateFormat;
@@ -196,10 +197,10 @@ public class GpsLoggingService extends Service implements IActionListener {
     */
    public void setupAutoSendTimers() {
       Utilities.logDebug("GpsLoggingService.setupAutoSendTimers");
-      Utilities.logDebug("isAutoSendEnabled - " + String.valueOf(AppSettings.isAutoSendEnabled()));
-      Utilities.logDebug("Session.getAutoSendDelay - " + String.valueOf(Session.getAutoSendDelay()));
+      Utilities.logDebug("isAutoPublishEnabled - " + String.valueOf(AppSettings.isAutoPublishEnabled()));
+      Utilities.logDebug("Session.getAutoPublishDelay - " + String.valueOf(Session.getAutoSendDelay()));
 
-      if (AppSettings.isAutoSendEnabled() && Session.getAutoSendDelay() > 0) {
+      if (AppSettings.isAutoPublishEnabled() && Session.getAutoSendDelay() > 0) {
          Utilities.logDebug("Setting up autosend alarm");
          long triggerTime = System.currentTimeMillis() + (long) (Session.getAutoSendDelay() * 60 * 60 * 1000);
 
@@ -230,6 +231,7 @@ public class GpsLoggingService extends Service implements IActionListener {
 
    public void logOnce() {
       setForceLogOnce(true);
+
       if (Session.isStarted()) {
          startGpsManager();
       }
@@ -256,10 +258,10 @@ public class GpsLoggingService extends Service implements IActionListener {
     */
    private void autoPublishOnStop() {
       Utilities.logDebug("GpsLoggingService.autoPublishOnStop");
-      Utilities.logVerbose("isAutoSendEnabled - " + AppSettings.isAutoSendEnabled());
+      Utilities.logVerbose("isAutoPublishEnabled - " + AppSettings.isAutoPublishEnabled());
 
       // autoSendDelay 0 means send it when you stop logging.
-      if (AppSettings.isAutoSendEnabled() && Session.getAutoSendDelay() == 0) {
+      if (AppSettings.isAutoPublishEnabled() && Session.getAutoSendDelay() == 0) {
          Session.setReadyToBeAutoSent(true);
          autoPublishFile();
       }
@@ -288,9 +290,9 @@ public class GpsLoggingService extends Service implements IActionListener {
    protected void forcePublish() {
       Utilities.logDebug("GpsLoggingService.forcePublish");
 
-      if (AppSettings.isAutoSendEnabled()) {
+      if (AppSettings.isAutoPublishEnabled()) {
          if (isMainFormVisible()) {
-            Utilities.showProgress(mainServiceClient.getActivity(), getString(R.string.autosend_sending), getString(R.string.please_wait));
+            Utilities.showProgress(mainServiceClient.getActivity(), getString(R.string.autopublish_sending), getString(R.string.please_wait));
          }
 
          Utilities.logInfo("Force publishing");
@@ -306,12 +308,12 @@ public class GpsLoggingService extends Service implements IActionListener {
       Utilities.logDebug("GpsLoggingService.getPreferences");
       Utilities.populateAppSettings(getApplicationContext());
 
-      Utilities.logDebug("Session.getAutoSendDelay: " + Session.getAutoSendDelay());
-      Utilities.logDebug("AppSettings.getAutoSendDelay: " + AppSettings.getAutoSendDelay());
+      Utilities.logDebug("Session.getAutoPublishDelay: " + Session.getAutoSendDelay());
+      Utilities.logDebug("AppSettings.getAutoPublishDelay: " + AppSettings.getAutoPublishDelay());
 
-      if (Session.getAutoSendDelay() != AppSettings.getAutoSendDelay()) {
-         Utilities.logDebug("Old autoSendDelay - " + String.valueOf(Session.getAutoSendDelay()) + "; New -" + String.valueOf(AppSettings.getAutoSendDelay()));
-         Session.setAutoSendDelay(AppSettings.getAutoSendDelay());
+      if (Session.getAutoSendDelay() != AppSettings.getAutoPublishDelay()) {
+         Utilities.logDebug("Old autoSendDelay - " + String.valueOf(Session.getAutoSendDelay()) + "; New -" + String.valueOf(AppSettings.getAutoPublishDelay()));
+         Session.setAutoSendDelay(AppSettings.getAutoPublishDelay());
          setupAutoSendTimers();
       }
 
@@ -444,6 +446,19 @@ public class GpsLoggingService extends Service implements IActionListener {
    private void startGpsManager() {
       Utilities.logDebug("GpsLoggingService.startGpsManager");
 
+      if (AppSettings.getTimeoutSeconds() > 0) {
+         Handler timeoutHandler = new Handler();
+         timeoutHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+               if (!Session.isIdle()) {
+                  Utilities.logInfo("Timeout fetching GPS signal");
+                  stopManagerAndResetAlarm();
+               }
+            }
+         }, AppSettings.getTimeoutSeconds() * 1000);
+      }
+
       getPreferences();
 
       if (gpsLocationListener == null) {
@@ -461,6 +476,9 @@ public class GpsLoggingService extends Service implements IActionListener {
 
       if (Session.isGpsEnabled() && !AppSettings.shouldPreferCellTower()) {
          Utilities.logInfo("Requesting GPS location updates");
+
+         Session.setIdle(false);
+
          // gps satellite based
          gpsLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, gpsLocationListener);
 
@@ -469,6 +487,9 @@ public class GpsLoggingService extends Service implements IActionListener {
          Session.setUsingGps(true);
       } else if (Session.isTowerEnabled()) {
          Utilities.logInfo("Requesting tower location updates");
+
+         Session.setIdle(false);
+
          Session.setUsingGps(false);
          // Cell tower and wifi based
          towerLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, towerLocationListener);
@@ -628,6 +649,8 @@ public class GpsLoggingService extends Service implements IActionListener {
 
       }
 
+      Session.setIdle(true);
+
       Utilities.logInfo("New location obtained");
       Session.setLatestTimeStamp(System.currentTimeMillis());
       Session.setCurrentLocationInfo(loc);
@@ -725,6 +748,7 @@ public class GpsLoggingService extends Service implements IActionListener {
       Utilities.logDebug("GpsLoggingService.writeToFile");
 
       List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
+
       boolean atLeastOneAnnotationSuccess = false;
 
       for (ILocationLogger locationLogger : loggers) {

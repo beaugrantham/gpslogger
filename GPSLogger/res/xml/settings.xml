@@ -61,6 +61,12 @@
                                 android:numeric="integer" android:maxLength="4"
                                 android:hint="@string/retry_time_hint"/>
 
+            <EditTextPreference android:key="timeout_time"
+                                android:title="@string/timeout_time_title"
+                                android:summary="@string/timeout_time_summary"
+                                android:dialogTitle="@string/timeout_time_dialog_title"
+                                android:numeric="integer" android:maxLength="4"
+                                android:hint="@string/timeout_time_hint"/>
 
 
 
@@ -84,24 +90,20 @@
                             android:key="debugtofile" android:defaultValue="false"/>
 
     </PreferenceScreen>
-    <PreferenceScreen android:key="autosend_preferencescreen" android:title="@string/pref_autosend_title" android:summary="@string/pref_autosend_summary">
+    <PreferenceScreen android:key="autopublish_preferencescreen" android:title="@string/pref_autopublish_title" android:summary="@string/pref_autopublish_summary">
 
-        <CheckBoxPreference android:key="autosend_enabled"
-                            android:title="@string/autosend_enabled"
-                            android:summary="@string/autosend_enabled_summary" />
+        <CheckBoxPreference android:key="autopublish_enabled"
+                            android:title="@string/autopublish_enabled"
+                            android:summary="@string/autopublish_enabled_summary" />
 
 
-        <ListPreference android:key="autosend_frequency"
-                        android:title="@string/autosend_frequency"
-                        android:summary="@string/autosend_frequency_summary"
-                        android:entries="@array/autosend_frequencies" android:defaultValue="0"
-                        android:entryValues="@array/autosend_values"/>
+        <ListPreference android:key="autopublish_frequency"
+                        android:title="@string/autopublish_frequency"
+                        android:summary="@string/autopublish_frequency_summary"
+                        android:entries="@array/autopublish_frequencies" android:defaultValue="0"
+                        android:entryValues="@array/autopublish_values"/>
 
-        <PreferenceCategory android:title="@string/autosend_targets_category">
-            <Preference android:title="@string/autoemail_title"
-                        android:summary="@string/autoemail_summary" android:key="autoemail_setup">
-                <intent android:action="com.mendhak.gpslogger.AUTOEMAIL_SETUP"/>
-            </Preference>
+        <PreferenceCategory android:title="@string/autopublish_targets_category">
             <Preference android:title="@string/autopost_setup_title"
                         android:summary="@string/autopost_setup_summary" android:key="autopost_setup">
                 <intent android:action="com.mendhak.gpslogger.AUTOPOST_SETUP" />
