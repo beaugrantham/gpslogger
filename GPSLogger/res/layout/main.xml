@@ -131,6 +131,15 @@
                           android:layout_height="fill_parent"/>
             </TableRow>
 
+            <TableRow android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/trTimeout">
+                <TextView android:id="@+id/lblTimeout" android:layout_width="wrap_content"
+                          android:textSize="9dip" android:layout_height="fill_parent" android:textStyle="italic"
+                          android:paddingLeft="8dip" android:text="@string/summary_timeout"/>
+                <TextView android:id="@+id/txtTimeout" android:layout_width="wrap_content"
+                          android:paddingLeft="3dip" android:textSize="9dip" android:textStyle="italic"
+                          android:layout_height="fill_parent"/>
+            </TableRow>
+
             <TableRow android:layout_width="fill_parent"
                       android:layout_height="fill_parent" android:id="@+id/trAutoPublish">
                 <TextView android:id="@+id/lblAutoEmail" android:layout_width="wrap_content"

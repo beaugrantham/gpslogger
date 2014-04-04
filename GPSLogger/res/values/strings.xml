@@ -14,6 +14,7 @@
     <string name="letters_numbers">Use only letters and numbers</string>
 
     <string name="disabled">Disabled</string>
+    <string name="no">No</string>
 
     <!-- menu strings -->
     <string name="menu_settings">Settings</string>
@@ -43,6 +44,8 @@
     <string name="summary_dist_regardless">maximum</string>
     <string name="summary_current_filename">File:</string>
     <string name="summary_current_filename_format">%s (in your GPSLogger folder)</string>
+
+    <string name="summary_timeout">Timeout:</string>
 
     <!-- general -->
     <string name="foot">&#160;foot</string>
