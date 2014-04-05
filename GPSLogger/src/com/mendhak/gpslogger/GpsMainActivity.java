@@ -42,7 +42,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -348,6 +347,7 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
         Utilities.logDebug("GpsMainActivity.showPreferencesSummary");
         try
         {
+            TextView txtProvider = (TextView) findViewById(R.id.txtProvider);
             TextView txtLoggingTo = (TextView) findViewById(R.id.txtLoggingTo);
             TextView txtFrequency = (TextView) findViewById(R.id.txtFrequency);
             TextView txtDistance = (TextView) findViewById(R.id.txtDistance);
@@ -355,6 +355,8 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             TextView txtAutoPublish = (TextView) findViewById(R.id.txtAutoPublish);
 
             List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
+
+            txtProvider.setText(getApplicationContext().getString(AppSettings.getProviderType().getResx()));
 
             if (loggers.size() > 0)
             {

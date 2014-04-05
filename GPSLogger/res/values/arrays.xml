@@ -25,4 +25,16 @@
         <item>0.5</item>
         <item>0.08</item>
     </string-array>
+
+    <string-array name="providers">
+        <item>@string/provider_value_gps</item>
+        <item>@string/provider_value_gps_with_network_fallback</item>
+        <item>@string/provider_value_network</item>
+    </string-array>
+
+    <string-array name="provider_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
 </resources>

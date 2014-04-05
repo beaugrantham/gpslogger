@@ -119,7 +119,15 @@ public class Utilities
 
         AppSettings.setShowInNotificationBar(prefs.getBoolean("show_notification", true));
 
-        AppSettings.setPreferCellTower(prefs.getBoolean("prefer_celltower", false));
+        String provider = prefs.getString("provider", "");
+
+        if (!TextUtils.isEmpty(provider)) {
+           AppSettings.setProviderType(ProviderType.values()[Integer.parseInt(provider)]);
+        }
+        else
+        {
+           AppSettings.setProviderType(ProviderType.GPS_WITH_NETWORK_FALLBACK);
+        }
 
         String minimumDistanceString = prefs.getString("distance_before_logging", "0");
 

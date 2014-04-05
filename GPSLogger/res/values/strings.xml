@@ -36,6 +36,7 @@
 
     <string name="gpslogger_still_running">GPSLogger is still running.</string>
 
+    <string name="summary_provider">Location provider:</string>
     <string name="summary_loggingto">Logging to:</string>
     <string name="summary_loggingto_screen">screen only</string>
     <string name="summary_freq_every">Frequency:</string>
@@ -121,11 +122,11 @@
     <!-- Settings -->
     <string name="pref_logging_title">Logging details</string>
 
+    <string name="pref_provider_title">Location Provider</string>
+    <string name="provider_title">Location Provider</string>
+    <string name="provider_summary">Choose between using GPS and/or network based (celltower &amp; wifi) location providers.</string>
+
     <string name="pref_performance_title">Performance</string>
-    <string name="prefer_celltower_title">Prefer celltowers</string>
-    <string name="prefer_celltower_summary">Uses celltowers rather than satellites. Less accurate, but saves more
-        battery.
-    </string>
     <string name="time_before_logging_title">Time before logging</string>
     <string name="time_before_logging_summary">Use 0 for maximum frequency, but slower is better for battery life.
     </string>
@@ -178,6 +179,10 @@
     <string name="autopublish_frequency_1">After 1 hour</string>
     <string name="autopublish_frequency_05">After 0.5 hour</string>
     <string name="autopublish_frequency_008">After 5 minutes</string>
+
+    <string name="provider_value_gps">GPS Only</string>
+    <string name="provider_value_gps_with_network_fallback">GPS With Network Fallback</string>
+    <string name="provider_value_network">Network Only</string>
 
     <string name="fix_obtained">Fix obtained</string>
     <string name="started_waiting">GPS started, waiting for fix</string>

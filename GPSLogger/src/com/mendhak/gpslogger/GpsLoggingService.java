@@ -38,6 +38,7 @@ import android.os.SystemClock;
 import android.text.format.DateFormat;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.common.IActionListener;
+import com.mendhak.gpslogger.common.ProviderType;
 import com.mendhak.gpslogger.common.Session;
 import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.loggers.LocationLoggerFactory;
@@ -453,6 +454,9 @@ public class GpsLoggingService extends Service implements IActionListener {
             public void run() {
                if (!Session.isIdle()) {
                   Utilities.logInfo("Timeout fetching GPS signal");
+
+                  // TODO - fallback to network if configured
+
                   stopManagerAndResetAlarm();
                }
             }
@@ -474,7 +478,7 @@ public class GpsLoggingService extends Service implements IActionListener {
 
       checkTowerAndGpsStatus();
 
-      if (Session.isGpsEnabled() && !AppSettings.shouldPreferCellTower()) {
+      if (Session.isGpsEnabled() && !AppSettings.getProviderType().equals(ProviderType.NETWORK)) {
          Utilities.logInfo("Requesting GPS location updates");
 
          Session.setIdle(false);
@@ -485,7 +489,7 @@ public class GpsLoggingService extends Service implements IActionListener {
          gpsLocationManager.addGpsStatusListener(gpsLocationListener);
 
          Session.setUsingGps(true);
-      } else if (Session.isTowerEnabled()) {
+      } else if (Session.isTowerEnabled() && !AppSettings.getProviderType().equals(ProviderType.GPS)) {
          Utilities.logInfo("Requesting tower location updates");
 
          Session.setIdle(false);

@@ -25,7 +25,6 @@ public class AppSettings extends Application
     // User Preferences
     // ---------------------------------------------------
     private static boolean useImperial = false;
-    private static boolean preferCellTower;
     private static boolean logToCustomUrl;
     private static String customLoggingUrl;
     private static boolean showInNotificationBar;
@@ -34,6 +33,8 @@ public class AppSettings extends Application
     private static int retryInterval;
     private static Float autoPublishDelay = 0f;
     private static boolean autoPublishEnabled = false;
+
+    private static ProviderType providerType;
 
     private static boolean debugToFile;
     private static int minimumDistance;
@@ -60,22 +61,6 @@ public class AppSettings extends Application
     static void setUseImperial(boolean useImperial)
     {
         AppSettings.useImperial = useImperial;
-    }
-
-    /**
-     * @return the preferCellTower
-     */
-    public static boolean shouldPreferCellTower()
-    {
-        return preferCellTower;
-    }
-
-    /**
-     * @param preferCellTower the preferCellTower to set
-     */
-    static void setPreferCellTower(boolean preferCellTower)
-    {
-        AppSettings.preferCellTower = preferCellTower;
     }
 
     /**
@@ -281,4 +266,12 @@ public class AppSettings extends Application
     public static void setTimeoutSeconds(int timeoutSeconds) {
        AppSettings.timeoutSeconds = timeoutSeconds;
     }
+
+   public static ProviderType getProviderType() {
+      return providerType;
+   }
+
+   public static void setProviderType(ProviderType providerType) {
+      AppSettings.providerType = providerType;
+   }
 }
