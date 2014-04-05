@@ -179,6 +179,7 @@
     <string name="autopublish_frequency_1">After 1 hour</string>
     <string name="autopublish_frequency_05">After 0.5 hour</string>
     <string name="autopublish_frequency_008">After 5 minutes</string>
+    <string name="autopublish_frequency_0017">After 1 minute</string>
 
     <string name="provider_value_gps">GPS Only</string>
     <string name="provider_value_gps_with_network_fallback">GPS With Network Fallback</string>

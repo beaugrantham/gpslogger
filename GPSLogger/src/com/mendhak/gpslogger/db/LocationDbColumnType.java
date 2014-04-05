@@ -9,7 +9,7 @@ package com.mendhak.gpslogger.db;
  */
 public enum LocationDbColumnType {
 
-   ID ("id"),
+   ID ("_id"),
    LATITUDE ("latitude"),
    LONGITUDE ("longitude"),
    ANNOTATION ("annotation"),

@@ -354,9 +354,9 @@ public class GpsMainActivity extends SherlockActivity implements OnCheckedChange
             TextView txtTimeout = (TextView) findViewById(R.id.txtTimeout);
             TextView txtAutoPublish = (TextView) findViewById(R.id.txtAutoPublish);
 
-            List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
-
             txtProvider.setText(getApplicationContext().getString(AppSettings.getProviderType().getResx()));
+
+            List<ILocationLogger> loggers = LocationLoggerFactory.getLoggers(this);
 
             if (loggers.size() > 0)
             {

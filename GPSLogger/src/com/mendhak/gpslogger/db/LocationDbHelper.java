@@ -23,7 +23,7 @@ import java.util.TreeMap;
  * To change this template use File | Settings | File Templates.
  */
 public class LocationDbHelper extends SQLiteOpenHelper {
-   public static final int DATABASE_VERSION = 3;
+   public static final int DATABASE_VERSION = 1;
 
    public static final String DATABASE_NAME = "gpslogger.db";
 
@@ -35,8 +35,8 @@ public class LocationDbHelper extends SQLiteOpenHelper {
 
    public void onCreate(SQLiteDatabase db) {
       final String createLocationTable =
-              "CREATE TABLE " + TABLE_NAME + " (" +
-                      LocationDbColumnType.ID.getColumnName() + " INTEGER PRIMARY KEY, " +
+              "CREATE TABLE " + TABLE_NAME + " ( " +
+                      LocationDbColumnType.ID.getColumnName() + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                       LocationDbColumnType.LATITUDE.getColumnName() + " TEXT, " +
                       LocationDbColumnType.LONGITUDE.getColumnName() + " TEXT, " +
                       LocationDbColumnType.ANNOTATION.getColumnName() + " TEXT, " +

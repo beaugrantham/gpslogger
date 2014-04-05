@@ -11,6 +11,7 @@
         <item>@string/autopublish_frequency_1</item>
         <item>@string/autopublish_frequency_05</item>
         <item>@string/autopublish_frequency_008</item>
+        <item>@string/autopublish_frequency_0017</item>
     </string-array>
 
     <string-array name="autopublish_values">
@@ -24,6 +25,7 @@
         <item>1</item>
         <item>0.5</item>
         <item>0.08</item>
+        <item>0.017</item>
     </string-array>
 
     <string-array name="providers">

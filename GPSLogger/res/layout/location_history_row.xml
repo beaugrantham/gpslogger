@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dip" >
+
+    <!-- Large ID -->
+    <LinearLayout android:id="@+id/loc_history_row_id_wrapper"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:padding="3dip"
+                  android:layout_alignParentLeft="true"
+                  android:layout_marginRight="5dip">
+
+        <TextView
+                android:id="@+id/loc_history_row_id"
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:gravity="center"
+                android:textSize="30dip"
+                android:text="1"/>
+
+    </LinearLayout>
+
+    <!-- Lat/Lon -->
+    <TextView
+            android:id="@+id/loc_history_row_latitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/loc_history_row_id_wrapper"
+            android:layout_toRightOf="@+id/loc_history_row_id_wrapper"
+            android:text="99.999999"
+            android:typeface="sans"
+            android:textSize="15dip"
+            android:textStyle="bold"/>
+    <TextView
+            android:id="@+id/loc_history_row_comma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/loc_history_row_latitude"
+            android:layout_toRightOf="@+id/loc_history_row_latitude"
+            android:text=", "
+            android:typeface="sans"
+            android:textSize="15dip"
+            android:textStyle="bold"/>
+    <TextView
+            android:id="@+id/loc_history_row_longitude"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/loc_history_row_comma"
+            android:layout_toRightOf="@+id/loc_history_row_comma"
+            android:text="-99.999999"
+            android:typeface="sans"
+            android:textSize="15dip"
+            android:textStyle="bold"/>
+
+    <!-- Annotation -->
+    <TextView
+            android:id="@+id/loc_history_row_annotation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loc_history_row_latitude"
+            android:textColor="#343434"
+            android:textSize="10dip"
+            android:layout_marginTop="1dip"
+            android:layout_toRightOf="@+id/loc_history_row_id_wrapper"
+            android:text="location annotation" />
+
+    <!-- Timestamp -->
+    <TextView
+            android:id="@+id/loc_history_row_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/loc_history_row_longitude"
+            android:gravity="right"
+            android:text="2014-01-01 01:01:01"
+            android:layout_marginRight="5dip"
+            android:textSize="10dip"
+            android:textStyle="bold"/>
+    <TextView
+            android:id="@+id/loc_history_row_published"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/loc_history_row_time"
+            android:gravity="right"
+            android:text="published"
+            android:layout_marginRight="5dip"
+            android:textSize="10dip"
+            android:textStyle="bold"/>
+</RelativeLayout>

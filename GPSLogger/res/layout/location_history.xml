@@ -5,8 +5,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:id="@+id/locationhistory">
-    </TableLayout>
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/location_history"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content" />
 </LinearLayout>
