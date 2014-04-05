@@ -275,8 +275,8 @@ public class GpsLoggingService extends Service implements IActionListener {
       Utilities.logDebug("GpsLoggingService.autoPublishFile");
       Utilities.logVerbose("isReadyToBeAutoSent - " + Session.isReadyToBeAutoSent());
 
-      // Check that auto emailing is enabled, there's a valid location
-      if (Session.isReadyToBeAutoSent() && Session.hasValidLocation()) {
+      // Check that auto emailing is enabled
+      if (Session.isReadyToBeAutoSent()) {
 
          //Don't show a progress bar when auto-emailing
          Utilities.logInfo("Auto Sending Location History");

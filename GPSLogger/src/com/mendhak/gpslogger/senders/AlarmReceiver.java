@@ -20,6 +20,7 @@ package com.mendhak.gpslogger.senders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import com.mendhak.gpslogger.GpsLoggingService;
 import com.mendhak.gpslogger.common.Utilities;
 
 
@@ -33,7 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver
         {
             Utilities.logInfo("Auto Send alarm received");
 
-            Intent serviceIntent = new Intent(context.getPackageName() + ".GpsLoggingService");
+            Intent serviceIntent = new Intent(context, GpsLoggingService.class);
             serviceIntent.putExtra("emailAlarm", true);
             // Start the service in case it isn't already running
             context.startService(serviceIntent);
