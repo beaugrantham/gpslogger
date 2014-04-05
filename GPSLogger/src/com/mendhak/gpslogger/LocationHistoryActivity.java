@@ -33,9 +33,11 @@ public class LocationHistoryActivity extends SherlockActivity implements LoaderM
            LocationDbColumnType.ID.getColumnName(),
            LocationDbColumnType.LATITUDE.getColumnName(),
            LocationDbColumnType.LONGITUDE.getColumnName(),
-           LocationDbColumnType.TIME.getColumnName(),
+           "DATETIME(" + LocationDbColumnType.TIME.getColumnName() + " / 1000, 'unixepoch') AS " + LocationDbColumnType.TIME.getColumnName(),
+           LocationDbColumnType.ACCURACY.getColumnName(),
+           LocationDbColumnType.SATELLITES.getColumnName(),
            LocationDbColumnType.ANNOTATION.getColumnName(),
-           LocationDbColumnType.PUBLISHED.getColumnName()};
+           "CASE WHEN " + LocationDbColumnType.PUBLISHED.getColumnName() + " = 1 THEN 'published' else '' END AS " + LocationDbColumnType.PUBLISHED.getColumnName()};
 
    /**
     * Event raised when the form is created for the first time
@@ -65,6 +67,8 @@ public class LocationHistoryActivity extends SherlockActivity implements LoaderM
               LocationDbColumnType.LATITUDE.getColumnName(),
               LocationDbColumnType.LONGITUDE.getColumnName(),
               LocationDbColumnType.TIME.getColumnName(),
+              LocationDbColumnType.ACCURACY.getColumnName(),
+              LocationDbColumnType.SATELLITES.getColumnName(),
               LocationDbColumnType.ANNOTATION.getColumnName(),
               LocationDbColumnType.PUBLISHED.getColumnName()};
       int[] toViews = {
@@ -72,6 +76,8 @@ public class LocationHistoryActivity extends SherlockActivity implements LoaderM
               R.id.loc_history_row_latitude,
               R.id.loc_history_row_longitude,
               R.id.loc_history_row_time,
+              R.id.loc_history_row_accuracy,
+              R.id.loc_history_row_satellites,
               R.id.loc_history_row_annotation,
               R.id.loc_history_row_published};
 
