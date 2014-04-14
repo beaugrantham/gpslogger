@@ -1,16 +1,22 @@
 package com.mendhak.gpslogger;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.mendhak.gpslogger.common.Utilities;
@@ -51,6 +57,20 @@ public class LocationHistoryActivity extends SherlockActivity implements LoaderM
       setContentView(R.layout.location_history);
 
       ListView listView = (ListView) findViewById(R.id.location_history);
+
+      listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+         @Override
+         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            TextView latitudeTextView = (TextView) view.findViewById(R.id.loc_history_row_latitude);
+            CharSequence latitude = latitudeTextView.getText();
+
+            TextView longitudeTextView = (TextView) view.findViewById(R.id.loc_history_row_longitude);
+            CharSequence longitude = longitudeTextView.getText();
+
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?q=" + latitude + "," + longitude));
+            startActivity(intent);
+         }
+      });
 
       // Create a progress bar to display while the list loads
       ProgressBar progressBar = new ProgressBar(this);
