@@ -18,8 +18,6 @@
 package com.mendhak.gpslogger.senders.dropbox;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AccessTokenPair;
@@ -30,6 +28,7 @@ import com.mendhak.gpslogger.BuildConfig;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.senders.IFileSender;
 import com.path.android.jobqueue.JobManager;
+import com.path.android.jobqueue.TagConstraint;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -39,8 +38,6 @@ import java.util.List;
 public class DropBoxHelper implements IFileSender {
 
     private static final org.slf4j.Logger tracer = LoggerFactory.getLogger(DropBoxHelper.class.getSimpleName());
-    final static public String ACCESS_KEY_NAME = "DROPBOX_ACCESS_KEY";
-    final static public String ACCESS_SECRET_NAME = "DROPBOX_ACCESS_SECRET";
     final static private Session.AccessType ACCESS_TYPE = Session.AccessType.APP_FOLDER;
 
     Context context;
@@ -86,22 +83,13 @@ public class DropBoxHelper implements IFileSender {
      * @param secret The Access Secret
      */
     private void storeKeys(String key, String secret) {
-
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.putString(ACCESS_KEY_NAME, key);
-        edit.putString(ACCESS_SECRET_NAME, secret);
-        edit.apply();
+        AppSettings.setDropBoxAccessKeyName(key);
+        AppSettings.setDropBoxAccessSecret(secret);
     }
 
     private void clearKeys() {
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        SharedPreferences.Editor edit = prefs.edit();
-        edit.remove(ACCESS_KEY_NAME);
-        edit.remove(ACCESS_SECRET_NAME);
-        edit.apply();
+        AppSettings.setDropBoxAccessKeyName(null);
+        AppSettings.setDropBoxAccessSecret(null);
     }
 
     private AndroidAuthSession buildSession() {
@@ -127,9 +115,8 @@ public class DropBoxHelper implements IFileSender {
      * @return Array of [access_key, access_secret], or null if none stored
      */
     private String[] getKeys() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String key = prefs.getString(ACCESS_KEY_NAME, null);
-        String secret = prefs.getString(ACCESS_SECRET_NAME, null);
+        String key = AppSettings.getDropBoxAccessKeyName();
+        String secret = AppSettings.getDropBoxAccessSecretName();
         if (key != null && secret != null) {
             String[] ret = new String[2];
             ret[0] = key;
@@ -162,6 +149,7 @@ public class DropBoxHelper implements IFileSender {
 
     public void UploadFile(String fileName) {
         JobManager jobManager = AppSettings.GetJobManager();
+        jobManager.cancelJobsInBackground(null, TagConstraint.ANY, DropboxJob.getJobTag(fileName));
         jobManager.addJobInBackground(new DropboxJob(fileName, BuildConfig.DROPBOX_APP_KEY, BuildConfig.DROPBOX_APP_SECRET, getKeys()));
     }
 

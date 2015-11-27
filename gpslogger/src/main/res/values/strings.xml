@@ -169,6 +169,8 @@
 
     <string name="startonbootup_title">Start on bootup</string>
     <string name="startonbootup_summary">Launch app and start logging when phone starts</string>
+    <string name="startonapplaunch_title">Start on app launch</string>
+    <string name="startonapplaunch_summary">Start logging when the app is launched</string>
 
     <string name="autoemail_title">Email</string>
     <string name="autoemail_summary">Automatically emails the log file to an address of your choice</string>
@@ -277,6 +279,21 @@
     <string name="dropbox_couldnotauthorize">Could not authorize with Dropbox, please try again later</string>
     <string name="dropbox_upload">Dropbox</string>
 
+    <string name="owncloud_setup_title">ownCloud</string>
+    <string name="owncloud_setup_summary">Upload your files to an ownCloud server.</string>
+    <string name="owncloud_server">Server</string>
+    <string name="owncloud_server_summary">ownCloud Base URL</string>
+    <string name="owncloud_username">Username</string>
+    <string name="owncloud_password">Password</string>
+    <string name="owncloud_directory">Folder</string>
+    <string name="owncloud_directory_summary">Folder to use on ownCloud server. Ensure that it exists or upload will fail.</string>
+    <string name="owncloud_test">Test ownCloud Upload</string>
+    <string name="owncloud_test_summary">Upload a test file to the ownCloud server</string>
+   
+    <string name="owncloud_testing">Testing ownCloud upload</string>
+    <string name="owncloud_invalid_settings">Invalid settings</string>
+    <string name="owncloud_invalid_summary">Some of your settings are invalid. Please ensure that you have filled out all relevant fields. </string>
+    <string name="owncloud_upload">ownCloud</string>
 
     <string name="menu_upload">Upload</string>
 
@@ -371,7 +388,7 @@
     <string name="autoftp_setup_title">FTP</string>
     <string name="autoftp_setup_summary">Upload your files to an FTP(S) server. Note: This does not cover SFTP.</string>
 
-    <string name="faq_screen_title">Frequently asked questions</string>
+    <string name="faq_screen_title">@string/menu_faq</string>
     <string name="menu_faq">Help and FAQ</string>
     <string name="gpsf_missing">Missing Service</string>
     <string name="gpsf_missing_description">You will need Google Play Services Framework to use this feature.</string>
@@ -397,6 +414,7 @@
     <string name="view_simple">Simple View</string>
     <string name="view_detailed">Detailed View</string>
     <string name="view_big">Big View</string>
+    <string name="view_log">Log View</string>
     <string name="bigview_taptotoggle">Tap to start/stop logging</string>
     <string name="summary_autosendtargets">Upload to:</string>
 
@@ -428,7 +446,8 @@
     <string name="new_file_custom_each_time_title">Ask for a file name on every start</string>
     <string name="new_file_custom_each_time_summary">Prompt for a custom file name each time the logging is started</string>
     <string name="donate_app">Donate (app)</string>
-    <string name="donate_bitcoin">Donate (Bitcoin)</string>
+    <string name="donate_bitcoin">Bitcoin</string>
+    <string name="tip_coffee">Buy me a coffee</string>
 
     <string name="no_network_message">There is no network available</string>
     <string name="hide_notification_buttons">Hide notification buttons</string>
@@ -450,5 +469,10 @@
     <string name="altitude_subtractgeoidheight_title">Use MSL instead of WGS84</string>
     <string name="altitude_subtractoffset_title">Subtract altitude offset</string>
     <string name="altitude_subtractoffset_summary">A value in meters to subtract from GPS altitudes. Use a negative number to add a value to the altitude. Only applies to GPS satellite points, not network or NMEA.</string>
-
+	<string name="upload_failure">Could not upload the file</string>
+    <string name="inaccurate_point_discarded">Inaccurate point discarded</string>
+    <string name="not_enough_distance_traveled">Only %s m traveled. Point discarded.</string>
+    <string name="autosend_wifionly_title">Send on Wi-Fi only</string>
+    <string name="logview_showlocationsonly">Locations only</string>
+    <string name="logview_autoscroll">Auto Scroll</string>
 </resources>

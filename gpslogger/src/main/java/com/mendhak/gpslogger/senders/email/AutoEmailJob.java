@@ -27,7 +27,7 @@ public class AutoEmailJob extends Job {
                            String smtpPort, String smtpUsername, String smtpPassword,
                            boolean smtpUseSsl, String csvEmailTargets, String fromAddress,
                             String subject, String body, File[] files) {
-        super(new Params(1).requireNetwork().persist());
+        super(new Params(1).requireNetwork().persist().addTags(getJobTag(files)));
         this.smtpServer = smtpServer;
         this.smtpPort = smtpPort;
         this.smtpPassword = smtpPassword;
@@ -89,5 +89,14 @@ public class AutoEmailJob extends Job {
     protected boolean shouldReRunOnThrowable(Throwable throwable) {
         tracer.error("Could not send email", throwable);
         return false;
+    }
+
+    public static String getJobTag(File[] files) {
+        StringBuilder sb = new StringBuilder();
+        for(File f : files){
+            sb.append(f.getName()).append(".");
+        }
+        return "EMAIL" + sb.toString();
+
     }
 }

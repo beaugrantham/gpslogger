@@ -27,10 +27,7 @@ import android.widget.TextView;
 import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.location.DetectedActivity;
 import com.mendhak.gpslogger.R;
-import com.mendhak.gpslogger.common.AppSettings;
-import com.mendhak.gpslogger.common.EventBusHook;
-import com.mendhak.gpslogger.common.Session;
-import com.mendhak.gpslogger.common.Utilities;
+import com.mendhak.gpslogger.common.*;
 import com.mendhak.gpslogger.common.events.ServiceEvents;
 import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.IFileLogger;
@@ -40,9 +37,7 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 
 public class GpsDetailedViewFragment extends GenericViewFragment {
@@ -86,7 +81,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
             DisplayLocationInfo(Session.getCurrentLocationInfo());
         }
 
-        showPreferencesSummary();
+        ShowPreferencesAndMessages();
 
         return rootView;
     }
@@ -121,7 +116,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
             setActionButtonStart();
         }
 
-        showPreferencesSummary();
+        ShowPreferencesAndMessages();
         super.onResume();
     }
 
@@ -129,7 +124,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
      * Displays a human readable summary of the preferences chosen by the user
      * on the main form
      */
-    private void showPreferencesSummary() {
+    private void ShowPreferencesAndMessages() {
 
         try {
             TextView txtLoggingTo = (TextView) rootView.findViewById(R.id.detailedview_loggingto_text);
@@ -159,8 +154,8 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
 
             }
 
-            if (AppSettings.getMinimumSeconds() > 0) {
-                String descriptiveTime = Utilities.GetDescriptiveTimeString(AppSettings.getMinimumSeconds(),
+            if (AppSettings.getMinimumLoggingInterval() > 0) {
+                String descriptiveTime = Utilities.GetDescriptiveTimeString(AppSettings.getMinimumLoggingInterval(),
                         getActivity().getApplicationContext());
 
                 txtFrequency.setText(descriptiveTime);
@@ -170,14 +165,14 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
             }
 
 
-            if (AppSettings.getMinimumDistanceInMeters() > 0) {
-                txtDistance.setText(Utilities.GetDistanceDisplay(getActivity(), AppSettings.getMinimumDistanceInMeters(), AppSettings.shouldUseImperial()));
+            if (AppSettings.getMinimumDistanceInterval() > 0) {
+                txtDistance.setText(Utilities.GetDistanceDisplay(getActivity(), AppSettings.getMinimumDistanceInterval(), AppSettings.shouldDisplayImperialUnits()));
             } else {
                 txtDistance.setText(R.string.summary_dist_regardless);
             }
 
-            if (AppSettings.isAutoSendEnabled() && AppSettings.getAutoSendDelay() > 0) {
-                String autoEmailDisplay = String.format(getString(R.string.autosend_frequency_display), AppSettings.getAutoSendDelay().intValue());
+            if (AppSettings.isAutoSendEnabled() && AppSettings.getAutoSendInterval() > 0) {
+                String autoEmailDisplay = String.format(getString(R.string.autosend_frequency_display), AppSettings.getAutoSendInterval().intValue());
 
                 txtAutoEmail.setText(autoEmailDisplay);
             }
@@ -198,7 +193,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
                     sb.append(getString(R.string.autoftp_setup_title)).append("\n");
                 }
 
-                if (AppSettings.isGDocsAutoSendEnabled() && GDocsHelper.IsLinked(getActivity().getApplicationContext())) {
+                if (AppSettings.isGDocsAutoSendEnabled() && GDocsHelper.IsLinked()) {
                     sb.append(getString(R.string.gdocs_setup_title)).append("\n");
                 }
 
@@ -223,7 +218,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
 
 
         } catch (Exception ex) {
-            tracer.error("showPreferencesSummary", ex);
+            tracer.error("ShowPreferencesAndMessages " + ex.getMessage(), ex);
         }
 
 
@@ -238,7 +233,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
         txtFilename.setText(Session.getCurrentFileName() + "\n (" + AppSettings.getGpsLoggerFolder() + ")");
 
         Utilities.SetFileExplorerLink(txtFilename,
-                Html.fromHtml( Session.getCurrentFileName() + "<br /> (" + "<font color='blue'><u>" +  AppSettings.getGpsLoggerFolder() + "</u></font>" + ")"),
+                Html.fromHtml(Session.getCurrentFileName() + "<br /> (" + "<font color='blue'><u>" + AppSettings.getGpsLoggerFolder() + "</u></font>" + ")"),
                 AppSettings.getGpsLoggerFolder(),
                 getActivity().getApplicationContext());
     }
@@ -282,19 +277,6 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
     }
 
     @EventBusHook
-    public void onEventMainThread(ServiceEvents.StatusMessage event){
-        TextView txtStatus = (TextView) rootView.findViewById(R.id.detailedview_txtstatus);
-        txtStatus.setText(event.status);
-        showPreferencesSummary();
-    }
-
-    @EventBusHook
-    public void onEventMainThread(ServiceEvents.FatalMessage event){
-        TextView txtStatus = (TextView) rootView.findViewById(R.id.detailedview_txtstatus);
-        txtStatus.setText(event.message);
-    }
-
-    @EventBusHook
     public void onEventMainThread(ServiceEvents.LocationUpdate locationEvent){
         DisplayLocationInfo(locationEvent.location);
     }
@@ -308,7 +290,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
     public void onEventMainThread(ServiceEvents.LoggingStatus loggingStatus){
         if(loggingStatus.loggingStarted){
             setActionButtonStop();
-            showPreferencesSummary();
+            ShowPreferencesAndMessages();
             ClearDisplay();
         }
         else {
@@ -326,7 +308,7 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
             return;
         }
 
-        showPreferencesSummary();
+        ShowPreferencesAndMessages();
 
         TextView tvLatitude = (TextView) rootView.findViewById(R.id.detailedview_lat_text);
         TextView tvLongitude = (TextView) rootView.findViewById(R.id.detailedview_lon_text);
@@ -360,13 +342,13 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
         nf.setMaximumFractionDigits(3);
 
         if (locationInfo.hasAltitude()) {
-            tvAltitude.setText(Utilities.GetDistanceDisplay(getActivity(), locationInfo.getAltitude(), AppSettings.shouldUseImperial()));
+            tvAltitude.setText(Utilities.GetDistanceDisplay(getActivity(), locationInfo.getAltitude(), AppSettings.shouldDisplayImperialUnits()));
         } else {
             tvAltitude.setText(R.string.not_applicable);
         }
 
         if (locationInfo.hasSpeed()) {
-            txtSpeed.setText(Utilities.GetSpeedDisplay(getActivity(), locationInfo.getSpeed(), AppSettings.shouldUseImperial()));
+            txtSpeed.setText(Utilities.GetSpeedDisplay(getActivity(), locationInfo.getSpeed(), AppSettings.shouldDisplayImperialUnits()));
 
         } else {
             txtSpeed.setText(R.string.not_applicable);
@@ -392,14 +374,14 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
         if (locationInfo.hasAccuracy()) {
 
             float accuracy = locationInfo.getAccuracy();
-            txtAccuracy.setText(getString(R.string.accuracy_within, Utilities.GetDistanceDisplay(getActivity(), accuracy, AppSettings.shouldUseImperial()), ""));
+            txtAccuracy.setText(getString(R.string.accuracy_within, Utilities.GetDistanceDisplay(getActivity(), accuracy, AppSettings.shouldDisplayImperialUnits()), ""));
 
         } else {
             txtAccuracy.setText(R.string.not_applicable);
         }
 
         double distanceValue = Session.getTotalTravelled();
-        txtTravelled.setText(Utilities.GetDistanceDisplay(getActivity(), distanceValue, AppSettings.shouldUseImperial()) + " (" + Session.getNumLegs() + " points)");
+        txtTravelled.setText(Utilities.GetDistanceDisplay(getActivity(), distanceValue, AppSettings.shouldDisplayImperialUnits()) + " (" + Session.getNumLegs() + " points)");
 
         long startTime = Session.getStartTimeStamp();
         Date d = new Date(startTime);

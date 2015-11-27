@@ -1,10 +1,8 @@
 package com.mendhak.gpslogger.senders.gdocs;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.mendhak.gpslogger.common.AppSettings;
@@ -12,7 +10,7 @@ import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.common.events.UploadEvents;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
-import de.greenrobot.event.EventBus;
+
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import de.greenrobot.event.EventBus;
+
 public class GDocsJob extends Job {
     private static final org.slf4j.Logger tracer = LoggerFactory.getLogger(GDocsJob.class.getSimpleName());
     String token;
@@ -30,9 +30,13 @@ public class GDocsJob extends Job {
     String googleDriveFolderName;
 
     protected GDocsJob(File gpxFile, String googleDriveFolderName) {
-        super(new Params(1).requireNetwork().persist());
+        super(new Params(1).requireNetwork().persist().addTags(getJobTag(gpxFile)));
         this.gpxFile = gpxFile;
         this.googleDriveFolderName = googleDriveFolderName;
+    }
+
+    public static String getJobTag(File gpxFile){
+        return "GOOGLEDRIVE" + gpxFile.getName();
     }
 
     @Override
@@ -43,9 +47,9 @@ public class GDocsJob extends Job {
     @Override
     public void onRun() throws Throwable {
 
-        token = GoogleAuthUtil.getTokenWithNotification(AppSettings.getInstance(), GetAccountName(AppSettings.getInstance()), GetOauth2Scope(), new Bundle());
+        token = GoogleAuthUtil.getTokenWithNotification(AppSettings.getInstance(), AppSettings.getGoogleDriveAccountName(), GetOauth2Scope(), new Bundle());
         tracer.debug("GDocs token: " + token);
-        GDocsHelper.SaveAuthToken(AppSettings.getInstance(), token);
+        AppSettings.setGoogleDriveAuthToken(token);
 
         FileInputStream fis = new FileInputStream(gpxFile);
         String fileName = gpxFile.getName();
@@ -86,14 +90,6 @@ public class GDocsJob extends Job {
         return "oauth2:https://www.googleapis.com/auth/drive.file";
     }
 
-    /**
-     * Gets the stored account name
-     */
-    private String GetAccountName(Context applicationContext) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-        return prefs.getString("GDRIVE_ACCOUNT_NAME", "");
-    }
-
     private String UpdateFileContents(String authToken, String gpxFileId, byte[] fileContents, String fileName) {
         HttpURLConnection conn = null;
         String fileId = null;
@@ -119,6 +115,9 @@ public class GDocsJob extends Job {
             conn.setUseCaches(false);
             conn.setDoInput(true);
             conn.setDoOutput(true);
+
+			conn.setConnectTimeout(10000);
+			conn.setReadTimeout(30000);
 
             DataOutputStream wr = new DataOutputStream(
                     conn.getOutputStream());
@@ -180,6 +179,9 @@ public class GDocsJob extends Job {
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
+			conn.setConnectTimeout(10000);
+			conn.setReadTimeout(30000);
+
             DataOutputStream wr = new DataOutputStream(
                     conn.getOutputStream());
             wr.writeBytes(createFilePayload);
@@ -236,7 +238,9 @@ public class GDocsJob extends Job {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("User-Agent", "GPSLogger for Android");
             conn.setRequestProperty("Authorization", "OAuth " + authToken);
-
+			conn.setConnectTimeout(10000);
+			conn.setReadTimeout(30000);
+	
             String fileMetadata = Utilities.GetStringFromInputStream(conn.getInputStream());
 
 

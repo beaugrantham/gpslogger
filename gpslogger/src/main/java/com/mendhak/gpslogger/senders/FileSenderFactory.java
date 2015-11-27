@@ -27,6 +27,7 @@ import com.mendhak.gpslogger.senders.ftp.FtpHelper;
 import com.mendhak.gpslogger.senders.gdocs.GDocsHelper;
 import com.mendhak.gpslogger.senders.opengts.OpenGTSHelper;
 import com.mendhak.gpslogger.senders.osm.OSMHelper;
+import com.mendhak.gpslogger.senders.owncloud.OwnCloudHelper;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -61,6 +62,10 @@ public class FileSenderFactory {
 
     public static IFileSender GetFtpSender(Context applicationContext) {
         return new FtpHelper();
+    }
+
+    public static IFileSender GetOwnCloudSender(Context applicationContext) {
+        return new OwnCloudHelper();
     }
 
     public static void SendFiles(Context applicationContext, final String fileToSend) {
@@ -127,7 +132,7 @@ public class FileSenderFactory {
     private static List<IFileSender> GetFileSenders(Context applicationContext) {
         List<IFileSender> senders = new ArrayList<IFileSender>();
 
-        if (AppSettings.isGDocsAutoSendEnabled() && GDocsHelper.IsLinked(applicationContext)) {
+        if (AppSettings.isGDocsAutoSendEnabled() && GDocsHelper.IsLinked()) {
             senders.add(new GDocsHelper(applicationContext));
         }
 
@@ -151,6 +156,10 @@ public class FileSenderFactory {
 
         if (AppSettings.isFtpAutoSendEnabled()) {
             senders.add(new FtpHelper());
+        }
+
+        if (AppSettings.isOwnCloudAutoSendEnabled()) {
+            senders.add(new OwnCloudHelper());
         }
 
         return senders;

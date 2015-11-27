@@ -18,13 +18,13 @@
 package com.mendhak.gpslogger.senders.osm;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
 import com.mendhak.gpslogger.BuildConfig;
 import com.mendhak.gpslogger.R;
 import com.mendhak.gpslogger.common.AppSettings;
 import com.mendhak.gpslogger.senders.IFileSender;
 import com.path.android.jobqueue.JobManager;
+import com.path.android.jobqueue.TagConstraint;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -51,9 +51,8 @@ public class OSMHelper implements IFileSender {
     }
 
     public static boolean IsOsmAuthorized(Context context) {
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(context);
-        String oAuthAccessToken = prefs.getString("osm_accesstoken", "");
+
+        String oAuthAccessToken = AppSettings.getOSMAccessToken();
 
         return (oAuthAccessToken != null && oAuthAccessToken.length() > 0);
     }
@@ -68,11 +67,9 @@ public class OSMHelper implements IFileSender {
                     BuildConfig.OSM_CONSUMER_KEY,
                     BuildConfig.OSM_CONSUMER_SECRET);
 
-            SharedPreferences prefs = PreferenceManager
-                    .getDefaultSharedPreferences(context);
-            String osmAccessToken = prefs.getString("osm_accesstoken", "");
-            String osmAccessTokenSecret = prefs.getString(
-                    "osm_accesstokensecret", "");
+
+            String osmAccessToken =  AppSettings.getOSMAccessToken();
+            String osmAccessTokenSecret = AppSettings.getOSMAccessTokenSecret();
 
             if (osmAccessToken != null && osmAccessToken.length() > 0
                     && osmAccessTokenSecret != null
@@ -103,12 +100,13 @@ public class OSMHelper implements IFileSender {
         OAuthConsumer consumer = GetOSMAuthConsumer(context);
         String gpsTraceUrl = context.getString(R.string.osm_gpstrace_url);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        String description = prefs.getString("osm_description", "");
-        String tags = prefs.getString("osm_tags", "");
-        String visibility = prefs.getString("osm_visibility", "private");
+
+        String description = AppSettings.getOSMDescription();
+        String tags = AppSettings.getOSMTags();
+        String visibility = AppSettings.getOSMVisibility();
 
         JobManager jobManager = AppSettings.GetJobManager();
+        jobManager.cancelJobsInBackground(null, TagConstraint.ANY, OSMJob.getJobTag(chosenFile));
         jobManager.addJobInBackground(new OSMJob( consumer, gpsTraceUrl, chosenFile, description, tags, visibility));
     }
 

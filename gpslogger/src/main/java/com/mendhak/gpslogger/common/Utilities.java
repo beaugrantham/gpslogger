@@ -42,8 +42,11 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mendhak.gpslogger.R;
+import com.mendhak.gpslogger.common.slf4j.GpsRollingFileAppender;
+import com.mendhak.gpslogger.common.slf4j.SessionLogcatAppender;
 import com.mendhak.gpslogger.senders.dropbox.DropBoxHelper;
 import com.mendhak.gpslogger.senders.ftp.FtpHelper;
+import com.mendhak.gpslogger.senders.owncloud.OwnCloudHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -76,8 +79,7 @@ public class Utilities {
             lc.reset();
 
             //final String LOG_DIR = "/sdcard/GPSLogger";
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            final String LOG_DIR = prefs.getString("gpslogger_folder", Utilities.GetDefaultStorageFolder(context).getAbsolutePath());
+            final String LOG_DIR = AppSettings.getGpsLoggerFolder();
 
             GpsRollingFileAppender<ILoggingEvent> rollingFileAppender = new GpsRollingFileAppender<ILoggingEvent>();
             rollingFileAppender.setAppend(true);
@@ -116,183 +118,25 @@ public class Utilities {
             logcatAppender.setEncoder(encoder2);
             logcatAppender.start();
 
+            SessionLogcatAppender sessionAppender = new SessionLogcatAppender();
+            sessionAppender.setContext(lc);
+            sessionAppender.start();
+
             // add the newly created appenders to the root logger;
             // qualify Logger to disambiguate from org.slf4j.Logger
             ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
             root.addAppender(rollingFileAppender);
             root.addAppender(logcatAppender);
+            root.addAppender(sessionAppender);
+
         }
         catch(Exception ex){
               System.out.println("Could not configure logging!");
         }
 
-
     }
 
 
-    public static List<String> GetListeners(){
-
-        List<String> listeners = new ArrayList<String>();
-        listeners.add("gps");
-        listeners.add("network");
-        listeners.add("passive");
-
-        return listeners;
-    }
-
-    /**
-     * Gets user preferences, populates the AppSettings class.
-     */
-    public static void PopulateAppSettings(Context context) {
-
-        tracer.info("Getting preferences");
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        AppSettings.setHideNotificationButtons(prefs.getBoolean("hide_notification_buttons", false));
-
-        AppSettings.setUseImperial(prefs.getBoolean("useImperial", false));
-
-        AppSettings.setLogToKml(prefs.getBoolean("log_kml", false));
-
-        AppSettings.setLogToGpx(prefs.getBoolean("log_gpx", true));
-
-        AppSettings.setLogToPlainText(prefs.getBoolean("log_plain_text", false));
-
-        AppSettings.setLogToNmea(prefs.getBoolean("log_nmea", false));
-
-        AppSettings.setLogToCustomUrl(prefs.getBoolean("log_customurl_enabled", false));
-        AppSettings.setCustomLoggingUrl(prefs.getString("log_customurl_url", ""));
-
-        AppSettings.setLogToOpenGts(prefs.getBoolean("log_opengts", false));
-
-        Set<String> listeners = new HashSet<String>(GetListeners());
-        AppSettings.setChosenListeners(prefs.getStringSet("listeners", listeners));
-
-        String minimumDistanceString = prefs.getString(
-                "distance_before_logging", "0");
-
-        if (minimumDistanceString != null && minimumDistanceString.length() > 0) {
-            AppSettings.setMinimumDistanceInMeters(Integer
-                    .valueOf(minimumDistanceString));
-        } else {
-            AppSettings.setMinimumDistanceInMeters(0);
-        }
-
-        String minimumAccuracyString = prefs.getString(
-                "accuracy_before_logging", "0");
-
-        if (minimumAccuracyString != null && minimumAccuracyString.length() > 0) {
-            AppSettings.setMinimumAccuracyInMeters(Integer
-                    .valueOf(minimumAccuracyString));
-        } else {
-            AppSettings.setMinimumAccuracyInMeters(0);
-        }
-
-        String minimumSecondsString = prefs.getString("time_before_logging",
-                "60");
-
-        if (minimumSecondsString != null && minimumSecondsString.length() > 0) {
-            AppSettings
-                    .setMinimumSeconds(Integer.valueOf(minimumSecondsString));
-        } else {
-            AppSettings.setMinimumSeconds(60);
-        }
-
-        AppSettings.setKeepFix(prefs.getBoolean("keep_fix",
-                false));
-
-        String retryIntervalString = prefs.getString("retry_time",
-                "60");
-
-        if (retryIntervalString != null && retryIntervalString.length() > 0) {
-            AppSettings
-                    .setRetryInterval(Integer.valueOf(retryIntervalString));
-        } else {
-            AppSettings.setRetryInterval(60);
-        }
-
-        /**
-         * New file creation preference: 
-         *     onceaday, 
-         *     custom file (static),
-         *     every time the service starts 
-         */
-        AppSettings.setNewFileCreation(prefs.getString("new_file_creation",
-                "onceaday"));
-
-        if (AppSettings.getNewFileCreation().equals("onceaday")) {
-            AppSettings.setNewFileOnceADay(true);
-            AppSettings.setCustomFile(false);
-        } else if (AppSettings.getNewFileCreation().equals("custom") || AppSettings.getNewFileCreation().equals("static")) {
-            AppSettings.setCustomFile(true);
-            AppSettings.setCustomFileName(prefs.getString("new_file_custom_name", "gpslogger"));
-            AppSettings.setAskCustomFileNameEachTime(prefs.getBoolean("new_file_custom_each_time", true));
-        } else /* new log with each start */ {
-            AppSettings.setNewFileOnceADay(false);
-            AppSettings.setCustomFile(false);
-        }
-
-        AppSettings.setAutoSendEnabled(prefs.getBoolean("autosend_enabled", false));
-
-        AppSettings.setEmailAutoSendEnabled(prefs.getBoolean("autoemail_enabled",
-                false));
-
-        try{
-            AppSettings.setAutoSendDelay(Float.valueOf(prefs.getString("autosend_frequency_minutes", "60")));
-        } catch (Exception e)  { AppSettings.setAutoSendDelay(60f);  }
-
-
-        AppSettings.setAutoSendWhenIPressStop(prefs.getBoolean("autosend_frequency_whenstoppressed", false));
-
-        AppSettings.setSmtpServer(prefs.getString("smtp_server", ""));
-        AppSettings.setSmtpPort(prefs.getString("smtp_port", "25"));
-        AppSettings.setSmtpSsl(prefs.getBoolean("smtp_ssl", true));
-        AppSettings.setSmtpUsername(prefs.getString("smtp_username", ""));
-        AppSettings.setSmtpPassword(prefs.getString("smtp_password", ""));
-        AppSettings.setAutoEmailTargets(prefs.getString("autoemail_target", ""));
-        AppSettings.setDebugToFile(prefs.getBoolean("debugtofile", false));
-        AppSettings.setShouldSendZipFile(prefs.getBoolean("autosend_sendzip", true));
-        AppSettings.setSmtpFrom(prefs.getString("smtp_from", ""));
-        AppSettings.setOpenGtsAutoSendEnabled(prefs.getBoolean("autoopengts_enabled", false));
-        AppSettings.setOpenGTSServer(prefs.getString("opengts_server", ""));
-        AppSettings.setOpenGTSServerPort(prefs.getString("opengts_server_port", ""));
-        AppSettings.setOpenGTSServerCommunicationMethod(prefs.getString("opengts_server_communication_method", ""));
-        AppSettings.setOpenGTSServerPath(prefs.getString("autoopengts_server_path", ""));
-        AppSettings.setOpenGTSDeviceId(prefs.getString("opengts_device_id", ""));
-        AppSettings.setOpenGTSAccountName(prefs.getString("opengts_accountname",""));
-
-        AppSettings.setGDocsAutoSendEnabled(prefs.getBoolean("gdocs_enabled", false));
-        AppSettings.setDropboxAutoSendEnabled(prefs.getBoolean("dropbox_enabled", false));
-        AppSettings.setOsmAutoSendEnabled(prefs.getBoolean("osm_enabled", false));
-
-        AppSettings.setFtpAutoSendEnabled(prefs.getBoolean("autoftp_enabled", false));
-        AppSettings.setFtpServerName(prefs.getString("autoftp_server", ""));
-        AppSettings.setFtpUsername(prefs.getString("autoftp_username", ""));
-        AppSettings.setFtpPassword(prefs.getString("autoftp_password", ""));
-        AppSettings.setFtpDirectory(prefs.getString("autoftp_directory", "GPSLogger"));
-        AppSettings.setFtpPort(Integer.valueOf(prefs.getString("autoftp_port", "21")));
-        AppSettings.setFtpUseFtps(prefs.getBoolean("autoftp_useftps", false));
-        AppSettings.setFtpProtocol(prefs.getString("autoftp_ssltls", ""));
-        AppSettings.setFtpImplicit(prefs.getBoolean("autoftp_implicit", false));
-        AppSettings.setGpsLoggerFolder(prefs.getString("gpslogger_folder", Utilities.GetDefaultStorageFolder(context).getAbsolutePath()));
-        AppSettings.setFileNamePrefixSerial(prefs.getBoolean("new_file_prefix_serial", false));
-
-        String absoluteTimeoutString = prefs.getString("absolute_timeout",
-                "120");
-
-        if (absoluteTimeoutString != null && absoluteTimeoutString.length() > 0) {
-            AppSettings.setAbsoluteTimeout(Integer.valueOf(absoluteTimeoutString));
-        } else {
-            AppSettings.setAbsoluteTimeout(120);
-        }
-
-        AppSettings.setGoogleDriveFolderName(prefs.getString("gdocs_foldername", "GPSLogger for Android"));
-
-        AppSettings.setShouldNotLogIfUserIsStill(prefs.getBoolean("activityrecognition_dontlogifstill", false));
-
-        AppSettings.setAdjustAltitudeFromGeoIdHeight(prefs.getBoolean("altitude_subtractgeoidheight", false));
-        AppSettings.setSubtractAltitudeOffset(Integer.valueOf(prefs.getString("altitude_subtractoffset", "0")));
-    }
 
 
     public static void ShowProgress(Context context, String title, String message) {
@@ -564,9 +408,19 @@ public class Utilities {
                 AppSettings.getFtpProtocol(), AppSettings.FtpImplicit());
     }
 
+
+    public static boolean IsOwnCloudSetup() {
+
+        OwnCloudHelper helper = new OwnCloudHelper();
+
+        return helper.ValidSettings(AppSettings.getOwnCloudServerName(),
+                AppSettings.getOwnCloudUsername(),
+                AppSettings.getOwnCloudPassword(),
+                AppSettings.getOwnCloudDirectory());
+    }
+
     public static boolean IsDropBoxSetup(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.contains(DropBoxHelper.ACCESS_KEY_NAME) && prefs.contains(DropBoxHelper.ACCESS_SECRET_NAME);
+        return AppSettings.getDropBoxAccessKeyName() != null && AppSettings.getDropBoxAccessSecretName() != null;
     }
 
     /**
@@ -641,7 +495,7 @@ public class Utilities {
             try {
                 is.close();
             } catch (Exception e) {
-                tracer.warn("GetStringFromInputStream - could not close stream");
+                tracer.warn(SessionLogcatAppender.MARKER_INTERNAL, "GetStringFromInputStream - could not close stream");
             }
         }
 
@@ -673,7 +527,7 @@ public class Utilities {
             try {
                 is.close();
             } catch (Exception e) {
-                tracer.warn("GetStringFromInputStream - could not close stream");
+                tracer.warn(SessionLogcatAppender.MARKER_INTERNAL, "GetStringFromInputStream - could not close stream");
             }
         }
 
@@ -828,9 +682,12 @@ public class Utilities {
 
     public static void SetFileExplorerLink(TextView txtFilename, Spanned htmlString, final String pathToLinkTo, final Context context) {
 
-        if(Utilities.IsPackageInstalled("com.estrongs.android.pop", context)
-                || Utilities.IsPackageInstalled("com.metago.astro", context)){
+        final Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(Uri.parse("file://" + pathToLinkTo), "resource/folder");
+        intent.setAction(Intent.ACTION_VIEW);
 
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
             txtFilename.setLinksClickable(true);
             txtFilename.setClickable(true);
             txtFilename.setMovementMethod(LinkMovementMethod.getInstance());
@@ -841,28 +698,10 @@ public class Utilities {
             txtFilename.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent shareIntent = new Intent(Intent.ACTION_VIEW);
-                    shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    shareIntent.setType("resource/folder");
-                    shareIntent.setData(Uri.fromFile(new File(pathToLinkTo)));
-
-                    if(Utilities.IsPackageInstalled("com.estrongs.android.pop", context) ){
-                        shareIntent.setComponent(ComponentName.unflattenFromString("com.estrongs.android.pop/.view.FileExplorerActivity"));
-                        shareIntent.setPackage("com.estrongs.android.pop");
-                    }
-
-                    if(Utilities.IsPackageInstalled("com.metago.astro", context)){
-                        shareIntent.setPackage("com.metago.astro");
-                        shareIntent.setComponent(ComponentName.unflattenFromString("com.metago.astro/.MainActivity"));
-                    }
-
-                    context.startActivity(shareIntent);
+                    context.startActivity(intent);
                 }
             });
-
         }
-
     }
 
     private static NetworkInfo getActiveNetworkInfo(Context context) {
@@ -941,6 +780,14 @@ public class Utilities {
                 new String[] { file.getPath() },
                 new String[] { mimeType },
                 null);
+    }
+
+    public static int parseWithDefault(String number, int defaultVal) {
+        try {
+            return Integer.parseInt(number);
+        } catch (Exception e) {
+            return defaultVal;
+        }
     }
 
 }

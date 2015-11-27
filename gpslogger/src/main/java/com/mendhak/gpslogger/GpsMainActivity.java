@@ -24,11 +24,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.*;
-import android.preference.PreferenceManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -37,35 +39,57 @@ import android.support.v7.internal.view.menu.ActionMenuItemView;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.view.*;
-import android.widget.*;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.heinrichreimersoftware.materialdrawer.DrawerView;
 import com.heinrichreimersoftware.materialdrawer.structure.DrawerItem;
-import com.mendhak.gpslogger.common.*;
-import com.mendhak.gpslogger.common.events.*;
+import com.mendhak.gpslogger.common.AppSettings;
+import com.mendhak.gpslogger.common.EventBusHook;
+import com.mendhak.gpslogger.common.Session;
+import com.mendhak.gpslogger.common.Utilities;
+import com.mendhak.gpslogger.common.events.CommandEvents;
+import com.mendhak.gpslogger.common.events.ServiceEvents;
+import com.mendhak.gpslogger.common.events.UploadEvents;
+import com.mendhak.gpslogger.common.slf4j.SessionLogcatAppender;
 import com.mendhak.gpslogger.senders.FileSenderFactory;
 import com.mendhak.gpslogger.senders.IFileSender;
 import com.mendhak.gpslogger.senders.dropbox.DropBoxHelper;
 import com.mendhak.gpslogger.senders.gdocs.GDocsHelper;
 import com.mendhak.gpslogger.senders.osm.OSMHelper;
-import com.mendhak.gpslogger.views.GenericViewFragment;
-import com.mendhak.gpslogger.views.GpsBigViewFragment;
-import com.mendhak.gpslogger.views.GpsDetailedViewFragment;
-import com.mendhak.gpslogger.views.GpsSimpleViewFragment;
-import de.greenrobot.event.EventBus;
+import com.mendhak.gpslogger.senders.owncloud.OwnCloudHelper;
+import com.mendhak.gpslogger.views.*;
+
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import de.greenrobot.event.EventBus;
 
 public class GpsMainActivity extends ActionBarActivity
         implements
         Toolbar.OnMenuItemClickListener,
         ActionBar.OnNavigationListener {
 
+    private static boolean userInvokedUpload;
     private static Intent serviceIntent;
     private ActionBarDrawerToggle drawerToggle;
     private org.slf4j.Logger tracer;
@@ -86,6 +110,11 @@ public class GpsMainActivity extends ActionBarActivity
         LoadDefaultFragmentView();
         StartAndBindService();
         RegisterEventBus();
+
+        if(AppSettings.shouldStartLoggingOnAppLaunch()){
+            tracer.debug("Start logging on app launch");
+            EventBus.getDefault().postSticky(new CommandEvents.RequestStartStop(true));
+        }
     }
 
     private void RegisterEventBus() {
@@ -109,7 +138,6 @@ public class GpsMainActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-        GetPreferences();
         StartAndBindService();
 
         if (Session.hasDescription()) {
@@ -191,22 +219,7 @@ public class GpsMainActivity extends ActionBarActivity
             InputStreamReader reader = new InputStreamReader(new FileInputStream(file));
             props.load(reader);
 
-            for(Object key : props.keySet()){
-
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = prefs.edit();
-
-                String value = props.getProperty(key.toString());
-                tracer.info("Setting preset property: " + key.toString() + " to " + value.toString());
-
-                if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")){
-                    editor.putBoolean(key.toString(), Boolean.parseBoolean(value));
-                }
-                else {
-                    editor.putString(key.toString(), value);
-                }
-                editor.apply();
-            }
+            AppSettings.SetPreferenceFromProperties(props);
 
         } catch (Exception e) {
             tracer.error("Could not load preset properties", e);
@@ -353,16 +366,22 @@ public class GpsMainActivity extends ActionBarActivity
                         .setTextPrimary(getString(R.string.osm_setup_title))
         );
 
+        drawer.addItem(new DrawerItem()
+                        .setId(10)
+                        .setImage(getResources().getDrawable(R.drawable.owncloud))
+                        .setTextPrimary(getString(R.string.owncloud_setup_title))
+        );
+
         drawer.addDivider();
 
         drawer.addItem(new DrawerItem()
-                        .setId(10)
+                        .setId(11)
                         .setImage(getResources().getDrawable(R.drawable.helpfaq))
                         .setTextPrimary(getString(R.string.menu_faq))
         );
 
         drawer.addItem(new DrawerItem()
-                        .setId(11)
+                        .setId(12)
                         .setImage(getResources().getDrawable(R.drawable.exit))
                         .setTextPrimary(getString(R.string.menu_exit)));
 
@@ -406,10 +425,13 @@ public class GpsMainActivity extends ActionBarActivity
                         LaunchPreferenceScreen(MainPreferenceActivity.PreferenceConstants.OSM);
                         break;
                     case 10:
+                        LaunchPreferenceScreen(MainPreferenceActivity.PreferenceConstants.OWNCLOUD);
+                        break;
+                    case 11:
                         Intent faqtivity = new Intent(getApplicationContext(), Faqtivity.class);
                         startActivity(faqtivity);
                         break;
-                    case 11:
+                    case 12:
                         EventBus.getDefault().post(new CommandEvents.RequestStartStop(false));
                         finish();
                         break;
@@ -439,8 +461,7 @@ public class GpsMainActivity extends ActionBarActivity
     }
 
     private int GetUserSelectedNavigationItem(){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return sp.getInt("SPINNER_SELECTED_POSITION", 0);
+        return AppSettings.getUserSelectedNavigationItem();
     }
 
     private void LoadDefaultFragmentView() {
@@ -452,16 +473,20 @@ public class GpsMainActivity extends ActionBarActivity
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         switch (position) {
+            default:
             case 0:
                 transaction.replace(R.id.container, GpsSimpleViewFragment.newInstance());
                 break;
             case 1:
                 transaction.replace(R.id.container, GpsDetailedViewFragment.newInstance());
                 break;
-            default:
             case 2:
                 transaction.replace(R.id.container, GpsBigViewFragment.newInstance());
                 break;
+            case 3:
+                transaction.replace(R.id.container, GpsLogViewFragment.newInstance());
+                break;
+
         }
         transaction.commitAllowingStateLoss();
     }
@@ -476,11 +501,7 @@ public class GpsMainActivity extends ActionBarActivity
 
     @Override
     public boolean onNavigationItemSelected(int position, long itemId) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt("SPINNER_SELECTED_POSITION", position);
-        editor.apply();
-
+        AppSettings.setUserSelectedNavigationItem(position);
         LoadFragmentView(position);
         return true;
     }
@@ -622,6 +643,9 @@ public class GpsMainActivity extends ActionBarActivity
                 return true;
             case R.id.mnuAutoSendNow:
                 ForceAutoSendNow();
+            case R.id.mnuOwnCloud:
+                UploadToOwnCloud();
+                return true;
             default:
                 return true;
         }
@@ -698,6 +722,19 @@ public class GpsMainActivity extends ActionBarActivity
         ShowFileListDialog(FileSenderFactory.GetDropBoxSender(getApplication()));
     }
 
+
+
+    private void UploadToOwnCloud() {
+        final OwnCloudHelper ownCloudHelper = new OwnCloudHelper();
+
+        if (!Utilities.IsOwnCloudSetup()) {
+            LaunchPreferenceScreen(MainPreferenceActivity.PreferenceConstants.OWNCLOUD);
+            return;
+        }
+
+        ShowFileListDialog(FileSenderFactory.GetOwnCloudSender(getApplication()));
+    }
+
     private void SendToOpenGTS() {
         if (!Utilities.IsOpenGTSSetup()) {
             LaunchPreferenceScreen(MainPreferenceActivity.PreferenceConstants.OPENGTS);
@@ -708,7 +745,7 @@ public class GpsMainActivity extends ActionBarActivity
     }
 
     private void UploadToGoogleDocs() {
-        if (!GDocsHelper.IsLinked(getApplicationContext())) {
+        if (!GDocsHelper.IsLinked()) {
             LaunchPreferenceScreen(MainPreferenceActivity.PreferenceConstants.GDOCS);
             return;
         }
@@ -783,7 +820,9 @@ public class GpsMainActivity extends ActionBarActivity
                             if (chosenFiles.size() > 0) {
                                 Utilities.ShowProgress(GpsMainActivity.this, getString(R.string.please_wait),
                                         getString(R.string.please_wait));
+                                userInvokedUpload = true;
                                 sender.UploadFile(chosenFiles);
+
                             }
                             return true;
                         }
@@ -924,7 +963,7 @@ public class GpsMainActivity extends ActionBarActivity
                 unbindService(gpsServiceConnection);
                 Session.setBoundToService(false);
             } catch (Exception e) {
-                tracer.warn("Could not unbind service", e);
+                tracer.warn(SessionLogcatAppender.MARKER_INTERNAL, "Could not unbind service", e);
             }
         }
 
@@ -959,45 +998,119 @@ public class GpsMainActivity extends ActionBarActivity
     }
 
 
-    private void GetPreferences() {
-        Utilities.PopulateAppSettings(getApplicationContext());
-    }
-
-
     @EventBusHook
     public void onEventMainThread(UploadEvents.OpenGTS upload){
         tracer.debug("Open GTS Event completed, success: " + upload.success);
         Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.opengts_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
     }
 
     @EventBusHook
     public void onEventMainThread(UploadEvents.AutoEmail upload){
         tracer.debug("Auto Email Event completed, success: " + upload.success);
         Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.autoemail_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
     }
 
     @EventBusHook
     public void onEventMainThread(UploadEvents.OpenStreetMap upload){
         tracer.debug("OSM Event completed, success: " + upload.success);
         Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.osm_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
     }
 
     @EventBusHook
     public void onEventMainThread(UploadEvents.Dropbox upload){
         tracer.debug("Dropbox Event completed, success: " + upload.success);
         Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.dropbox_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
     }
 
     @EventBusHook
     public void onEventMainThread(UploadEvents.GDocs upload){
         tracer.debug("GDocs Event completed, success: " + upload.success);
         Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.gdocs_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
     }
 
     @EventBusHook
     public void onEventMainThread(UploadEvents.Ftp upload){
         tracer.debug("FTP Event completed, success: " + upload.success);
         Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.autoftp_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
+    }
+
+
+    @EventBusHook
+    public void onEventMainThread(UploadEvents.OwnCloud upload){
+        tracer.debug("OwnCloud Event completed, success: " + upload.success);
+        Utilities.HideProgress();
+
+        if(!upload.success){
+            tracer.error(getString(R.string.owncloud_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+
+            if(userInvokedUpload){
+                Utilities.MsgBox(getString(R.string.sorry),getString(R.string.upload_failure), this);
+                userInvokedUpload = false;
+            }
+        }
     }
 
     @EventBusHook

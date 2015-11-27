@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 
 public class DropboxJob extends Job {
 
+
     private static final org.slf4j.Logger tracer = LoggerFactory.getLogger(DropboxJob.class.getSimpleName());
     String fileName;
     DropboxAPI<AndroidAuthSession> dropboxApi;
@@ -26,7 +27,7 @@ public class DropboxJob extends Job {
     final static private Session.AccessType ACCESS_TYPE = Session.AccessType.APP_FOLDER;
 
     protected DropboxJob(String fileName, String dropboxAppkey, String dropboxAppSecret, String[] storedKeys) {
-        super(new Params(1).requireNetwork().persist());
+        super(new Params(1).requireNetwork().persist().addTags(getJobTag(fileName)));
 
         this.fileName = fileName;
         this.dropboxAppKey = dropboxAppkey;
@@ -48,7 +49,7 @@ public class DropboxJob extends Job {
         AndroidAuthSession session = buildSession();
         dropboxApi = new DropboxAPI<AndroidAuthSession>(session);
         DropboxAPI.Entry upEntry = dropboxApi.putFileOverwrite(gpxFile.getName(), fis, gpxFile.length(), null);
-        tracer.info("DropBox uploaded file rev is: " + upEntry.rev);
+        tracer.info("DropBox upload complete. Rev: " + upEntry.rev);
         EventBus.getDefault().post(new UploadEvents.Dropbox(true));
         fis.close();
     }
@@ -76,5 +77,9 @@ public class DropboxJob extends Job {
     protected boolean shouldReRunOnThrowable(Throwable throwable) {
         tracer.error("Could not upload to Dropbox", throwable);
         return false;
+    }
+
+    public static String getJobTag(String fileName) {
+        return "DROPBOX" + fileName;
     }
 }

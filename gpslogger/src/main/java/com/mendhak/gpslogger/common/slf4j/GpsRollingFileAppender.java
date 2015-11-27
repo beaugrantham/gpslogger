@@ -15,13 +15,13 @@
  * along with GPSLogger for Android.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
 
-package com.mendhak.gpslogger.common;
+package com.mendhak.gpslogger.common.slf4j;
 
 import ch.qos.logback.core.rolling.RollingFileAppender;
+import com.mendhak.gpslogger.common.AppSettings;
 
 
 public class GpsRollingFileAppender<E> extends RollingFileAppender<E> {
-
 
     @Override
     protected void subAppend(E e) {
@@ -30,9 +30,8 @@ public class GpsRollingFileAppender<E> extends RollingFileAppender<E> {
         // It checks if the user has requested a
         // debug log file and only then writes
         // to a file.
-        if (AppSettings.isDebugToFile()) {
+        if (AppSettings.shouldDebugToFile()) {
             super.subAppend(e);
         }
-
     }
 }

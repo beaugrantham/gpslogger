@@ -24,6 +24,7 @@ import android.location.Location;
 public class Session extends Application {
 
 
+
     // ---------------------------------------------------
     // Session values - updated as the app runs
     // ---------------------------------------------------
@@ -124,7 +125,7 @@ public class Session extends Application {
      * @return the currentFileName (without extension)
      */
     public static String getCurrentFileName() {
-        if (AppSettings.isCustomFile() && !Utilities.IsNullOrEmpty(currentFileName)) {
+        if (AppSettings.shouldCreateCustomFile() && !Utilities.IsNullOrEmpty(currentFileName)) {
             return Utilities.GetFormattedCustomFileName(currentFileName);
         } else {
             if (!Utilities.IsNullOrEmpty(currentFileName) && AppSettings.shouldPrefixSerialToFileName() && !currentFileName.contains(Utilities.GetBuildSerial())) {

@@ -1,6 +1,7 @@
 package com.mendhak.gpslogger.loggers.customurl;
 
 import android.location.Location;
+import android.util.Base64;
 import com.mendhak.gpslogger.common.SerializableLocation;
 import com.mendhak.gpslogger.common.Utilities;
 import com.mendhak.gpslogger.common.events.UploadEvents;
@@ -9,11 +10,13 @@ import com.path.android.jobqueue.Params;
 import de.greenrobot.event.EventBus;
 import org.slf4j.LoggerFactory;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomUrlJob extends Job {
 
@@ -43,6 +46,15 @@ public class CustomUrlJob extends Job {
     public void onRun() throws Throwable {
         HttpURLConnection conn;
 
+        String basicUsername="", basicPassword="";
+        Pattern r = Pattern.compile("(\\w+):(\\w+)@.+"); //Looking for http://username:password@example.com/....
+        Matcher m =  r.matcher(logUrl);
+        while(m.find()){
+            basicUsername = m.group(1);
+            basicPassword = m.group(2);
+            logUrl = logUrl.replace(basicUsername + ":" + basicPassword+"@","");
+        }
+
         //String logUrl = "http://192.168.1.65:8000/test?lat=%LAT&lon=%LON&sat=%SAT&desc=%DESC&alt=%ALT&acc=%ACC&dir=%DIR&prov=%PROV
         // &spd=%SPD&time=%TIME&battery=%BATT&androidId=%AID&serial=%SER";
 
@@ -63,8 +75,21 @@ public class CustomUrlJob extends Job {
         tracer.debug("Sending to URL: " + logUrl);
         URL url = new URL(logUrl);
 
-        conn = (HttpURLConnection) url.openConnection();
+        if(url.getProtocol().equalsIgnoreCase("https")){
+            HttpsURLConnection.setDefaultSSLSocketFactory(CustomUrlTrustEverything.GetSSLContextSocketFactory());
+            conn = (HttpsURLConnection)url.openConnection();
+            ((HttpsURLConnection)conn).setHostnameVerifier(new CustomUrlTrustEverything.VerifyEverythingHostnameVerifier());
+        } else {
+            conn = (HttpURLConnection) url.openConnection();
+        }
+
         conn.setRequestMethod("GET");
+
+        if(!Utilities.IsNullOrEmpty(basicPassword) && !Utilities.IsNullOrEmpty(basicUsername) ){
+            String basicAuth = "Basic " + new String(Base64.encode((basicUsername + ":" + basicPassword).getBytes(), Base64.DEFAULT));
+            conn.setRequestProperty("Authorization", basicAuth);
+        }
+
 
         if(conn.getResponseCode() != 200){
             tracer.error("Status code: " + String.valueOf(conn.getResponseCode()));
@@ -84,5 +109,10 @@ public class CustomUrlJob extends Job {
     protected boolean shouldReRunOnThrowable(Throwable throwable) {
         tracer.error("Could not send to custom URL", throwable);
         return true;
+    }
+
+    @Override
+    protected int getRetryLimit() {
+        return 2;
     }
 }

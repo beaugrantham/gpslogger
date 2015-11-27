@@ -34,7 +34,7 @@ public class FtpJob extends Job {
     protected FtpJob(String server, int port, String username,
                      String password, String directory, boolean useFtps, String protocol, boolean implicit,
                      File gpxFile, String fileName) {
-        super(new Params(1).requireNetwork().persist());
+        super(new Params(1).requireNetwork().persist().addTags(getJobTag(gpxFile)));
 
         this.server = server;
         this.port = port;
@@ -184,5 +184,9 @@ public class FtpJob extends Job {
     protected boolean shouldReRunOnThrowable(Throwable throwable) {
         tracer.error("Could not FTP file", throwable);
         return false;
+    }
+
+    public static String getJobTag(File testFile) {
+        return "FTP"+testFile.getName();
     }
 }

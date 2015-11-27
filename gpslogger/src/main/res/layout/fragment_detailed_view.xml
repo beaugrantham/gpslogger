@@ -102,14 +102,14 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_alignParentRight="true"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content">
                     <com.dd.processbutton.iml.ActionProcessButton
                         android:id="@+id/btnActionProcess"
                         android:layout_width="wrap_content"
-                        android:width="180dp"
+                        android:width="240dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="22dp"
                         android:layout_marginTop="24dp"
@@ -125,15 +125,7 @@
                         custom:pb_textError="Error"
                         custom:pb_colorError="@color/red_error" />
 
-                    <TextView
-                        android:id="@+id/detailedview_txtstatus"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.4"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="22dp"
-                        android:text=""
-                        android:layout_gravity="center_vertical"
-                        />
+
                 </LinearLayout>
 
 

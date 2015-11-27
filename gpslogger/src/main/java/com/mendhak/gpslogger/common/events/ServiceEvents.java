@@ -2,30 +2,10 @@ package com.mendhak.gpslogger.common.events;
 
 import android.location.Location;
 import com.google.android.gms.location.ActivityRecognitionResult;
+import com.mendhak.gpslogger.common.Session;
 
 public class ServiceEvents {
 
-
-    /**
-     * Status message
-     */
-    public static class StatusMessage {
-        public String status;
-        public StatusMessage(String message){
-            this.status = message;
-        }
-
-    }
-
-    /**
-     * Error message
-     */
-    public static class FatalMessage {
-        public String message;
-        public FatalMessage(String message) {
-            this.message = message;
-        }
-    }
 
     /**
      * New location
