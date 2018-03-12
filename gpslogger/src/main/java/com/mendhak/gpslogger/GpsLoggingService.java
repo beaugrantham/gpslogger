@@ -96,18 +96,26 @@ public class GpsLoggingService extends Service  {
 
     private void requestActivityRecognitionUpdates() {
 
-        LOG.debug("Requesting activity recognition updates");
-        Intent intent = new Intent(getApplicationContext(), GpsLoggingService.class);
-        activityRecognitionPendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        ActivityRecognitionClient arClient = ActivityRecognition.getClient(getApplicationContext());
-        arClient.requestActivityUpdates(preferenceHelper.getMinimumLoggingInterval() * 1000, activityRecognitionPendingIntent);
+        if(preferenceHelper.shouldNotLogIfUserIsStill()){
+            LOG.debug("Requesting activity recognition updates");
+            Intent intent = new Intent(getApplicationContext(), GpsLoggingService.class);
+            activityRecognitionPendingIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            ActivityRecognitionClient arClient = ActivityRecognition.getClient(getApplicationContext());
+            arClient.requestActivityUpdates(preferenceHelper.getMinimumLoggingInterval() * 1000, activityRecognitionPendingIntent);
+        }
+
     }
 
     private void stopActivityRecognitionUpdates(){
-
-        LOG.debug("Stopping activity recognition updates");
-        ActivityRecognitionClient arClient = ActivityRecognition.getClient(getApplicationContext());
-        arClient.removeActivityUpdates(activityRecognitionPendingIntent);
+        try{
+            if (activityRecognitionPendingIntent != null){
+                LOG.debug("Stopping activity recognition updates");
+                ActivityRecognitionClient arClient = ActivityRecognition.getClient(getApplicationContext());
+                arClient.removeActivityUpdates(activityRecognitionPendingIntent);
+            }
+        } catch (Exception ex){
+            LOG.error("Could not stop activity recognition service", ex);
+        }
     }
 
     private void registerEventBus() {
@@ -446,6 +454,7 @@ public class GpsLoggingService extends Service  {
         notifyClientsStarted(false);
         session.setCurrentFileName("");
         session.setCurrentFormattedFileName("");
+        stopSelf();
     }
 
     /**
