@@ -444,4 +444,7 @@
     <string name="customurl_http_body">HTTP Body</string>
     <string name="customurl_http_headers">HTTP Headers</string>
     <string name="customurl_http_method">HTTP Method</string>
+
+    <string name="log_db_title">Log to Database</string>
+    <string name="log_db_summary">Send locations to a local database</string>
 </resources>

@@ -567,6 +567,13 @@ public class PreferenceHelper {
         return prefs.getBoolean(PreferenceNames.LOG_TO_NMEA, false);
     }
 
+    /**
+     * Whether to log to a database
+     */
+    @ProfilePreference(name= PreferenceNames.LOG_TO_DB)
+    public boolean shouldLogToDb() {
+        return prefs.getBoolean(PreferenceNames.LOG_TO_DB, false);
+    }
 
     /**
      * Whether to log to a custom URL. The app will log to the URL returned by {@link #getCustomLoggingUrl()}

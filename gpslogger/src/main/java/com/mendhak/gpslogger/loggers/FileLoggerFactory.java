@@ -27,6 +27,7 @@ import com.mendhak.gpslogger.common.Strings;
 import com.mendhak.gpslogger.common.Systems;
 import com.mendhak.gpslogger.loggers.csv.CSVFileLogger;
 import com.mendhak.gpslogger.loggers.customurl.CustomUrlLogger;
+import com.mendhak.gpslogger.loggers.db.DbLogger;
 import com.mendhak.gpslogger.loggers.geojson.GeoJSONLogger;
 import com.mendhak.gpslogger.loggers.gpx.Gpx10FileLogger;
 import com.mendhak.gpslogger.loggers.gpx.Gpx11FileLogger;
@@ -96,6 +97,9 @@ public class FileLoggerFactory {
             loggers.add(new GeoJSONLogger(file, session.shouldAddNewTrackSegment()));
         }
 
+        if (preferenceHelper.shouldLogToDb()) {
+            loggers.add(new DbLogger());
+        }
 
         return loggers;
     }
