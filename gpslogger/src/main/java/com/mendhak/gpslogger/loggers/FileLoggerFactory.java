@@ -98,7 +98,7 @@ public class FileLoggerFactory {
         }
 
         if (preferenceHelper.shouldLogToDb()) {
-            loggers.add(new DbLogger());
+            loggers.add(new DbLogger(context));
         }
 
         return loggers;
