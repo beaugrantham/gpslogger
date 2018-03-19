@@ -18,6 +18,7 @@
             <item android:id="@+id/mnuEmail" android:title="@string/autoemail_title"/>
             <item android:id="@+id/mnuOwnCloud" android:title="@string/owncloud_setup_title" />
             <item android:id="@+id/mnuFtp" android:title="@string/autoftp_setup_title" />
+            <item android:id="@+id/mnuCustomWs" android:title="@string/customws_setup_title" />
         </menu>
     </item>
 

@@ -100,6 +100,8 @@ public class UploadEvents {
 
     public static class OpenStreetMap extends BaseUploadEvent {}
 
+    public static class CustomWs extends BaseUploadEvent {}
+
     public static class OwnCloud extends BaseUploadEvent {}
 
     public static class SFTP extends BaseUploadEvent {

@@ -45,6 +45,7 @@ import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.Files;
 import com.mendhak.gpslogger.loggers.nmea.NmeaFileLogger;
 import com.mendhak.gpslogger.senders.AlarmReceiver;
+import com.mendhak.gpslogger.senders.DbSenderFactory;
 import com.mendhak.gpslogger.senders.FileSenderFactory;
 import de.greenrobot.event.EventBus;
 import org.slf4j.Logger;
@@ -361,6 +362,8 @@ public class GpsLoggingService extends Service  {
             FileSenderFactory.autoSendFiles(fileToSend);
             setupAutoSendTimers();
         }
+
+        DbSenderFactory.autoSend(this);
     }
 
     private void resetAutoSendTimersIfNecessary() {

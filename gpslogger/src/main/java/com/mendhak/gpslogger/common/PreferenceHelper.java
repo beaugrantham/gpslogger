@@ -96,6 +96,37 @@ public class PreferenceHelper {
         return prefs.getBoolean(PreferenceNames.AUTOSEND_EMAIL_ENABLED, false);
     }
 
+    /**
+     * Whether automatic sending to custom WS is enabled
+     */
+    @ProfilePreference(name= PreferenceNames.CUSTOMWS_ENABLED)
+    public boolean isCustomWsEnabled() {
+        return prefs.getBoolean(PreferenceNames.CUSTOMWS_ENABLED, false);
+    }
+
+    /**
+     * Custom WS service for auto sending
+     */
+    @ProfilePreference(name= PreferenceNames.CUSTOMWS_SERVICE)
+    public String getCustomWsService() {
+        return prefs.getString(PreferenceNames.CUSTOMWS_SERVICE, "");
+    }
+
+    /**
+     * Custom WS basic authentication for auto sending
+     */
+    @ProfilePreference(name= PreferenceNames.CUSTOMWS_BASIC_AUTH)
+    public String getCustomWsBasicAuth() {
+        return prefs.getString(PreferenceNames.CUSTOMWS_BASIC_AUTH, "");
+    }
+
+    /**
+     * Custom WS user ID for auto sending
+     */
+    @ProfilePreference(name= PreferenceNames.CUSTOMWS_USER_ID)
+    public String getCustomWsUserId() {
+        return prefs.getString(PreferenceNames.CUSTOMWS_USER_ID, "");
+    }
 
     /**
      * SMTP Server to use when sending emails

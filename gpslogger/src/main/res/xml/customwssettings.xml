@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android" android:key="customws_preferences">
+
+    <com.mendhak.gpslogger.ui.components.CustomSwitchPreference
+		android:key="customws_enabled"
+        android:title="@string/autosend_enabled"/>
+
+    <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        android:key="customws_service"
+        android:title="@string/customws_service"
+        android:summary="@string/customws_service_summary"
+        android:dialogTitle="@string/customws_service"/>
+
+    <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        android:key="customws_basic_auth"
+        android:title="@string/customws_basic_auth"
+        android:summary="@string/customws_basic_auth_summary"
+        android:dialogTitle="@string/customws_basic_auth"/>
+
+    <com.afollestad.materialdialogs.prefs.MaterialEditTextPreference
+        android:key="customws_user_id"
+        android:title="@string/customws_user_id"
+        android:summary="@string/customws_user_id_summary"
+        android:dialogTitle="@string/customws_user_id"/>
+
+</PreferenceScreen>

@@ -121,6 +121,10 @@ public class MainPreferenceActivity extends AppCompatActivity {
                 setTitle(R.string.sftp_setup_title);
                 preferenceFragment = new SFTPSettingsFragment();
                 break;
+            case PREFERENCE_FRAGMENTS.CUSTOMWS:
+                setTitle(R.string.customws_setup_title);
+                preferenceFragment = new CustomWsFragment();
+                break;
         }
 
         getFragmentManager().beginTransaction()
@@ -173,6 +177,7 @@ public class MainPreferenceActivity extends AppCompatActivity {
         public static final String OWNCLOUD = "OwnCloudAuthorizationFragment";
         public static final String OSM = "OSMAuthorizationFragment";
         public static final String SFTP = "SFTPSettingsFragment";
+        public static final String CUSTOMWS = "CustomWsSettingsFragment";
     }
 
 }

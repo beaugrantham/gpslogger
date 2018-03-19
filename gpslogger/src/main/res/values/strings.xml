@@ -325,6 +325,14 @@
 
     <string name="autoftp_setup_title">FTP</string>
 
+    <string name="customws_setup_title">Custom WS</string>
+    <string name="customws_service">Web Service</string>
+    <string name="customws_service_summary">Endpoint (protocol, host, port, and service)</string>
+    <string name="customws_basic_auth">Basic Authentication</string>
+    <string name="customws_basic_auth_summary">Optional authentication (username:password)</string>
+    <string name="customws_user_id">User ID</string>
+    <string name="customws_user_id_summary">User ID (if service requires it)</string>
+
     <string name="faq_screen_title" translatable="false">@string/menu_faq</string>
     <string name="menu_faq">Help and FAQ</string>
     <string name="gpsf_missing">Missing Service</string>

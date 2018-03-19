@@ -57,7 +57,10 @@ public  class PreferenceNames {
     public static final String EMAIL_SMTP_PORT = "smtp_port";
     public static final String EMAIL_SMTP_USERNAME = "smtp_username";
     public static final String EMAIL_SMTP_PASSWORD = "smtp_password";
-
+    public static final String CUSTOMWS_ENABLED = "customws_enabled";
+    public static final String CUSTOMWS_SERVICE = "customws_service";
+    public static final String CUSTOMWS_BASIC_AUTH = "customws_basic_auth";
+    public static final String CUSTOMWS_USER_ID = "customws_user_id";
     public static final String EMAIL_SMTP_SSL = "smtp_ssl";
     public static final String EMAIL_TARGET = "autoemail_target";
     public static final String EMAIL_FROM = "smtp_from";

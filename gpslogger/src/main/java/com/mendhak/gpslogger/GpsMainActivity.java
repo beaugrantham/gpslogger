@@ -58,6 +58,7 @@ import com.mendhak.gpslogger.common.events.UploadEvents;
 import com.mendhak.gpslogger.common.slf4j.Logs;
 import com.mendhak.gpslogger.common.slf4j.SessionLogcatAppender;
 import com.mendhak.gpslogger.loggers.Files;
+import com.mendhak.gpslogger.senders.DbSenderFactory;
 import com.mendhak.gpslogger.senders.FileSender;
 import com.mendhak.gpslogger.senders.FileSenderFactory;
 import com.mendhak.gpslogger.ui.Dialogs;
@@ -518,6 +519,7 @@ public class GpsMainActivity extends AppCompatActivity
         materialDrawer.addItem(GpsLoggerDrawerItem.newSecondary(R.string.autoemail_title, R.drawable.email, 1006));
         materialDrawer.addItem(GpsLoggerDrawerItem.newSecondary(R.string.owncloud_setup_title, R.drawable.owncloud, 1010));
         materialDrawer.addItem(GpsLoggerDrawerItem.newSecondary(R.string.autoftp_setup_title, R.drawable.ftp, 1007));
+        materialDrawer.addItem(GpsLoggerDrawerItem.newSecondary(R.string.customws_setup_title, R.drawable.ftp, 1016));
 
         materialDrawer.addItem(new DividerDrawerItem());
 
@@ -565,6 +567,9 @@ public class GpsMainActivity extends AppCompatActivity
                         break;
                     case 1015:
                         launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.SFTP);
+                        break;
+                    case 1016:
+                        launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMWS);
                         break;
                     case 9000:
                         Intent faqtivity = new Intent(getApplicationContext(), Faqtivity.class);
@@ -858,6 +863,9 @@ public class GpsMainActivity extends AppCompatActivity
             case R.id.mnuSFTP:
                 uploadToSFTP();
                 return true;
+            case R.id.mnuCustomWs:
+                uploadToCustomWs();
+                return true;
             default:
                 return true;
         }
@@ -943,6 +951,22 @@ public class GpsMainActivity extends AppCompatActivity
         }
 
         showFileListDialog(FileSenderFactory.getSFTPSender());
+    }
+
+    private void uploadToCustomWs() {
+        if (!DbSenderFactory.getCustomWsSender(this).isAvailable()) {
+            launchPreferenceScreen(MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMWS);
+            return;
+        }
+
+        if (!Systems.isNetworkAvailable(this)) {
+            Dialogs.alert(getString(R.string.sorry), getString(R.string.no_network_message), this);
+            return;
+        }
+
+        Dialogs.progress(GpsMainActivity.this, getString(R.string.please_wait), getString(R.string.please_wait));
+        userInvokedUpload = true;
+        DbSenderFactory.getCustomWsSender(this).upload();
     }
 
     private void uploadToOwnCloud() {
@@ -1258,6 +1282,22 @@ public class GpsMainActivity extends AppCompatActivity
                     + "-"
                     + getString(R.string.upload_failure));
             if(userInvokedUpload){
+                Dialogs.error(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
+                userInvokedUpload = false;
+            }
+        }
+    }
+
+    @EventBusHook
+    public void onEventMainThread(UploadEvents.CustomWs upload) {
+        LOG.debug("Custom WS Event completed, success: " + upload.success);
+        Dialogs.hideProgress();
+
+        if (!upload.success) {
+            LOG.error(getString(R.string.customws_setup_title)
+                    + "-"
+                    + getString(R.string.upload_failure));
+            if (userInvokedUpload) {
                 Dialogs.error(getString(R.string.sorry), getString(R.string.upload_failure), upload.message, upload.throwable, this);
                 userInvokedUpload = false;
             }

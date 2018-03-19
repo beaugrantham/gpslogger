@@ -2,9 +2,11 @@ package com.mendhak.gpslogger.loggers.db;
 
 import android.content.Context;
 import android.location.Location;
+import android.os.AsyncTask;
 
-import com.mendhak.gpslogger.GpsLoggingService;
 import com.mendhak.gpslogger.common.SerializableLocation;
+import com.mendhak.gpslogger.common.db.LocationDatabase;
+import com.mendhak.gpslogger.common.db.Point;
 import com.mendhak.gpslogger.common.slf4j.Logs;
 import com.mendhak.gpslogger.loggers.FileLogger;
 
@@ -26,7 +28,7 @@ public class DbLogger implements FileLogger {
     public void write(Location loc) throws Exception {
         SerializableLocation sLoc = new SerializableLocation(loc);
 
-        Point point = new Point();
+        final Point point = new Point();
         point.setAltitude(sLoc.getAltitude());
         point.setAccuracy(sLoc.getAccuracy());
         point.setBearing(sLoc.getBearing());
@@ -38,11 +40,21 @@ public class DbLogger implements FileLogger {
         point.setSatelliteCount(sLoc.getSatelliteCount());
         point.setDetectedActivity(sLoc.getDetectedActivity());
 
-        LocationDatabase db = LocationDatabase.getLocationDatabase(context);
+        final LocationDatabase db = LocationDatabase.getLocationDatabase(context);
 
-        db.pointDao().insert(point);
+        new AsyncTask<Void, Void, Integer>() {
+            @Override
+            protected Integer doInBackground(Void... params) {
+                db.pointDao().insert(point);
 
-        LOG.info("Total points tracked: " + db.pointDao().countPoints());
+                return db.pointDao().countPoints();
+            }
+
+            @Override
+            protected void onPostExecute(Integer param) {
+                LOG.info("Total points tracked: " + param);
+            }
+        }.execute();
     }
 
     @Override

@@ -72,7 +72,10 @@
             android:title="@string/autoftp_setup_title"
             android:key="autoftp_setup">
         </Preference>
-
+        <Preference
+            android:title="@string/customws_setup_title"
+            android:key="customws_setup">
+        </Preference>
 
     </PreferenceCategory>
 

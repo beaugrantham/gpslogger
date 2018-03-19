@@ -55,6 +55,7 @@ public class UploadSettingsFragment extends PreferenceFragment implements Prefer
         findPreference("autoftp_setup").setOnPreferenceClickListener(this);
         findPreference("owncloud_setup").setOnPreferenceClickListener(this);
         findPreference("sftp_setup").setOnPreferenceClickListener(this);
+        findPreference("customws_setup").setOnPreferenceClickListener(this);
     }
 
 
@@ -93,6 +94,10 @@ public class UploadSettingsFragment extends PreferenceFragment implements Prefer
 
         if(preference.getKey().equalsIgnoreCase("sftp_setup")){
             launchFragment = MainPreferenceActivity.PREFERENCE_FRAGMENTS.SFTP;
+        }
+
+        if (preference.getKey().equalsIgnoreCase("customws_setup")) {
+            launchFragment = MainPreferenceActivity.PREFERENCE_FRAGMENTS.CUSTOMWS;
         }
 
         if(!Strings.isNullOrEmpty(launchFragment)){

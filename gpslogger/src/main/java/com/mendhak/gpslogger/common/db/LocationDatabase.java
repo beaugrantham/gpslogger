@@ -1,4 +1,4 @@
-package com.mendhak.gpslogger.loggers.db;
+package com.mendhak.gpslogger.common.db;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -14,7 +14,7 @@ public abstract class LocationDatabase extends RoomDatabase {
 
     public static LocationDatabase getLocationDatabase(Context context) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(), LocationDatabase.class, "location-database").build();
+            instance = Room.databaseBuilder(context.getApplicationContext(), LocationDatabase.class, "gpslogger-db").build();
         }
 
         return instance;

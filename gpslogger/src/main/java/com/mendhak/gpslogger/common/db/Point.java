@@ -1,4 +1,4 @@
-package com.mendhak.gpslogger.loggers.db;
+package com.mendhak.gpslogger.common.db;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -39,6 +39,9 @@ public class Point {
 
     @ColumnInfo(name = "detected_activity")
     private String detectedActivity;
+
+    @ColumnInfo(name = "published")
+    private boolean published;
 
     public int getId() {
         return id;
@@ -126,6 +129,14 @@ public class Point {
 
     public void setDetectedActivity(String detectedActivity) {
         this.detectedActivity = detectedActivity;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
     }
 
 }

@@ -40,6 +40,7 @@ import com.mendhak.gpslogger.common.slf4j.Logs;
 import com.mendhak.gpslogger.loggers.FileLogger;
 import com.mendhak.gpslogger.loggers.FileLoggerFactory;
 import com.mendhak.gpslogger.loggers.Files;
+import com.mendhak.gpslogger.senders.DbSenderFactory;
 import com.mendhak.gpslogger.senders.FileSenderFactory;
 import org.slf4j.Logger;
 
@@ -219,6 +220,10 @@ public class GpsDetailedViewFragment extends GenericViewFragment {
 
                 if (FileSenderFactory.getOwnCloudSender().isAutoSendAvailable()) {
                     sb.append(getString(R.string.owncloud_setup_title)).append("\n");
+                }
+
+                if (DbSenderFactory.getCustomWsSender(getActivity()).isAutoSendAvailable()) {
+                    sb.append(getString(R.string.customws_setup_title)).append("\n");
                 }
 
                 txtTargets.setText(sb.toString());
