@@ -311,10 +311,19 @@ public class Session {
 
     public void clearDescription() {
         setDescription("");
+        setMedia("");
     }
 
     public void setDescription(String newDescription) {
         set("description", newDescription);
+    }
+
+    public String getMedia() {
+        return get("media", "");
+    }
+
+    public void setMedia(String media) {
+        set("media", media);
     }
 
     public void setWaitingForLocation(boolean waitingForLocation) {

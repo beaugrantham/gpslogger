@@ -49,7 +49,7 @@ public class OpenGTSLogger implements FileLogger {
     }
 
     @Override
-    public void annotate(String description, Location loc) throws Exception {
+    public void annotate(String description, String media, Location loc) throws Exception {
     }
 
     @Override

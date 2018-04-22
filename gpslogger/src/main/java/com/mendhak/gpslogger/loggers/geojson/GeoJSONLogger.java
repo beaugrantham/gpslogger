@@ -29,11 +29,11 @@ public class GeoJSONLogger implements FileLogger {
 
     @Override
     public void write(Location loc) throws Exception {
-        annotate(null, loc);
+        annotate(null, null, loc);
     }
 
     @Override
-    public void annotate(String description, Location loc) throws Exception {
+    public void annotate(String description, String media, Location loc) throws Exception {
         Runnable gw = new GeoJSONWriterPoints(file, loc, description, addNewTrackSegment);
         EXECUTOR.execute(gw);
     }

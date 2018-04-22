@@ -43,6 +43,12 @@ public class Point {
     @ColumnInfo(name = "published")
     private boolean published;
 
+    @ColumnInfo(name = "annotation")
+    private String annotation;
+
+    @ColumnInfo(name = "media")
+    private String media;
+
     public int getId() {
         return id;
     }
@@ -139,4 +145,19 @@ public class Point {
         this.published = published;
     }
 
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public void setMedia(String media) {
+        this.media = media;
+    }
 }

@@ -26,6 +26,11 @@ public class DbLogger implements FileLogger {
 
     @Override
     public void write(Location loc) throws Exception {
+        annotate(null, null, loc);
+    }
+
+    @Override
+    public void annotate(String description, String media, Location loc) throws Exception {
         SerializableLocation sLoc = new SerializableLocation(loc);
 
         final Point point = new Point();
@@ -39,6 +44,8 @@ public class DbLogger implements FileLogger {
         point.setTime(sLoc.getTime());
         point.setSatelliteCount(sLoc.getSatelliteCount());
         point.setDetectedActivity(sLoc.getDetectedActivity());
+        point.setAnnotation(description);
+        point.setMedia(media);
 
         final LocationDatabase db = LocationDatabase.getLocationDatabase(context);
 
@@ -55,11 +62,6 @@ public class DbLogger implements FileLogger {
                 LOG.info("Total points tracked: " + param);
             }
         }.execute();
-    }
-
-    @Override
-    public void annotate(String description, Location loc) throws Exception {
-
     }
 
     @Override

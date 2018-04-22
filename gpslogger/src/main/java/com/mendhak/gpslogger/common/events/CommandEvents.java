@@ -62,8 +62,13 @@ public class CommandEvents {
      */
     public static class Annotate {
         public String annotation;
+        public String media;
         public Annotate(String annotation) {
             this.annotation = annotation;
+        }
+        public Annotate(String annotation, String media) {
+            this(annotation);
+            this.media = media;
         }
     }
 

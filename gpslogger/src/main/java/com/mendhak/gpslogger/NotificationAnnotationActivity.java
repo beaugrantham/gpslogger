@@ -21,17 +21,25 @@ package com.mendhak.gpslogger;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Base64;
 import android.view.KeyEvent;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.mendhak.gpslogger.common.Strings;
 import com.mendhak.gpslogger.common.events.CommandEvents;
 import com.mendhak.gpslogger.common.slf4j.Logs;
 import de.greenrobot.event.EventBus;
 import org.slf4j.Logger;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class NotificationAnnotationActivity extends AppCompatActivity {
 
@@ -43,6 +51,21 @@ public class NotificationAnnotationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        String media = null;
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if (type.startsWith("image/")) {
+                Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+                media = uri.toString();
+            }
+        }
+
+        final String fMedia = media;
 
         new MaterialDialog.Builder(this)
                 .title(R.string.add_description)
@@ -59,9 +82,8 @@ public class NotificationAnnotationActivity extends AppCompatActivity {
                 .input(getString(R.string.letters_numbers), "", new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(@NonNull MaterialDialog materialDialog, @NonNull CharSequence input) {
-
                         LOG.info("Annotation from notification: " + input.toString());
-                        EventBus.getDefault().post(new CommandEvents.Annotate(input.toString()));
+                        EventBus.getDefault().post(new CommandEvents.Annotate(input.toString(), fMedia));
                         Intent serviceIntent = new Intent(getApplicationContext(), GpsLoggingService.class);
                         getApplicationContext().startService(serviceIntent);
                         materialDialog.dismiss();
@@ -94,4 +116,5 @@ public class NotificationAnnotationActivity extends AppCompatActivity {
 
         return super.onKeyDown(keyCode, event);
     }
+
 }

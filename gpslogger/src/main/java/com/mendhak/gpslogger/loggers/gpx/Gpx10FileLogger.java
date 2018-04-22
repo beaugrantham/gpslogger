@@ -67,7 +67,7 @@ public class Gpx10FileLogger implements FileLogger {
         return new Gpx10WriteHandler(dateTimeString, gpxFile, loc, addNewTrackSegment);
     }
 
-    public void annotate(String description, Location loc) throws Exception {
+    public void annotate(String description, String media, Location loc) throws Exception {
 
         description = Strings.cleanDescriptionForXml(description);
 

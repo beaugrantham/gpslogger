@@ -50,7 +50,7 @@ public class CSVFileLogger implements FileLogger {
     @Override
     public void write(Location loc) throws Exception {
         if (!Session.getInstance().hasDescription()) {
-            annotate("", loc);
+            annotate("", null, loc);
         }
     }
 
@@ -87,7 +87,7 @@ public class CSVFileLogger implements FileLogger {
     }
 
     @Override
-    public void annotate(String description, Location loc) throws Exception {
+    public void annotate(String description, String media, Location loc) throws Exception {
         if (!Files.reallyExists(file)) {
             file.createNewFile();
 

@@ -110,9 +110,9 @@ public class FileLoggerFactory {
         }
     }
 
-    public static void annotate(Context context, String description, Location loc) throws Exception {
+    public static void annotate(Context context, String description, String media, Location loc) throws Exception {
         for (FileLogger logger : getFileLoggers(context)) {
-            logger.annotate(description, loc);
+            logger.annotate(description, media, loc);
         }
     }
 }

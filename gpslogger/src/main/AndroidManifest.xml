@@ -158,13 +158,17 @@
         <!--android:theme="@style/Theme.AppCompat.Translucent"-->
         <activity
             android:name=".NotificationAnnotationActivity"
-            android:label=""
+            android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:excludeFromRecents="true"
-            >
+            android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.category.DEFAULT" />
                 <category android:name="com.mendhak.gpslogger.NOTIFICATION_BUTTON" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 

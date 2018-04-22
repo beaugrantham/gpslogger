@@ -954,7 +954,7 @@ public class GpsLoggingService extends Service  {
 
             if (session.hasDescription()) {
                 LOG.info("Writing annotation: " + session.getDescription());
-                FileLoggerFactory.annotate(getApplicationContext(), session.getDescription(), loc);
+                FileLoggerFactory.annotate(getApplicationContext(), session.getDescription(), session.getMedia(), loc);
             }
         }
         catch(Exception e){
@@ -1040,6 +1040,7 @@ public class GpsLoggingService extends Service  {
         } else {
             LOG.debug("Pending annotation: " + desc);
             session.setDescription(desc);
+            session.setMedia(annotate.media);
             EventBus.getDefault().post(new ServiceEvents.AnnotationStatus(false));
 
             if(session.isStarted()){

@@ -69,7 +69,7 @@ public class AndroidWearLogger implements FileLogger, GoogleApiClient.Connection
     }
 
     @Override
-    public void annotate(String description, Location loc) throws Exception { }
+    public void annotate(String description, String media, Location loc) throws Exception { }
 
     @Override
     public String getName() {

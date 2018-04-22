@@ -55,12 +55,12 @@ public class CustomUrlLogger implements FileLogger {
     @Override
     public void write(Location loc) throws Exception {
         if (!Session.getInstance().hasDescription()) {
-            annotate("", loc);
+            annotate("", null, loc);
         }
     }
 
     @Override
-    public void annotate(String description, Location loc) throws Exception {
+    public void annotate(String description, String media, Location loc) throws Exception {
 
         String finalUrl = getFormattedTextblock(customLoggingUrl, loc, description, androidId, batteryLevel, Strings.getBuildSerial(),
                 Session.getInstance().getStartTimeStamp(), Session.getInstance().getCurrentFormattedFileName());

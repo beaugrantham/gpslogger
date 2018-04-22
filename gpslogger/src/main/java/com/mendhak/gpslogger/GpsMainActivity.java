@@ -117,8 +117,6 @@ public class GpsMainActivity extends AppCompatActivity
             LOG.debug("Start logging on app launch");
             EventBus.getDefault().postSticky(new CommandEvents.RequestStartStop(true));
         }
-
-
     }
 
 
@@ -166,8 +164,6 @@ public class GpsMainActivity extends AppCompatActivity
 
         populateProfilesList();
         enableDisableMenuItems();
-
-
     }
 
     @Override
