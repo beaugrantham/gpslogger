@@ -498,11 +498,11 @@ public class GpsLoggingService extends Service  {
             contentTitle = Strings.getFormattedLatitude(session.getCurrentLatitude()) + ", "
                     + Strings.getFormattedLongitude(session.getCurrentLongitude());
 
-            contentText = Html.fromHtml("<b>" + getString(R.string.txt_altitude) + "</b> " + Strings.getDistanceDisplay(this,session.getCurrentLocationInfo().getAltitude(), preferenceHelper.shouldDisplayImperialUnits(), false)
-                    + "  "
-                    + "<b>" + getString(R.string.txt_travel_duration) + "</b> "  + Strings.getDescriptiveDurationString((int) (System.currentTimeMillis() - session.getStartTimeStamp()) / 1000, this)
-                    + "  "
-                    + "<b>" + getString(R.string.txt_accuracy) + "</b> "  + Strings.getDistanceDisplay(this, session.getCurrentLocationInfo().getAccuracy(), preferenceHelper.shouldDisplayImperialUnits(), true));
+            String numberOfPoints = "#" + session.getNumLegs();
+            String timestamp = " @ " + new SimpleDateFormat("HH:mm:ss").format(new Date(session.getLatestTimeStamp()));
+            String travelDuration = " (" + Strings.getDescriptiveDurationString((int) (System.currentTimeMillis() - session.getStartTimeStamp()) / 1000, this) + ")";
+
+            contentText = Html.fromHtml(numberOfPoints + timestamp + travelDuration);
 
             notificationTime = session.getCurrentLocationInfo().getTime();
         }
@@ -513,7 +513,7 @@ public class GpsLoggingService extends Service  {
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.gpsloggericon3))
                     .setPriority( preferenceHelper.shouldHideNotificationFromStatusBar() ? NotificationCompat.PRIORITY_MIN : NotificationCompat.PRIORITY_LOW)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
-                    .setVisibility(NotificationCompat.VISIBILITY_SECRET) //This hides the notification from lock screen
+                    .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .setContentTitle(contentTitle)
                     .setContentText(contentText)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText).setBigContentTitle(contentTitle))
