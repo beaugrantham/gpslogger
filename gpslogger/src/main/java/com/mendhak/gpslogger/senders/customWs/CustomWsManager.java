@@ -135,6 +135,7 @@ public class CustomWsManager extends DbSender {
         Map<String, String> map = new HashMap<>();
 
         map.put("time", String.valueOf(point.getTime()));
+        map.put("timezone", point.getTimezone());
         map.put("user", !Strings.isNullOrEmpty(preferenceHelper.getCustomWsUserId()) ? preferenceHelper.getCustomWsUserId() : "");
         map.put("satellites", null);
         map.put("annotation", point.getAnnotation());

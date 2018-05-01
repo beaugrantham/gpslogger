@@ -34,6 +34,9 @@ public class Point {
     @ColumnInfo(name = "time")
     private long time;
 
+    @ColumnInfo(name = "timezone")
+    private String timezone;
+
     @ColumnInfo(name = "satellite_count")
     private int satelliteCount;
 
@@ -119,6 +122,14 @@ public class Point {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
     }
 
     public int getSatelliteCount() {

@@ -12,6 +12,8 @@ import com.mendhak.gpslogger.loggers.FileLogger;
 
 import org.slf4j.Logger;
 
+import java.util.TimeZone;
+
 public class DbLogger implements FileLogger {
 
     private static final Logger LOG = Logs.of(DbLogger.class);
@@ -41,7 +43,8 @@ public class DbLogger implements FileLogger {
         point.setLongitude(sLoc.getLongitude());
         point.setProvider(sLoc.getProvider());
         point.setSpeed(sLoc.getSpeed());
-        point.setTime(sLoc.getTime());
+        point.setTime(sLoc.getTime());                      // System.currentTimeMillis()
+        point.setTimezone(TimeZone.getDefault().getID());   // active timezone
         point.setSatelliteCount(sLoc.getSatelliteCount());
         point.setDetectedActivity(sLoc.getDetectedActivity());
         point.setAnnotation(description);

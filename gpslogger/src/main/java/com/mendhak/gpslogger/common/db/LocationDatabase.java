@@ -7,7 +7,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 
-@Database(entities = {Point.class}, version = 3, exportSchema = false)
+@Database(entities = {Point.class}, version = 4, exportSchema = false)
 public abstract class LocationDatabase extends RoomDatabase {
 
     private static LocationDatabase instance;
@@ -29,9 +29,16 @@ public abstract class LocationDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE point ADD COLUMN timezone TEXT");
+        }
+    };
+
     public static LocationDatabase getLocationDatabase(Context context) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(), LocationDatabase.class, "gpslogger-db").addMigrations(MIGRATION_2_3).build();
+            instance = Room.databaseBuilder(context.getApplicationContext(), LocationDatabase.class, "gpslogger-db").addMigrations(MIGRATION_3_4).build();
         }
 
         return instance;
